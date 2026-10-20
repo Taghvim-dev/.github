@@ -30,3 +30,22 @@ test("only correctly bound migration and checkpoint receipts get a verified labe
   assert.match(good.body,/NOT CERTIFIED/);
   assert.equal(receipt({...sample,migrations:{...migrations,record:{...migrations.record,database:"wrong"}}}).migrationsOK,false);
 });
+
+test("sandbox 2.1.0 SHA/run-bound receipts are persisted without implying GA",()=>{
+  const base={schema_version:1,kind:"taghvim_engine_sandbox_promotion",environment:"sandbox",
+    source_sha:SHA,workflow_run:run,api_version:"2.1.0",contract_sha256:"d".repeat(64),
+    migrations:[{name:"0001_control.sql",sha256:"e".repeat(64)}],
+    checks:{health:true,readiness:true,openapi:true,d1_ledger:true},production_approved:false};
+  const valid=receipt({...sample,status:"skipped",sandboxStatus:"failure",
+    sandbox:{record:base,sha256:"f".repeat(64)}});
+  assert.equal(valid.sandboxOK,true);
+  assert.match(valid.body,/Sandbox job result: \*\*FAILURE\*\*/);
+  assert.match(valid.body,/Production job result: \*\*SKIPPED\*\*/);
+  assert.match(valid.body,/NOT CERTIFIED/);
+  assert.equal(receipt({...sample,sandbox:{record:{...base,source_sha:"b".repeat(40)}}}).sandboxOK,false);
+  assert.equal(receipt({...sample,sandbox:{record:{...base,checks:{...base.checks,d1_ledger:false}}}}).sandboxOK,false);
+  assert.equal(receipt({...sample,sandbox:{record:{...base,api_version:"2.0.0"}}}).sandboxOK,false);
+});
+test("unknown sandbox state cannot masquerade as a successful job",()=>{
+  assert.throws(()=>receipt({...sample,sandboxStatus:"approved"}),/Invalid sandbox result/);
+});
