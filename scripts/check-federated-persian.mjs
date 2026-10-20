@@ -32,7 +32,7 @@ for(const path of [...new Set(files)].sort()){
   if(presentation.test(source))problems.push(path+": glyph presentation form in source text");
   if(reversed.test(source))problems.push(path+": suspect reversed Persian term");
   if((source.match(/^\s*```/gm)||[]).length%2)problems.push(path+": unclosed code fence");
-  if(path.endsWith("/README.md")&&["SDK","CLI","cookbooks"].includes(path.split("/")[0])){
+  if(["SDK/README.md","CLI/README.md","cookbooks/README.md"].includes(path)){
     if(!/lang="fa"[^>]*dir="rtl"|dir="rtl"[^>]*lang="fa"/.test(source))problems.push(path+": missing explicit Persian direction context");
     if(!/دسترسی زودهنگام|آزمایشی/.test(source))problems.push(path+": preview availability warning absent");
     if(!/Apache-2\.0/.test(source))problems.push(path+": OSS scope missing");
