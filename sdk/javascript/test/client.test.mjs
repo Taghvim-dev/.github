@@ -4,7 +4,7 @@ import {TaghvimClient, TaghvimApiError, createTestClient} from "../index.js";
 import {readFileSync} from "node:fs";
 
 const key="tgv_test_ExampleApprovedByInvitation";
-const contract=JSON.parse(readFileSync(new URL("../../../../contracts/operation-index.json", import.meta.url)));
+const contract=JSON.parse(readFileSync(new URL("../../../contracts/operation-index.json", import.meta.url)));
 test("product preview API routes belong to the pinned contract", () => {
  const allow=new Set(contract.operations.map(x=>x.method+" "+x.path));
  for(const route of ["POST /v1/dates/convert","POST /v1/business-days/add","GET /v1/holidays","POST /v1/deadlines","GET /v1/usage","GET /v1/health"]) assert.ok(allow.has(route),route);
