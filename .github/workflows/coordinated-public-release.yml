@@ -1,0 +1,58 @@
+name: coordinated-public-release
+on:
+  pull_request:
+    paths:
+      - "release/PUBLIC-RELEASE-MATRIX.json"
+      - "scripts/check-public-release.mjs"
+      - ".github/workflows/coordinated-public-release.yml"
+  push:
+    branches: [main]
+    paths:
+      - "release/PUBLIC-RELEASE-MATRIX.json"
+      - "scripts/check-public-release.mjs"
+      - ".github/workflows/coordinated-public-release.yml"
+  workflow_dispatch:
+    inputs:
+      verify_live:
+        type: boolean
+        description: "Also enforce matching published website, API and contract. This is a GA gate, not a status report."
+        default: false
+permissions:
+  contents: read
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  public-contract-parity:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: Taghvim-dev/SDK
+          ref: 10e667a456fc89f0edc4e8510df4c0d9cec53005
+          path: SDK
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: Taghvim-dev/CLI
+          ref: c8e3e736dd988404a6666a6b398faf1df941d36d
+          path: CLI
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: Taghvim-dev/cookbooks
+          ref: d8be0eee27294d4f9aedfe8cb1ca2927dc8d5f11
+          path: cookbooks
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Validate cohesive public manifest and exact contract index
+        run: node scripts/check-public-release.mjs
+      - name: Require full live website ↔ API contract parity on manual request
+        if: github.event_name == 'workflow_dispatch' && inputs.verify_live == true
+        run: node scripts/check-public-release.mjs --live
