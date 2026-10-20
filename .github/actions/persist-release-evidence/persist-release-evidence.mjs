@@ -13,13 +13,14 @@ const read=(name)=>{
   const bytes=readFileSync(name);
   try{return {record:JSON.parse(bytes.toString("utf8")),sha256:sha256(bytes)}}catch{return {error:"invalid_json",sha256:sha256(bytes)}}
 };
-export function receipt({repo,issue,component,sha,run,attempt,status,checkpoint=null,migrations=null}) {
+export function receipt({repo,issue,component,sha,run,attempt,status,checkpoint=null,migrations=null,sandbox=null,sandboxStatus="unknown"}) {
   if(!/^[0-9a-f]{40}$/.test(sha)||!/^\d+$/.test(run)||!/^\d+$/.test(attempt))
     throw Error("Missing immutable workflow identity");
   const expectedIssue=component==="engine"?9:component==="landing"?13:null;
   if(repo!=="Taghvim-dev/"+component || issue!==expectedIssue)
     throw Error("Issue/owner/component mismatch");
-  if(!["success","failure","cancelled"].includes(status))throw Error("Invalid job result");
+  if(!["success","failure","cancelled","skipped"].includes(status))throw Error("Invalid job result");
+  if(!["success","failure","cancelled","skipped","unknown"].includes(sandboxStatus))throw Error("Invalid sandbox result");
   const ck=checkpoint?.record;
   const identityOK=!!ck && ck.workflow_run===run && (ck.engine_sha||ck.landing_sha)===sha &&
     ck.component===component && Array.isArray(ck.checkpoints);
@@ -27,6 +28,18 @@ export function receipt({repo,issue,component,sha,run,attempt,status,checkpoint=
   const appliedOK=!!applied && applied.kind==="d1_applied_ledger" &&
     applied.status==="VERIFIED" && applied.workflow_run===run && applied.release_sha===sha &&
     applied.database===(component==="engine"?"taghvim-engine":"taghvim-web");
+  const sr=sandbox?.record;
+  const expectedChecks=component==="engine"
+    ? {health:true,readiness:true,openapi:true,d1_ledger:true}
+    : {health:true,readiness:true,openapi:true,d1_ledger:true,synthetic_form:true,mail_suppressed:true};
+  const sandboxOK=!!sr && sr.schema_version===1 &&
+    sr.kind==="taghvim_"+component+"_sandbox_promotion" &&
+    sr.environment==="sandbox" && sr.source_sha===sha && sr.workflow_run===run &&
+    sr.api_version==="2.1.0" && sr.production_approved===false &&
+    /^[0-9a-f]{64}$/.test(sr.contract_sha256||"") &&
+    Array.isArray(sr.migrations) && sr.migrations.length>0 &&
+    Object.entries(expectedChecks).every(([key,value])=>sr.checks?.[key]===value) &&
+    Object.keys(sr.checks||{}).length===Object.keys(expectedChecks).length;
   const marker="taghvim-release:"+component+":"+run+":"+attempt;
   const body=[
     "<!-- "+marker+" -->",
@@ -34,14 +47,16 @@ export function receipt({repo,issue,component,sha,run,attempt,status,checkpoint=
     "- Component: \`"+component+"\`",
     "- Workflow run: \`"+run+"\` / attempt \`"+attempt+"\`",
     "- Immutable source SHA: \`"+sha+"\`",
-    "- GitHub job result: **"+status.toUpperCase()+"**",
+    "- Production job result: **"+status.toUpperCase()+"**",
+    "- Sandbox job result: **"+sandboxStatus.toUpperCase()+"**",
+    "- Sandbox promotion receipt: **"+(sandboxOK?"VERIFIED":"MISSING_OR_INVALID")+"**; artifact SHA-256: \`"+(sandbox?.sha256||"MISSING")+"\`",
     "- Checkpoint: **"+(identityOK?ck.phase:"UNVERIFIED")+"**; artifact SHA-256: \`"+(checkpoint?.sha256||"MISSING")+"\`",
     "- Remote D1 applied-ledger: **"+(appliedOK?"VERIFIED":"MISSING_OR_INVALID")+"**; evidence SHA-256: \`"+(migrations?.sha256||"MISSING")+"\`",
     "- Production GA: **NOT CERTIFIED** — live E2E, tenant isolation, billing, restore and approval remain independent requirements.",
     "- Source workflow: https://github.com/"+repo+"/actions/runs/"+run,
     "",
   ].join("\n");
-  return {marker,body,checkpointOK:identityOK,migrationsOK:appliedOK};
+  return {marker,body,checkpointOK:identityOK,migrationsOK:appliedOK,sandboxOK};
 }
 
 async function main() {
@@ -50,7 +65,8 @@ async function main() {
     run=process.env.GITHUB_RUN_ID||"",attempt=process.env.GITHUB_RUN_ATTEMPT||"1";
   const issue=component==="engine"?9:13;
   const built=receipt({repo,issue,component,sha,run,attempt,status,
-    checkpoint:read("release-evidence.json"),migrations:read("release-d1-applied-evidence.json")});
+    checkpoint:read("release-evidence.json"),migrations:read("release-d1-applied-evidence.json"),
+    sandbox:read("sandbox-promotion-receipt.json"),sandboxStatus:process.env.SANDBOX_RESULT||"unknown"});
   const token=process.env.GITHUB_TOKEN;
   if(!token)throw Error("GITHUB_TOKEN missing: durable registry is mandatory");
   const path="https://api.github.com/repos/"+repo+"/issues/"+issue+"/comments";
@@ -72,7 +88,7 @@ async function main() {
   }
   await request(path,{method:"POST",body:JSON.stringify({body:built.body})});
   console.log("DURABLE_RELEASE_REGISTRY_WRITTEN",built.marker,
-    "checkpoint",built.checkpointOK,"migration_receipt",built.migrationsOK);
+    "checkpoint",built.checkpointOK,"migration_receipt",built.migrationsOK,"sandbox",built.sandboxOK);
 }
 if(process.argv[1]&&fileURLToPath(import.meta.url)===process.argv[1]){
   main().catch(e=>{console.error("::error::DURABLE_RELEASE_REGISTRY_FAILED: "+e.message);process.exitCode=1});
