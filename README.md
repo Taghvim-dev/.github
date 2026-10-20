@@ -7,6 +7,7 @@ This repository contains public-facing examples, guides, and product-level diagr
 ## Start here
 - [Developer onboarding](docs/DEVELOPER-ONBOARDING.md)
 - [Quickstart: API](docs/API-QUICKSTART.md)
+- [Reference SDK clients (JavaScript/Python)](docs/SDK.md)
 - [JavaScript example](examples/javascript/convert-date.mjs)
 - [Python example](examples/python/convert_date.py)
 - [Cookbooks](docs/COOKBOOKS.md)

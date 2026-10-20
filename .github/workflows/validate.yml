@@ -1,0 +1,39 @@
+name: public-docs-verify
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: License and documents
+        run: |
+          test -f LICENSE
+          grep -q 'Apache License' LICENSE
+          test -f NOTICE
+          test -f profile/README.md
+          test -f docs/COOKBOOKS.md
+          test -f docs/B2B2B2C.md
+      - name: JavaScript reference clients
+        run: |
+          node --check examples/javascript/convert-date.mjs
+          node --check examples/javascript/client.mjs
+          node --test examples/javascript/client.test.mjs
+      - name: Python reference clients
+        run: python -m compileall -q examples/python
