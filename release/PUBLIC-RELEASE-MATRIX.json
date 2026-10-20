@@ -44,15 +44,15 @@
   "source_verification": {
     "date": "2026-10-20",
     "phase": "source-integrated-not-deployed",
-    "engine_main_merge_sha": "929199a6c29c264cf6ec4933a85da3054ef3e5f9",
+    "engine_main_merge_sha": "3f45d4b8acbfe6039cf1451efc4c89416df2683a",
     "engine_offline_ci_run": "39439068261",
     "engine_live_gate_ci_run": "39439068311",
-    "landing_main_merge_sha": "96591a0b9eef07a25b5cddbaf300ee1d4b96d159",
+    "landing_main_merge_sha": "1d55ba10750fdd773a4a095823816a4d44d581a4",
     "landing_integration_merge_sha": "793753e489b4a8a90065eb0c016b6ec06fdb6f91",
     "landing_integration_ci_run": "39438283229",
     "landing_rtl_ci_run": "39438283155",
     "landing_two_phase_release_ci_run": "39440013499",
-    "note": "CI for immutable Engine/Landing/SDK/CLI/Cookbooks and shared applied-D1 verifier is green. Protected production dispatch, Cloudflare remote ledger, deployments and live E2E are not verified. Do not claim GA.",
+    "note": "Shared version-pinned applied-D1 verification and private issue-ledger source checks passed, with code, tests, and evidence registry linked. No production Workflow dispatch or Cloudflare remote evidence was observed; deployed versions, tenant/auth/meter/billing E2E and GA still blocked.",
     "engine_node24_action_test": "39441189301",
     "landing_node24_action_test": "39441203096",
     "landing_node24_rtl_test": "39441203134",
@@ -106,6 +106,19 @@
       "previous_defect": "wrangler d1 migrations list reports unapplied migrations, not authoritative applied ledger",
       "evidence_file": "release-d1-applied-evidence.json",
       "remote_receipt": "MISSING"
+    },
+    "durable_private_issue_registry": {
+      "action_sha": "5c58f89f1481b5ff14c55a40740e10f14e6e0d86",
+      "offline_ci_run": "39457844180",
+      "engine_reporter_pr_ci": "39458243141",
+      "landing_reporter_pr_ci": "39458252866",
+      "engine_reporter_main_sha": "3f45d4b8acbfe6039cf1451efc4c89416df2683a",
+      "landing_reporter_main_sha": "1d55ba10750fdd773a4a095823816a4d44d581a4",
+      "workflow_design": "post-deploy job with isolated issues:write; no Cloudflare token; deduplicated private issue entry keyed by component/run/attempt",
+      "engine_issue": "Taghvim-dev/engine#9",
+      "landing_issue": "Taghvim-dev/landing#13",
+      "actual_production_receipt": "MISSING",
+      "status": "SOURCE_TESTED; NOT DISPATCHED"
     }
   }
 }
