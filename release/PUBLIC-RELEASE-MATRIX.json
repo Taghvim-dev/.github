@@ -44,15 +44,15 @@
   "source_verification": {
     "date": "2026-10-20",
     "phase": "source-integrated-not-deployed",
-    "engine_main_merge_sha": "c1e501c48a8ad8c2c910b130157e006d34492156",
+    "engine_main_merge_sha": "929199a6c29c264cf6ec4933a85da3054ef3e5f9",
     "engine_offline_ci_run": "39439068261",
     "engine_live_gate_ci_run": "39439068311",
-    "landing_main_merge_sha": "4064a7d6ea27037bd4923aa7f1128aeb1e4714b4",
+    "landing_main_merge_sha": "96591a0b9eef07a25b5cddbaf300ee1d4b96d159",
     "landing_integration_merge_sha": "793753e489b4a8a90065eb0c016b6ec06fdb6f91",
     "landing_integration_ci_run": "39438283229",
     "landing_rtl_ci_run": "39438283155",
     "landing_two_phase_release_ci_run": "39440013499",
-    "note": "Combined test, dry-run, date freshness and immutable run evidence are source-verified. Deployment is NOT attested. Cloudflare credentials, protected production environment, D1 migrations and live E2E can only be verified in authorized GitHub dispatch/Cloudflare with real receipts; do not claim GA.",
+    "note": "CI for immutable Engine/Landing/SDK/CLI/Cookbooks and shared applied-D1 verifier is green. Protected production dispatch, Cloudflare remote ledger, deployments and live E2E are not verified. Do not claim GA.",
     "engine_node24_action_test": "39441189301",
     "landing_node24_action_test": "39441203096",
     "landing_node24_rtl_test": "39441203134",
@@ -94,6 +94,18 @@
       "live_signup_and_tenant_isolation": "MISSING",
       "live_meter_and_billing_recovery": "MISSING",
       "legal_and_accessibility_signoff": "MISSING"
+    },
+    "d1_remote_migration_gate": {
+      "action_pin": "e314da7b0dbf00c733954b808f50235c9c4c5208",
+      "action_ci": "39456618077",
+      "engine_pr_ci": "39456852189",
+      "landing_pr_ci": "39456841940",
+      "engine_main_sha": "929199a6c29c264cf6ec4933a85da3054ef3e5f9",
+      "landing_main_sha": "96591a0b9eef07a25b5cddbaf300ee1d4b96d159",
+      "mode": "source-tested-only; remote D1 query has NOT run",
+      "previous_defect": "wrangler d1 migrations list reports unapplied migrations, not authoritative applied ledger",
+      "evidence_file": "release-d1-applied-evidence.json",
+      "remote_receipt": "MISSING"
     }
   }
 }
