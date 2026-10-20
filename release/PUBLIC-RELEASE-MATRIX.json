@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "product": "Taghvim.dev",
+  "state": "PREVIEW",
+  "general_availability_approved": false,
+  "contract_version": "2.1.0",
+  "openapi_source_git_blob_sha": "c0d163f8e2d883125fc3778b17842bd19fe3f6bf",
+  "operation_index_git_blob_sha": "e7cdd7e25c3bab1bba262bd80032252d65a3fd95",
+  "required_public_operation_count": 46,
+  "repositories": [
+    {
+      "name": "SDK",
+      "commit": "10e667a456fc89f0edc4e8510df4c0d9cec53005",
+      "ci_run": "39431164831"
+    },
+    {
+      "name": "CLI",
+      "commit": "c8e3e736dd988404a6666a6b398faf1df941d36d",
+      "ci_run": "39431176951"
+    },
+    {
+      "name": "cookbooks",
+      "commit": "d8be0eee27294d4f9aedfe8cb1ca2927dc8d5f11",
+      "ci_run": "39431416903"
+    }
+  ],
+  "deployment_observation": {
+    "date": "2026-10-20",
+    "public_api_version": "2.0.0",
+    "public_landing_api_version": "2.0.0",
+    "contract_parity": "BLOCKED",
+    "source_run": "39426745433"
+  },
+  "prerequisites": {
+    "published_contract_sync": false,
+    "verified_public_signup": false,
+    "authorized_sandbox_key_e2e": false,
+    "tenant_isolation_e2e": false,
+    "metering_reconciliation": false,
+    "approved_migrations": false,
+    "manual_production_approval": false
+  },
+  "owner_action": "Do not declare GA or enable live billing until all prerequisites have evidence and pass their gates."
+}
