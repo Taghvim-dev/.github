@@ -1,19 +1,21 @@
-# Taghvim.dev — Open Developer Resources
+# تقویم.dev | منابع عمومی توسعه‌دهندگان
 
-Public organization profile: [profile/README.md](profile/README.md).
+<p dir="rtl" lang="fa">
+در این مخزن، مستندات عمومی محصول، راهنمای API و SDK، مثال‌های کاربردی، دیاگرام‌های مفهومی، سیاست مالکیت فکری و مسیر درخواست دسترسی زودهنگام منتشر می‌شوند. هیچ‌یک از نمونه‌ها جایگزین فعال‌سازی واقعی حساب آزمایشی نیست.
+</p>
 
-This repository contains public-facing examples, guides, and product-level diagrams. **Early access, not general availability.** The private production runtime is not published here.
+- [پروفایل عمومی سازمان](profile/README.md)
+- [شروع و درخواست دسترسی آزمایشی](docs/DEVELOPER-ONBOARDING.md)
+- [راهنمای سریع API](docs/API-QUICKSTART.md)
+- [راهنمای SDK و نمونه‌های JavaScript/Python](docs/SDK.md)
+- [Cookbookهای کاربردی](docs/COOKBOOKS.md)
+- [دیاگرام‌های محصول و مسیر کاربر](docs/PRODUCT-JOURNEY.md)
+- [قابلیت‌ها](docs/CAPABILITY-MAP.md) و [زنجیرهٔ B2B2B2C](docs/B2B2B2C.md)
+- [چارچوب یکپارچگی انتشار و استاندارد زبان فارسی](docs/EDITORIAL-AND-RELEASE-GATES.md)
+- [امنیت](SECURITY.md) · [پشتیبانی](SUPPORT.md) · [IP/OSS](IP-AND-OSS.md)
 
-## Start here
-- [Developer onboarding](docs/DEVELOPER-ONBOARDING.md)
-- [Quickstart: API](docs/API-QUICKSTART.md)
-- [Reference SDK clients (JavaScript/Python)](docs/SDK.md)
-- [JavaScript example](examples/javascript/convert-date.mjs)
-- [Python example](examples/python/convert_date.py)
-- [Cookbooks](docs/COOKBOOKS.md)
-- [Product journey](docs/PRODUCT-JOURNEY.md)
-- [Capability map](docs/CAPABILITY-MAP.md)
-- [B2B2B2C roadmap and capability boundaries](docs/B2B2B2C.md)
-- [Security](SECURITY.md), [support](SUPPORT.md), [IP and OSS](IP-AND-OSS.md)
+**مجوز محتوا و نمونه‌های اصلی عمومی: Apache-2.0.** استفاده از علائم تجاری، اطلاعات محرمانه یا کدهای دارای مجوز مستقل تابع حقوق مربوط است.
 
-**License:** Apache-2.0 for the original public material in this repository. Product marks are reserved. Nothing here automatically relicenses the private engine or third-party works.
+---
+
+**English:** Public Taghvim.dev developer resources and product-level guides. The product is in early access, not generally available; examples do not issue credentials or prove production readiness. Original public resources are licensed under Apache-2.0 unless separately noted.

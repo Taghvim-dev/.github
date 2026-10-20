@@ -8,6 +8,10 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   validate:
     runs-on: ubuntu-24.04
@@ -30,6 +34,8 @@ jobs:
           test -f profile/README.md
           test -f docs/COOKBOOKS.md
           test -f docs/B2B2B2C.md
+      - name: Public Persian copy and release-language quality
+        run: node scripts/check-public-copy.mjs
       - name: JavaScript reference clients
         run: |
           node --check examples/javascript/convert-date.mjs
