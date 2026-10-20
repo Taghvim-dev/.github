@@ -1,0 +1,364 @@
+{
+  "schemaVersion": 1,
+  "contractVersion": "2.1.0",
+  "openApiGitBlobSHA": "c0d163f8e2d883125fc3778b17842bd19fe3f6bf",
+  "sourceCommit": "292948b575c3417960b90e51f837f409c7385028",
+  "generatedAt": "2026-10-20",
+  "status": "preview",
+  "operations": [
+    {
+      "method": "GET",
+      "path": "/v1/health",
+      "operationId": "getHealth",
+      "auth": []
+    },
+    {
+      "method": "GET",
+      "path": "/v1/readiness",
+      "operationId": "getReadiness",
+      "auth": []
+    },
+    {
+      "method": "GET",
+      "path": "/v1/versions",
+      "operationId": "getVersions",
+      "auth": []
+    },
+    {
+      "method": "GET",
+      "path": "/openapi.json",
+      "operationId": "getOpenApi",
+      "auth": []
+    },
+    {
+      "method": "GET",
+      "path": "/v1/calendars/systems",
+      "operationId": "listCalendarSystems",
+      "auth": [
+        "ApiKey"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/v1/dates/convert",
+      "operationId": "convertDate",
+      "auth": [
+        "ApiKey"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/v1/dates/resolve",
+      "operationId": "resolveDate",
+      "auth": [
+        "ApiKey"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/v1/business-days/add",
+      "operationId": "addBusinessDays",
+      "auth": [
+        "ApiKey"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/v1/business-days/diff",
+      "operationId": "diffBusinessDays",
+      "auth": [
+        "ApiKey"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/v1/business-days/is-business-day",
+      "operationId": "isBusinessDay",
+      "auth": [
+        "ApiKey"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/business-days/check",
+      "operationId": "checkBusinessDay",
+      "auth": [
+        "ApiKey"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/business-days/next",
+      "operationId": "nextBusinessDay",
+      "auth": [
+        "ApiKey"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/business-days/previous",
+      "operationId": "previousBusinessDay",
+      "auth": [
+        "ApiKey"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/holidays",
+      "operationId": "listHolidays",
+      "auth": [
+        "ApiKey"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/holidays/{date}",
+      "operationId": "getHolidaysOn",
+      "auth": [
+        "ApiKey"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/v1/deadlines",
+      "operationId": "createDeadline",
+      "auth": [
+        "ApiKey"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/deadlines/{id}",
+      "operationId": "getDeadline",
+      "auth": [
+        "ApiKey"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/v1/sla/due",
+      "operationId": "dueSla",
+      "auth": [
+        "ApiKey"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/v1/reminders/preview",
+      "operationId": "previewReminders",
+      "auth": [
+        "ApiKey"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/v1/schedules/preview",
+      "operationId": "previewSchedule",
+      "auth": [
+        "ApiKey"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/me",
+      "operationId": "getMe",
+      "auth": [
+        "ApiKey"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/v1/keys",
+      "operationId": "createApiKey",
+      "auth": [
+        "ApiKey"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/keys",
+      "operationId": "listApiKeys",
+      "auth": [
+        "ApiKey"
+      ]
+    },
+    {
+      "method": "DELETE",
+      "path": "/v1/keys/{id}",
+      "operationId": "revokeApiKey",
+      "auth": [
+        "ApiKey"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/usage",
+      "operationId": "getUsage",
+      "auth": [
+        "ApiKey"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/usage/export",
+      "operationId": "exportUsage",
+      "auth": [
+        "ApiKey"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/plans",
+      "operationId": "listPlans",
+      "auth": [
+        "ApiKey"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/subscription",
+      "operationId": "getSubscription",
+      "auth": [
+        "ApiKey"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/v1/payment-intents",
+      "operationId": "createPaymentIntent",
+      "auth": [
+        "ApiKey"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/payment-intents/{id}",
+      "operationId": "getPaymentIntent",
+      "auth": [
+        "ApiKey"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/v1/payment-intents/{id}/verify",
+      "operationId": "verifyPaymentIntent",
+      "auth": [
+        "ApiKey"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/v1/payment-intents/{id}/cancel",
+      "operationId": "cancelPaymentIntent",
+      "auth": [
+        "ApiKey"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/receipts/{id}",
+      "operationId": "getReceipt",
+      "auth": [
+        "ApiKey"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/receipts/{id}/deliveries",
+      "operationId": "listReceiptDeliveries",
+      "auth": [
+        "ApiKey"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/event-log",
+      "operationId": "listEventLog",
+      "auth": [
+        "ApiKey"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/event-log/{id}",
+      "operationId": "getEventLogEntry",
+      "auth": [
+        "ApiKey"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/event-types",
+      "operationId": "listEventTypes",
+      "auth": []
+    },
+    {
+      "method": "POST",
+      "path": "/v1/webhooks",
+      "operationId": "createWebhook",
+      "auth": [
+        "ApiKey"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/webhooks",
+      "operationId": "listWebhooks",
+      "auth": [
+        "ApiKey"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/webhooks/{id}",
+      "operationId": "getWebhook",
+      "auth": [
+        "ApiKey"
+      ]
+    },
+    {
+      "method": "DELETE",
+      "path": "/v1/webhooks/{id}",
+      "operationId": "deleteWebhook",
+      "auth": [
+        "ApiKey"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/v1/webhooks/{id}/rotate-secret",
+      "operationId": "rotateWebhookSecret",
+      "auth": [
+        "ApiKey"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/webhooks/{id}/deliveries",
+      "operationId": "listWebhookDeliveries",
+      "auth": [
+        "ApiKey"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/v1/webhooks/{id}/test",
+      "operationId": "testWebhook",
+      "auth": [
+        "ApiKey"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/connectors/payment/standard",
+      "operationId": "getPaymentConnectorStandard",
+      "auth": []
+    },
+    {
+      "method": "POST",
+      "path": "/v1/connectors/payment/manifests/validate",
+      "operationId": "validateAdapterManifest",
+      "auth": []
+    }
+  ]
+}
