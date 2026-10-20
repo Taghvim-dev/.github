@@ -5,46 +5,42 @@
 ### زیرساخت برنامه‌پذیر زمان برای محصولات ایرانی
 **Build with time. Not around it.**
 
-تقویم شمسی، میلادی و قمری، روزهای کاری، تعطیلات، سررسید، زمان‌بندی، رزرو و اجرای زمان‌دار — با یک مدل زمانی هماهنگ.
+قابلیت‌های تقویم شمسی، میلادی و قمری، تعطیلات، روزهای کاری، سررسید، زمان‌بندی و رزرو؛ در قالب رابط‌های نسخه‌دار.
 
-[وب‌سایت](https://taghvim.dev/) · [مرجع API](https://taghvim.dev/#api-explorer) · [آزمایشگاه تاریخ](https://taghvim.dev/#engine) · [شروع رایگان / دسترسی زودهنگام](https://taghvim.dev/#start)
+[وب‌سایت](https://taghvim.dev/) · [مرجع API](https://taghvim.dev/#api-explorer) · [آزمایشگاه تاریخ](https://taghvim.dev/#playground) · [درخواست دسترسی زودهنگام](https://taghvim.dev/#access)
 
 </div>
 
 ## چه مسئله‌ای را حل می‌کنیم؟
-
-محاسبهٔ تاریخ فقط تبدیل یک روز نیست؛ رویدادهای تکرارشونده، منطقهٔ زمانی، روز کاری، تعطیلی، ضرب‌الاجل، رزرو و یادآوری باید در همهٔ بخش‌های محصول **رفتار سازگار و قابل‌توضیح** داشته باشند.
+از تبدیل تاریخ و بررسی روز کاری تا زمان‌بندی و محاسبهٔ سررسید، یک تعریف سازگار از زمان به محصولات مختلف کمک می‌کند.
 
 ```mermaid
 flowchart TB
-    A["محصول شما"] --> B{"یک مدل واحد زمان"}
-    B --> C["تقویم و تبدیل تاریخ"]
-    B --> D["تعطیلات و روزهای کاری"]
+    A["برنامه یا سازمان"] --> B["رابط تقویم.dev"]
+    B --> C["تبدیل تاریخ"]
+    B --> D["روز کاری و تعطیلات"]
     B --> E["زمان‌بندی و رزرو"]
-    B --> F["سررسید و یادآوری"]
-    B --> G["رویداد و اجرای زمان‌دار"]
-    C --> H["نتیجهٔ قابل‌استفاده"]
-    D --> H
-    E --> H
-    F --> H
-    G --> H
+    B --> F["سررسید و رویداد"]
+    C --> G["پاسخ نسخه‌دار"]
+    D --> G
+    E --> G
+    F --> G
 ```
 
-## برای چه کسانی؟
+## شروع برای توسعه‌دهندگان
+- [راهنمای شروع و وضعیت دسترسی](../docs/DEVELOPER-ONBOARDING.md)
+- [Quickstart برای API](../docs/API-QUICKSTART.md)
+- [نمونهٔ JavaScript](../examples/javascript/convert-date.mjs) و [Python](../examples/python/convert_date.py)
+- [Cookbooks](../docs/COOKBOOKS.md) · [نقشهٔ قابلیت‌ها](../docs/CAPABILITY-MAP.md)
+- [پشتیبانی](../SUPPORT.md) · [امنیت](../SECURITY.md) · [سیاست IP/OSS](../IP-AND-OSS.md)
 
-توسعه‌دهندگان نرم‌افزار، تیم‌های محصول، کسب‌وکارهای مالی، خدمات درمانی، منابع انسانی، حقوقی و عملیات سازمانی؛ هرجا که تصمیم‌ها و فرآیندها به تقویم دقیق وابسته‌اند.
+**وضعیت:** Early Access. ابزارهای آزمایشی وب‌سایت ممکن است در مرورگر اجرا شوند. دسترسی واقعی به API و کلید آزمایشی نیازمند دعوت و فعال‌سازی است؛ **صدور عمومی خودکار کلید هنوز تأیید نشده است**.
 
-## رابط‌ها و قابلیت‌ها
-
-API نسخه‌دار، ابزارهای توسعه‌دهنده، ویجت‌های آماده و رابط‌های عامل‌های هوشمند؛ قابلیت‌های مختلف به‌صورت تدریجی عرضه می‌شوند. **وضعیت عمومی کنونی: دسترسی زودهنگام.** نمایش نمونه در وب‌سایت به معنای فعال‌بودن همان قابلیت برای همهٔ کاربران نیست.
-
-- [مسیر کاربر و دیاگرام‌های محصول](../docs/PRODUCT-JOURNEY.md)
-- [نقشهٔ قابلیت‌ها](../docs/CAPABILITY-MAP.md)
-- [پشتیبانی](../SUPPORT.md) · [گزارش محرمانهٔ امنیتی](../SECURITY.md)
-- [سیاست مالکیت فکری و متن‌باز](../IP-AND-OSS.md)
+## برای چه محصولاتی؟
+نرم‌افزارهای سازمانی، تجارت و خدمات، مالی، درمان، لجستیک، حقوق و منابع انسانی. پشتیبانی کامل از زنجیره‌های مستقل B2B2B2C یک **هدف محصول** است، نه ادعای پیاده‌سازی کامل فعلی.
 
 ---
 
-**English:** Taghvim.dev provides programmable time capabilities for Iranian products, from calendars and business days to deadlines, bookings and scheduled operations. **Early access:** request an invitation on [taghvim.dev](https://taghvim.dev/).
+**English:** Taghvim.dev offers programmable calendar and time capabilities. [Request early access](https://taghvim.dev/#access), then explore [developer documentation](../docs/API-QUICKSTART.md).
 
-© 2026 Taghvim.dev project authors and respective rights holders. Trademarks and product materials are subject to the [IP/OSS policy](../IP-AND-OSS.md).
+Public developer documentation and examples in this repository: Apache-2.0. Trademarks reserved; see [NOTICE](../NOTICE).

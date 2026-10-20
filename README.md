@@ -1,13 +1,18 @@
-# Taghvim.dev — Organization Community Hub
+# Taghvim.dev — Open Developer Resources
 
-The public-facing organization profile is at [profile/README.md](profile/README.md).
+Public organization profile: [profile/README.md](profile/README.md).
 
+This repository contains public-facing examples, guides, and product-level diagrams. **Early access, not general availability.** The private production runtime is not published here.
+
+## Start here
+- [Developer onboarding](docs/DEVELOPER-ONBOARDING.md)
+- [Quickstart: API](docs/API-QUICKSTART.md)
+- [JavaScript example](examples/javascript/convert-date.mjs)
+- [Python example](examples/python/convert_date.py)
+- [Cookbooks](docs/COOKBOOKS.md)
 - [Product journey](docs/PRODUCT-JOURNEY.md)
-- [Capabilities and product-level diagrams](docs/CAPABILITY-MAP.md)
-- [IP and open-source policy](IP-AND-OSS.md)
-- [Security reporting](SECURITY.md)
-- [Support](SUPPORT.md)
-- [Contributing](CONTRIBUTING.md)
-- [Community conduct](CODE_OF_CONDUCT.md)
+- [Capability map](docs/CAPABILITY-MAP.md)
+- [B2B2B2C roadmap and capability boundaries](docs/B2B2B2C.md)
+- [Security](SECURITY.md), [support](SUPPORT.md), [IP and OSS](IP-AND-OSS.md)
 
-This repository contains **public-facing community and product documentation only**. Product implementation and operational details are not published here. Taghvim.dev is currently in **early access**; these documents do not certify general production availability.
+**License:** Apache-2.0 for the original public material in this repository. Product marks are reserved. Nothing here automatically relicenses the private engine or third-party works.
