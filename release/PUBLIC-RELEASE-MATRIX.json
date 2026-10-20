@@ -44,15 +44,15 @@
   "source_verification": {
     "date": "2026-10-20",
     "phase": "source-integrated-not-deployed",
-    "engine_main_merge_sha": "2339d96f08ee55ab5fb0a42639babaeebf97a07b",
+    "engine_main_merge_sha": "c1e501c48a8ad8c2c910b130157e006d34492156",
     "engine_offline_ci_run": "39439068261",
     "engine_live_gate_ci_run": "39439068311",
-    "landing_main_merge_sha": "c3a5b4833686ef881d2eeed46ab2b69c68ba4af4",
+    "landing_main_merge_sha": "4064a7d6ea27037bd4923aa7f1128aeb1e4714b4",
     "landing_integration_merge_sha": "793753e489b4a8a90065eb0c016b6ec06fdb6f91",
     "landing_integration_ci_run": "39438283229",
     "landing_rtl_ci_run": "39438283155",
     "landing_two_phase_release_ci_run": "39440013499",
-    "note": "Source-level coordinated release candidate tested; live API/Landing deployed 2.0.0 observed. Source parity does not certify actual migration, isolated tenant onboarding, billing, durable execution recovery or GA.",
+    "note": "Combined test, dry-run, date freshness and immutable run evidence are source-verified. Deployment is NOT attested. Cloudflare credentials, protected production environment, D1 migrations and live E2E can only be verified in authorized GitHub dispatch/Cloudflare with real receipts; do not claim GA.",
     "engine_node24_action_test": "39441189301",
     "landing_node24_action_test": "39441203096",
     "landing_node24_rtl_test": "39441203134",
@@ -76,6 +76,24 @@
       "matching_git_blobs": 11,
       "contract_version": "2.1.0",
       "contract_git_blob": "c0d163f8e2d883125fc3778b17842bd19fe3f6bf"
+    },
+    "browser_freshness_main_sha": "33cc1f86995812780b72ac70d5852a6bd4c3ed25",
+    "browser_freshness_pr_ci": "39449793285",
+    "browser_freshness_rtl_ci": "39449792450",
+    "release_checkpoint_action_sha": "23ccd9db8d35919915c2cdc697fafe0f76dc9160",
+    "release_checkpoint_action_validation_run": "39450872277",
+    "engine_protected_release_gate_ci": "39450667511",
+    "landing_protected_release_gate_ci": "39450678605",
+    "production_release_checks": {
+      "durable_checkpoint": "SOURCE-VERIFIED",
+      "manual_approval": "UNVERIFIED",
+      "protected_environment": "UNVERIFIED",
+      "runtime_cloudflare_bindings": "UNVERIFIED",
+      "remote_migration_receipts": "MISSING",
+      "deployed_2_1_contract": "UNVERIFIED",
+      "live_signup_and_tenant_isolation": "MISSING",
+      "live_meter_and_billing_recovery": "MISSING",
+      "legal_and_accessibility_signoff": "MISSING"
     }
   }
 }
