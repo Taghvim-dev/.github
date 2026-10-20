@@ -44,15 +44,15 @@
   "source_verification": {
     "date": "2026-10-20",
     "phase": "source-integrated-not-deployed",
-    "engine_main_merge_sha": "8dfbe327fbc47c13a061079c322a031a7875f1bf",
+    "engine_main_merge_sha": "68fe3c603897a6fd1de0151459ff5760f48d17ec",
     "engine_offline_ci_run": "39439068261",
     "engine_live_gate_ci_run": "39439068311",
-    "landing_main_merge_sha": "b1c6c825cd5dd4392bc83c6fb81e1de16bff181a",
+    "landing_main_merge_sha": "6643d46135a7cacf5baa9a4698ec710d84eccf1e",
     "landing_integration_merge_sha": "793753e489b4a8a90065eb0c016b6ec06fdb6f91",
     "landing_integration_ci_run": "39438283229",
     "landing_rtl_ci_run": "39438283155",
     "landing_two_phase_release_ci_run": "39440013499",
-    "note": "All currently merged Engine/Landing release workflows use one hash-chained checkpoint action and verified applied-D1 ledger action; independent private issue reporters persist attempt receipts only upon owner dispatch. Source tests passed. No Cloudflare production execution was observed, so no GA attestation.",
+    "note": "Source CI green including release environment hard gate, migrations applied-ledger verifier and durable issue checkpoint. Live production remains API 2.0.0, current Engine source 2.1.0; no owner-approved protected deploy or Cloudflare E2E evidence recorded.",
     "engine_node24_action_test": "39441189301",
     "landing_node24_action_test": "39441203096",
     "landing_node24_rtl_test": "39441203134",
@@ -86,8 +86,8 @@
     "landing_protected_release_gate_ci": "39450678605",
     "production_release_checks": {
       "durable_checkpoint": "SOURCE-VERIFIED",
-      "manual_approval": "UNVERIFIED",
-      "protected_environment": "UNVERIFIED",
+      "manual_approval": "NOT_VERIFIED",
+      "protected_environment": "SOURCE_GATED_REMOTE_UNVERIFIED",
       "runtime_cloudflare_bindings": "UNVERIFIED",
       "remote_migration_receipts": "MISSING",
       "deployed_2_1_contract": "UNVERIFIED",
@@ -131,6 +131,17 @@
       "stage_count": 7,
       "remote_issue_ledger": "independent post-run least-privilege reporter, not an authorization",
       "actual_remote_execution": "NOT DISPATCHED"
+    },
+    "environment_admission": {
+      "action_sha": "ed645e61a13d5273756a0a37b2b6a67b081a4eb8",
+      "test_run": "39482582126",
+      "engine_pr_run": "39482755439",
+      "landing_pr_run": "39482763532",
+      "engine_main": "68fe3c603897a6fd1de0151459ff5760f48d17ec",
+      "landing_main": "6643d46135a7cacf5baa9a4698ec710d84eccf1e",
+      "requirement": "Independent required GitHub production reviewers; prevent_self_review=true; only protected/main branch; fail closed before remote D1 or deploy",
+      "live_policy_verified": false,
+      "note": "GitHub repository environment settings cannot be read/managed by current connector. Actual deploy job independently verifies via GitHub API; no production action authorized yet."
     }
   }
 }
