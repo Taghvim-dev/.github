@@ -34,19 +34,19 @@ jobs:
       - uses: actions/checkout@v5
         with:
           repository: Taghvim-dev/SDK
-          ref: 5d0592bef66f2a04f7c214f002a8b1f3e1de9965
+          ref: b0d9020a312d11a9085a86cca8e758694eb1c160
           path: SDK
           persist-credentials: false
       - uses: actions/checkout@v5
         with:
           repository: Taghvim-dev/CLI
-          ref: 09e6d82fcc9d9fb6046d4a37c14a5ca2d7aab9b2
+          ref: b5a627a13a7c46c3a56eb2d15f484ffae4ba4bb3
           path: CLI
           persist-credentials: false
       - uses: actions/checkout@v5
         with:
           repository: Taghvim-dev/cookbooks
-          ref: 46ce4d0bbd7e887ed4c367e34b30a34609f5d16c
+          ref: 9dc43e779fb6a1a4143cc5b5534ac5bad2cfff0f
           path: cookbooks
           persist-credentials: false
       - uses: actions/setup-node@v7.1.0
