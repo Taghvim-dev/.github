@@ -89,7 +89,7 @@ export async function persistIssue(event,{repository,issue,token,request=fetch})
   }
   const existing=all.filter(x=>x.body.includes(marker(event)));
   if (existing.length) {
-    if (existing.length!==1 || parsedEvent(existing[0].body)?.checkpoint_hash!==event.checkpoint_hash)
+    if (existing.length!==1 || existing[0].body!==commentFor(event))
       throw Error("conflicting existing durable release checkpoint");
     return {status:"already_recorded",comment_id:existing[0].id};
   }
