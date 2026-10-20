@@ -1,20 +1,13 @@
-<div align="center" dir="rtl" lang="fa">
-
-# تقویم.dev™ | Taghvim.dev
-
-### زیرساخت برنامه‌پذیر زمان برای محصولات ایرانی
-**Build with time. Not around it.**
-
-قابلیت‌های تقویم شمسی، میلادی و قمری، روزهای کاری، تعطیلات، سررسید، زمان‌بندی و رزرو، با یک مدل هماهنگ و رابط‌های نسخه‌دار.
-
-[وب‌سایت](https://taghvim.dev/) · [مرجع API](https://taghvim.dev/#api-explorer) · [آزمایشگاه تاریخ](https://taghvim.dev/#playground) · [درخواست دسترسی زودهنگام](https://taghvim.dev/#access)
-
-</div>
-
-<div dir="rtl" lang="fa">
+<h1 align="center" dir="rtl" lang="fa">تقویم.dev™ | Taghvim.dev</h1>
+<p align="center" dir="rtl" lang="fa"><strong>زیرساخت برنامه‌پذیر زمان برای محصولات ایرانی</strong></p>
+<p align="center" dir="ltr" lang="en"><strong>Build with time. Not around it.</strong></p>
+<p align="center" dir="rtl" lang="fa">تقویم شمسی، میلادی و قمری، روزهای کاری، تعطیلات، سررسید، زمان‌بندی و رزرو؛ همه با یک مدل زمانی هماهنگ و رابط‌های نسخه‌دار.</p>
+<p align="center" dir="rtl" lang="fa">
+<a href="https://taghvim.dev/">وب‌سایت</a> · <a href="https://taghvim.dev/#api-explorer">مرجع API</a> · <a href="https://taghvim.dev/#playground">آزمایشگاه تاریخ</a> · <a href="https://taghvim.dev/#access">دسترسی زودهنگام</a>
+</p>
 
 ## چه مسئله‌ای را حل می‌کنیم؟
-از تبدیل تاریخ و محاسبهٔ روزهای کاری تا برنامه‌ریزی و سررسید، یک تعریف سازگار از زمان در تمام رابط‌های محصول به کار می‌رود.
+<p dir="rtl" lang="fa">از تبدیل تاریخ و محاسبهٔ روزهای کاری تا برنامه‌ریزی و سررسید، همهٔ رابط‌های محصول بر یک تعریف سازگار از زمان تکیه می‌کنند.</p>
 
 ```mermaid
 flowchart TB
@@ -33,15 +26,14 @@ flowchart TB
 - [راهنمای شروع و وضعیت دسترسی](../docs/DEVELOPER-ONBOARDING.md)
 - [Quickstart برای API](../docs/API-QUICKSTART.md)
 - [نمونهٔ JavaScript](../examples/javascript/convert-date.mjs) و [Python](../examples/python/convert_date.py)
-- [SDKهای آزمایشی JavaScript و Python](../sdk/README.md) · [Cookbooks](../cookbooks/README.md) · [نقشهٔ قابلیت‌ها](../docs/CAPABILITY-MAP.md)
+- [SDKهای آزمایشی JavaScript و Python](../sdk/README.md) · [Cookbookهای کاربردی](../cookbooks/README.md)
+- [نمونه‌های کاربردی API](../docs/COOKBOOKS.md) · [نقشهٔ قابلیت‌ها](../docs/CAPABILITY-MAP.md)
 - [پشتیبانی](../SUPPORT.md) · [امنیت](../SECURITY.md) · [سیاست IP/OSS](../IP-AND-OSS.md)
 
-**وضعیت: دسترسی زودهنگام.** نمونه‌های صفحه لزوماً عملیات واقعی حساب کاربری نیستند. دسترسی آزمایشی به API پس از دعوت و فعال‌سازی امکان‌پذیر است؛ **ثبت‌نام در فهرست انتظار به‌معنای صدور خودکار کلید نیست**.
+<p dir="rtl" lang="fa"><strong>وضعیت: دسترسی زودهنگام.</strong> نمونه‌های تعاملی صفحه لزوماً عملیات واقعی حساب کاربری نیستند. دسترسی آزمایشی به API فقط پس از دعوت و فعال‌سازی فراهم می‌شود. <strong>عضویت در فهرست انتظار به‌معنای صدور خودکار کلید نیست.</strong></p>
 
 ## برای چه محصولاتی؟
-نرم‌افزارهای سازمانی، تجارت و خدمات، مالی، درمان، لجستیک، حقوق و منابع انسانی. پشتیبانی کامل از زنجیره‌های مستقل B2B2B2C یک **هدف محصول** است، نه ادعای پیاده‌سازی کامل فعلی.
-
-</div>
+<p dir="rtl" lang="fa">نرم‌افزارهای سازمانی، تجارت و خدمات، مالی، درمان، لجستیک، حقوق و منابع انسانی. پشتیبانی از زنجیرهٔ چندسطحی B2B2B2C در برنامهٔ محصول قرار دارد؛ این متن ادعای تکمیل آن در نسخهٔ فعلی نیست.</p>
 
 ---
 
