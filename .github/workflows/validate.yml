@@ -41,5 +41,12 @@ jobs:
           node --check examples/javascript/convert-date.mjs
           node --check examples/javascript/client.mjs
           node --test examples/javascript/client.test.mjs
+      - name: Versioned public SDK and cookbook conformance
+        run: |
+          node --check sdk/javascript/index.js
+          node --test sdk/javascript/test/*.test.mjs
+          for file in cookbooks/*.mjs; do node --check "$file"; done
+          PYTHONPATH=sdk/python python -m unittest discover -s sdk/python/tests -v
+          node scripts/check-sdk-release.mjs
       - name: Python reference clients
         run: python -m compileall -q examples/python
