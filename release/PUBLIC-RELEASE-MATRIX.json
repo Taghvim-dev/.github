@@ -44,20 +44,38 @@
   "source_verification": {
     "date": "2026-10-20",
     "phase": "source-integrated-not-deployed",
-    "engine_main_merge_sha": "01625fb064b269c1b88843c3e572d0833be2bdcc",
+    "engine_main_merge_sha": "2339d96f08ee55ab5fb0a42639babaeebf97a07b",
     "engine_offline_ci_run": "39439068261",
     "engine_live_gate_ci_run": "39439068311",
-    "landing_main_merge_sha": "42becc1758e4809dd8612ab44d53b7f1749a2e34",
+    "landing_main_merge_sha": "c3a5b4833686ef881d2eeed46ab2b69c68ba4af4",
     "landing_integration_merge_sha": "793753e489b4a8a90065eb0c016b6ec06fdb6f91",
     "landing_integration_ci_run": "39438283229",
     "landing_rtl_ci_run": "39438283155",
     "landing_two_phase_release_ci_run": "39440013499",
-    "note": "Verified source-level candidate and approvals logic; deployed API 2.0.0 and published Landing 2.0.0 remain observed drift until an authorized release. CI runs validate PR heads, not post-deploy state.",
+    "note": "Source-level coordinated release candidate tested; live API/Landing deployed 2.0.0 observed. Source parity does not certify actual migration, isolated tenant onboarding, billing, durable execution recovery or GA.",
     "engine_node24_action_test": "39441189301",
     "landing_node24_action_test": "39441203096",
     "landing_node24_rtl_test": "39441203134",
     "coordinated_public_ci_run": "39441050643",
     "node_setup": "actions/setup-node@v7.1.0",
-    "warning_regression": "No DEP0040, no GitHub warning/error annotations in all six verified PR-head logs; does not certify deployed production"
+    "warning_regression": "No DEP0040, no GitHub warning/error annotations in all six verified PR-head logs; does not certify deployed production",
+    "engine_security_ci_run": "39443163579",
+    "engine_security": {
+      "npm_audit_high": 0,
+      "ubuntu_24_tests": "81/81",
+      "ubuntu_26_tests": "81/81",
+      "wrangler_dry_run": "PASS",
+      "miniflare_version": "5.20261019.0-beta",
+      "wrangler_version": "4.151.2",
+      "scope": "source-level testing only"
+    },
+    "landing_audited_engine_repinned_ci_run": "39443673200",
+    "landing_audited_engine_rtl_ci_run": "39443673162",
+    "landing_vendored_engine_file_parity": {
+      "verified_files": 11,
+      "matching_git_blobs": 11,
+      "contract_version": "2.1.0",
+      "contract_git_blob": "c0d163f8e2d883125fc3778b17842bd19fe3f6bf"
+    }
   }
 }
