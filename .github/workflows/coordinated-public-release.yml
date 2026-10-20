@@ -63,6 +63,8 @@ jobs:
           python-version: "3.11"
       - name: Verify all pinned public manifests and capture immutable source evidence
         run: node scripts/check-public-parity.mjs --evidence
+      - name: Unified public Persian editorial and reference audit
+        run: node scripts/check-federated-persian.mjs
       - name: Exercise SDK JavaScript and Python clients
         run: |
           cd SDK
