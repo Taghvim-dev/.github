@@ -1,49 +1,33 @@
 name: Durable release checkpoint
-description: Append-only, fail-closed evidence checkpoint for coordinated Taghvim production release; no secrets or deployment
+description: Chain-hashed monotonic SHA-leased release evidence, published to GitHub before remote writes
 inputs:
   stage:
-    description: Monotonic release phase
+    description: A consecutive release phase, never inferred or skipped
     required: true
   component:
     description: Engine or Landing
     required: true
+  ledger-enabled:
+    description: Require remote issue-ledger persistence (false only for isolated unit tests)
+    default: "false"
+    required: true
+  ledger-issue:
+    description: Existing repository issue number owning the release ledger
+    required: false
+  ledger-token:
+    description: Scoped GitHub token with issues:write; available only to protected release jobs
+    required: false
 runs:
   using: composite
   steps:
-    - name: Persist verified release stage
+    - name: Append SHA-bound checkpoint before the next remote side effect
       shell: bash
       env:
         TAGHVIM_STAGE: ${{ inputs.stage }}
         TAGHVIM_COMPONENT: ${{ inputs.component }}
+        TAGHVIM_LEDGER_PERSIST: ${{ inputs.ledger-enabled }}
+        TAGHVIM_LEDGER_ISSUE: ${{ inputs.ledger-issue }}
+        TAGHVIM_LEDGER_TOKEN: ${{ inputs.ledger-token }}
       run: |
         set -euo pipefail
-        node --input-type=module <<'JS'
-        import {readFileSync, writeFileSync, renameSync, existsSync} from "node:fs";
-        const filename="release-evidence.json";
-        const stages=["authorized","checks_passed","migrations_started","migrations_applied",
-          "deploy_started","deployed","postdeploy_verified"];
-        const stage=process.env.TAGHVIM_STAGE;
-        const component=process.env.TAGHVIM_COMPONENT;
-        if(!stages.includes(stage)||!["engine","landing"].includes(component)) throw Error("Invalid stage/component");
-        const sha=process.env.GITHUB_SHA||"",run=process.env.GITHUB_RUN_ID||"";
-        if(!/^[0-9a-f]{40}$/.test(sha)||!/^\d+$/.test(run))throw Error("Missing immutable workflow identity");
-        const prior=existsSync(filename)?JSON.parse(readFileSync(filename,"utf8")):null;
-        if(prior&&(prior.engine_sha||prior.landing_sha)!==sha)throw Error("Checkpoint candidate SHA changed");
-        if(prior&&prior.workflow_run!==run)throw Error("Checkpoint run changed");
-        const entries=prior?.checkpoints||[];
-        const previous=entries.at(-1);
-        if(previous&&stages.indexOf(stage)<stages.indexOf(previous.stage))
-          throw Error("Release stage regression; read true infrastructure state before retry");
-        if(previous&&stages.indexOf(stage)>stages.indexOf(previous.stage)+1)
-          throw Error("Release evidence skipped a checkpoint");
-        if(!prior&&stage!=="authorized")throw Error("First checkpoint must be authorized");
-        if(!previous||previous.stage!==stage)entries.push({stage,at:new Date().toISOString()});
-        const result={schema_version:1,component,workflow_run:run,run_attempt:process.env.GITHUB_RUN_ATTEMPT||"1",
-          [component+"_sha"]:sha,phase:stage,checkpoints:entries,ga_approved:false,
-          declared_state:stage==="postdeploy_verified"?"CONTRACT_OBSERVED_NOT_GA":"RELEASE_IN_PROGRESS",
-          warning:"Workflow phase records are not independently verified remote migration receipts"};
-        const tmp=filename+".tmp";
-        writeFileSync(tmp,JSON.stringify(result,null,2)+"\n",{mode:0o600});
-        renameSync(tmp,filename);
-        console.log("RELEASE_CHECKPOINT",component,stage,"run",run,"sha",sha);
-        JS
+        node "$GITHUB_ACTION_PATH/record.mjs"
