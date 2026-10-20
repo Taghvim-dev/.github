@@ -12,6 +12,7 @@
 - [دیاگرام‌های محصول و مسیر کاربر](docs/PRODUCT-JOURNEY.md)
 - [قابلیت‌ها](docs/CAPABILITY-MAP.md) و [زنجیرهٔ B2B2B2C](docs/B2B2B2C.md)
 - [چارچوب یکپارچگی انتشار و استاندارد زبان فارسی](docs/EDITORIAL-AND-RELEASE-GATES.md)
+- [راهنمای فارسی‌نویسی و راست‌به‌چپ](docs/PERSIAN-STYLE-GUIDE.md)
 - [امنیت](SECURITY.md) · [پشتیبانی](SUPPORT.md) · [IP/OSS](IP-AND-OSS.md)
 
 **مجوز محتوا و نمونه‌های اصلی عمومی: Apache-2.0.** استفاده از علائم تجاری، اطلاعات محرمانه یا کدهای دارای مجوز مستقل تابع حقوق مربوط است.
