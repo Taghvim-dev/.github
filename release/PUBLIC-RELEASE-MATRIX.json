@@ -10,18 +10,19 @@
   "repositories": [
     {
       "name": "SDK",
-      "commit": "10e667a456fc89f0edc4e8510df4c0d9cec53005",
-      "ci_run": "39431164831"
+      "commit": "5d0592bef66f2a04f7c214f002a8b1f3e1de9965",
+      "ci_run": "39437487298"
     },
     {
       "name": "CLI",
-      "commit": "c8e3e736dd988404a6666a6b398faf1df941d36d",
-      "ci_run": "39431176951"
+      "commit": "09e6d82fcc9d9fb6046d4a37c14a5ca2d7aab9b2",
+      "ci_run": "39437339615"
     },
     {
       "name": "cookbooks",
-      "commit": "d8be0eee27294d4f9aedfe8cb1ca2927dc8d5f11",
-      "ci_run": "39431416903"
+      "commit": "46ce4d0bbd7e887ed4c367e34b30a34609f5d16c",
+      "ci_run": null,
+      "prior_verified_pr_run": "39437400603"
     }
   ],
   "deployment_observation": {
@@ -40,5 +41,18 @@
     "approved_migrations": false,
     "manual_production_approval": false
   },
-  "owner_action": "Do not declare GA or enable live billing until all prerequisites have evidence and pass their gates."
+  "owner_action": "Do not declare GA or enable live billing until all prerequisites have evidence and pass their gates.",
+  "source_verification": {
+    "date": "2026-10-20",
+    "phase": "source-integrated-not-deployed",
+    "engine_main_merge_sha": "6b4c0512287a4c33317859e23685452f18c48baf",
+    "engine_offline_ci_run": "39439068261",
+    "engine_live_gate_ci_run": "39439068311",
+    "landing_main_merge_sha": "bc0175cc5f903b5c873def157cb6755a12a8bb70",
+    "landing_integration_merge_sha": "793753e489b4a8a90065eb0c016b6ec06fdb6f91",
+    "landing_integration_ci_run": "39438283229",
+    "landing_rtl_ci_run": "39438283155",
+    "landing_two_phase_release_ci_run": "39440013499",
+    "note": "Verified source-level candidate and approvals logic; deployed API 2.0.0 and published Landing 2.0.0 remain observed drift until an authorized release. CI runs validate PR heads, not post-deploy state."
+  }
 }
