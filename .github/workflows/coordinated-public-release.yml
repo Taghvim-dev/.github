@@ -7,6 +7,7 @@ on:
       - ".github/workflows/coordinated-public-release.yml"
   push:
     branches: [main]
+    tags: ["public-release-*"]
     paths:
       - "release/PUBLIC-RELEASE-MATRIX.json"
       - "scripts/check-public-release.mjs"
@@ -56,3 +57,32 @@ jobs:
       - name: Require full live website ↔ API contract parity on manual request
         if: github.event_name == 'workflow_dispatch' && inputs.verify_live == true
         run: node scripts/check-public-release.mjs --live
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Verify all pinned public manifests and capture immutable source evidence
+        run: node scripts/check-public-parity.mjs --evidence
+      - name: Exercise SDK JavaScript and Python clients
+        run: |
+          cd SDK
+          node scripts/check-release.mjs
+          node --test javascript/test/*.test.mjs
+          node --test examples/javascript/client.test.mjs
+          PYTHONPATH=python python -m unittest discover -s python/tests -v
+      - name: Exercise CLI including offline and key-scope safety tests
+        run: |
+          cd CLI
+          npm test
+      - name: Exercise Cookbooks with the exact released SDK
+        run: |
+          ln -s ../SDK cookbooks/SDK
+          cd cookbooks
+          npm install --no-save --ignore-scripts --no-audit --no-fund ../SDK/javascript
+          npm test
+      - name: Retain public release evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: taghvim-public-release-evidence
+          path: public-release-evidence.json
+          retention-days: 30
