@@ -44,15 +44,15 @@
   "source_verification": {
     "date": "2026-10-20",
     "phase": "source-integrated-not-deployed",
-    "engine_main_merge_sha": "3f45d4b8acbfe6039cf1451efc4c89416df2683a",
+    "engine_main_merge_sha": "8dfbe327fbc47c13a061079c322a031a7875f1bf",
     "engine_offline_ci_run": "39439068261",
     "engine_live_gate_ci_run": "39439068311",
-    "landing_main_merge_sha": "1d55ba10750fdd773a4a095823816a4d44d581a4",
+    "landing_main_merge_sha": "b1c6c825cd5dd4392bc83c6fb81e1de16bff181a",
     "landing_integration_merge_sha": "793753e489b4a8a90065eb0c016b6ec06fdb6f91",
     "landing_integration_ci_run": "39438283229",
     "landing_rtl_ci_run": "39438283155",
     "landing_two_phase_release_ci_run": "39440013499",
-    "note": "Shared version-pinned applied-D1 verification and private issue-ledger source checks passed, with code, tests, and evidence registry linked. No production Workflow dispatch or Cloudflare remote evidence was observed; deployed versions, tenant/auth/meter/billing E2E and GA still blocked.",
+    "note": "All currently merged Engine/Landing release workflows use one hash-chained checkpoint action and verified applied-D1 ledger action; independent private issue reporters persist attempt receipts only upon owner dispatch. Source tests passed. No Cloudflare production execution was observed, so no GA attestation.",
     "engine_node24_action_test": "39441189301",
     "landing_node24_action_test": "39441203096",
     "landing_node24_rtl_test": "39441203134",
@@ -80,7 +80,7 @@
     "browser_freshness_main_sha": "33cc1f86995812780b72ac70d5852a6bd4c3ed25",
     "browser_freshness_pr_ci": "39449793285",
     "browser_freshness_rtl_ci": "39449792450",
-    "release_checkpoint_action_sha": "23ccd9db8d35919915c2cdc697fafe0f76dc9160",
+    "release_checkpoint_action_sha": "08d5979c1ce5c681795df9ec38854f3e8b1ddf60",
     "release_checkpoint_action_validation_run": "39450872277",
     "engine_protected_release_gate_ci": "39450667511",
     "landing_protected_release_gate_ci": "39450678605",
@@ -119,6 +119,18 @@
       "landing_issue": "Taghvim-dev/landing#13",
       "actual_production_receipt": "MISSING",
       "status": "SOURCE_TESTED; NOT DISPATCHED"
+    },
+    "cryptographic_checkpoint_chain": {
+      "action_sha": "08d5979c1ce5c681795df9ec38854f3e8b1ddf60",
+      "action_ci_run": "39455652086",
+      "engine_release_ci_run": "39459162015",
+      "landing_release_ci_run": "39459168565",
+      "engine_release_main_sha": "8dfbe327fbc47c13a061079c322a031a7875f1bf",
+      "landing_release_main_sha": "b1c6c825cd5dd4392bc83c6fb81e1de16bff181a",
+      "chain_algorithm": "SHA-256 monotonic stage transitions",
+      "stage_count": 7,
+      "remote_issue_ledger": "independent post-run least-privilege reporter, not an authorization",
+      "actual_remote_execution": "NOT DISPATCHED"
     }
   }
 }
