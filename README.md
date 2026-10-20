@@ -20,3 +20,13 @@
 ---
 
 **English:** Public Taghvim.dev developer resources and product-level guides. The product is in early access, not generally available; examples do not issue credentials or prove production readiness. Original public resources are licensed under Apache-2.0 unless separately noted.
+
+## Official developer tools
+
+- [SDK — JavaScript, TypeScript and Python](https://github.com/Taghvim-dev/SDK)
+- [CLI — command-line client](https://github.com/Taghvim-dev/CLI)
+- [Cookbooks — executable examples](https://github.com/Taghvim-dev/cookbooks)
+- [Public contract release registry](contracts/operation-index.json)
+- [Cross-repository release coordination](docs/PUBLIC-DEVELOPER-RELEASE.md)
+
+These are independently installable public projects under Apache-2.0. Every coordinated release verifies their contract and tests together; this organization repository is not a second copy of the SDK or Cookbooks.
