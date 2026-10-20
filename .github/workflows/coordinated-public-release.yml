@@ -28,28 +28,28 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 12
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           persist-credentials: false
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           repository: Taghvim-dev/SDK
-          ref: 10e667a456fc89f0edc4e8510df4c0d9cec53005
+          ref: 5d0592bef66f2a04f7c214f002a8b1f3e1de9965
           path: SDK
           persist-credentials: false
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           repository: Taghvim-dev/CLI
-          ref: c8e3e736dd988404a6666a6b398faf1df941d36d
+          ref: 09e6d82fcc9d9fb6046d4a37c14a5ca2d7aab9b2
           path: CLI
           persist-credentials: false
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           repository: Taghvim-dev/cookbooks
-          ref: d8be0eee27294d4f9aedfe8cb1ca2927dc8d5f11
+          ref: 46ce4d0bbd7e887ed4c367e34b30a34609f5d16c
           path: cookbooks
           persist-credentials: false
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: "22"
       - name: Validate cohesive public manifest and exact contract index
@@ -58,7 +58,7 @@ jobs:
         if: github.event_name == 'workflow_dispatch' && inputs.verify_live == true
         run: node scripts/check-public-release.mjs --live
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.11"
       - name: Verify all pinned public manifests and capture immutable source evidence
@@ -83,7 +83,8 @@ jobs:
           npm install --no-save --ignore-scripts --no-audit --no-fund ../SDK/javascript
           npm test
       - name: Retain public release evidence
-        uses: actions/upload-artifact@v4
+        if: always()
+        uses: actions/upload-artifact@v6
         with:
           name: taghvim-public-release-evidence
           path: public-release-evidence.json
