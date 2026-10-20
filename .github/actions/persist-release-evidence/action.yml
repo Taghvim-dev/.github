@@ -5,8 +5,12 @@ inputs:
     description: engine or landing; selects the existing PRIVATE release issue
     required: true
   result:
-    description: GitHub deploy job status (success, failure or cancelled)
+    description: GitHub production job status (success, failure, cancelled or skipped)
     required: true
+  sandbox_result:
+    description: GitHub sandbox job status (success, failure, cancelled or skipped)
+    required: false
+    default: unknown
 runs:
   using: composite
   steps:
@@ -16,6 +20,7 @@ runs:
         GITHUB_TOKEN: ${{ github.token }}
         COMPONENT: ${{ inputs.component }}
         JOB_RESULT: ${{ inputs.result }}
+        SANDBOX_RESULT: ${{ inputs.sandbox_result }}
         REGISTRY_SCRIPT: ${{ github.action_path }}/persist-release-evidence.mjs
       run: |
         set -euo pipefail
