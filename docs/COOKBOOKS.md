@@ -1,23 +1,43 @@
-# Taghvim.dev Cookbooks
+# Taghvim.dev cookbooks | مثال‌های کاربردی
 
-These are **API integration recipes and product guidance**, not assertions of universally active self-service access.
+The samples show the **planned public API contract**; they do not assert that self-service test access is available today. Never embed keys in shipped frontend code.
 
-## Calendar conversion
-Use `POST /v1/dates/convert` with a Jalali date string; rely on the returned canonical date, not local string parsing. See [Quickstart](API-QUICKSTART.md).
+## 1. Convert dates
 
-## Working-day deadlines
-Use `POST /v1/business-days/add` for calendar-aware offsets. The active holiday dataset, weekend profile and jurisdiction must be explicit for consequential deadlines. Re-evaluate dates when an officially announced holiday changes.
+```bash
+curl -X POST https://api.taghvim.dev/v1/dates/convert \
+  -H "Authorization: Bearer $TAGHVIM_TEST_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"date":"1405-07-15"}'
+```
 
-## Monthly usage and quotas
-Use `GET /v1/usage` with the **same tenant key** used for operations. Treat remaining quota and reset windows as authoritative; handle 429, `Retry-After` and `RateLimit` headers without retry storms. Compare usage with export and operations ledger if your account exposes them.
+## 2. Compute business days
 
-## Idempotent operations
-Supply a distinct `Idempotency-Key` for retriable state-changing operations that require one. Reuse the *same* key only for the same payload and route. Do not assume every read endpoint needs a key.
+```bash
+curl -X POST https://api.taghvim.dev/v1/business-days/add \
+  -H "Authorization: Bearer $TAGHVIM_TEST_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"date":"1405-07-15","days":3}'
+```
 
-## Test before live
-Create a separate test project and credentials when enabled. Verify account separation, application errors, revoked keys, quotas, callbacks, subscription status and recovery. No real customer payment details in test runs.
+## 3. Plan a recurring schedule
 
-## Distribution and delegated business integrations
-For multi-company platforms, do **not** forward one client's token to another company or silently co-mingle usage. Use explicit independently granted scope and tenant-aware metering only when the feature is implemented and verified.
+```bash
+curl -X POST https://api.taghvim.dev/v1/schedules/preview \
+  -H "Authorization: Bearer $TAGHVIM_TEST_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"rule":"last-business","from":"1405-07-01","count":6}'
+```
 
-[Developer onboarding](DEVELOPER-ONBOARDING.md) · [B2B2B2C capability boundary](B2B2B2C.md)
+## 4. Handle quota errors safely
+
+- Read HTTP status and `RateLimit` / `Retry-After` response headers.
+- Use the `Taghvim-Request-Id` when reporting a problem.
+- Avoid blind automatic retry for operations that cause effects.
+- Separate each customer's request scope and billing owner.
+
+## 5. Multi-party adoption
+
+A software provider can embed calendar features for business customers and their end users, but access grants and metering must remain separated per delegated customer. The current public documentation does **not** claim automated multi-layer billing or subtenant provisioning is deployed.
+
+[Developer quickstart](DEVELOPER-START.md) · [API lifecycle](API-LIFECYCLE.md)

@@ -1,24 +1,15 @@
-# B2B2B2C — intended distribution model
+# Multi-party distribution — B2B2B2C design target
 
-Taghvim.dev intends to serve software businesses (B), their client businesses (B), downstream distributors/merchants (B) and end consumers (C), including delegated agents.
+Taghvim.dev is designed to support **direct developers**, **technology resellers and partner platforms**, **downstream businesses**, and their **end users**. This is a target architecture, not proof that multi-level delegation and billing are fully deployed.
 
 ```mermaid
-flowchart LR
-    A["Platform / integrator"] --> B["Business / customer tenant"]
-    B --> C["Reseller / downstream business"]
-    C --> D["End user"]
-    A -. "Separate delegated authority" .-> C
+flowchart TB
+ T["Taghvim.dev governed API"] --> A["Software provider / integrator"]
+ A --> B["Partner platform / distributor"]
+ B --> C["Business customer"]
+ C --> D["End user / device / agent"]
 ```
 
-**Verified code boundary (2026-10-20):** the engine supports first-class tenant identity, test/live API keys, plans, quota/metering and tenant-isolated usage. Its current canonical database has a `tenants` table and keys linked directly to one tenant. It does **not** yet establish a full first-class parent/child/federated tenant graph, cross-tenant delegated authority and revenue-sharing ledger for arbitrary B2B2B2C depth.
+**Non-negotiables before general availability:** isolated tenant/subtenant identifiers; explicitly scoped delegated permissions; upstream and downstream meter attribution; no implicit inheritance of identity, data or keys; revoke at each boundary; signed traceable usage evidence; separate sandbox/live policies; clear service ownership.
 
-## Acceptance gates before calling it B2B2B2C-ready
-- Stable identities for all business/end-user actors, relationships and products.
-- Versioned delegation/grant/consent with revocation, isolation, scoped downstream key issuance.
-- Usage attribution at platform, customer tenant, downstream business and permitted end-user levels (privacy-minimized), without charging twice.
-- Distribution billing and settlement contracts, including cancellation, credits and refunds.
-- Marketplace/widget and API embed attribution and isolation.
-- Isolation/concurrency/fraud/payment/reconciliation end-to-end tests with explicit evidence.
-- Durable execution, audit and rollback across business boundaries.
-
-This page is an engineering roadmap, not a promise of a currently available service.
+Do not represent the consumer as the payer by default: a partner or business may pay on behalf of end-user traffic. Distributors can remain interoperable without a compulsory network or common customer database.
