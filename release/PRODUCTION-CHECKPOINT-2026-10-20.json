@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "project": "Taghvim.dev",
+  "observed_utc_date": "2026-10-20",
+  "release_state": "PREVIEW_NO_GO",
+  "general_availability_approved": false,
+  "http_probe": {
+    "source": "GitHub Actions ubuntu-24.04",
+    "run_id": 39436340797,
+    "website": 200,
+    "landing_health": 200,
+    "api_health": 200,
+    "api_readiness": 200,
+    "api_versions": 200,
+    "api_contract": 200
+  },
+  "contract": {
+    "candidate_version": "2.1.0",
+    "api_deployed_version": "2.0.0",
+    "landing_deployed_version": "2.0.0",
+    "api_sha256": "306a7e47cdaeda99a4a0d001995fec02660055caebaa52d089412cea6f91ffe8",
+    "landing_sha256": "f6004a20e91320ad8a423525c9d1fe5c9b76bc8ec0a849057feb8aede5c68253",
+    "candidate_sha256": "06d84eed91f62573729ee6674377b393057081c61c755a8dce465338e82a2f8c",
+    "parity": "BLOCKED",
+    "gate_commit": "ef2ad2162a5c0d78322afb1e3de9e61a46ff1279",
+    "gate_run": 39436340797,
+    "gate_result": "failure: expected fail-closed",
+    "engine_unit_tests_run": 39436340804,
+    "engine_unit_tests_result": "success"
+  },
+  "landing_candidate": {
+    "pr": 27,
+    "sha": "bd802b27c3924b4d947c1f38969b5b02273c6530",
+    "base_sha": "80effbbe648fb0e84a197a6e3851f1b26c52c148",
+    "files_changed": 17,
+    "ci_run": 39436871047,
+    "ci": "success",
+    "mergeable": true,
+    "merged": false,
+    "production_deployed": false,
+    "superseded_pr": 23
+  },
+  "public_main": {
+    "SDK": "10e667a456fc89f0edc4e8510df4c0d9cec53005",
+    "CLI": "c8e3e736dd988404a6666a6b398faf1df941d36d",
+    "cookbooks": "d8be0eee27294d4f9aedfe8cb1ca2927dc8d5f11"
+  },
+  "branch_protection": {
+    "main_protected": false,
+    "repos": [
+      "engine",
+      "landing",
+      "SDK",
+      "CLI",
+      "cookbooks",
+      ".github"
+    ],
+    "severity": "P0"
+  },
+  "unverified": [
+    "API 2.1.0 live deploy and full three-way hash parity",
+    "D1 migration and point-in-time recovery",
+    "authenticated test tenant and key issuance",
+    "multi-tenant isolation",
+    "metering/refund/replay idempotency",
+    "payment sandbox",
+    "mobile RTL visual approval and server-side date freshness",
+    "backup rollback",
+    "required protected main checks",
+    "owner approval"
+  ],
+  "session_independent": {
+    "canonical_checkpoint_location": "Taghvim-dev/.github release folder",
+    "chat_is_not_task_executor": true
+  }
+}
