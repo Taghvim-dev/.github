@@ -31,6 +31,12 @@ for(const path of [...new Set(files)].sort()){
   if(badBidi.test(source))problems.push(path+": unsafe invisible direction control");
   if(presentation.test(source))problems.push(path+": glyph presentation form in source text");
   if(reversed.test(source))problems.push(path+": suspect reversed Persian term");
+  // Markdown inside raw HTML paragraphs is displayed literally by GitHub.
+  const prose=source.replace(/^```[\s\S]*?^```/gm,"");
+  for(const block of prose.matchAll(/<p\b[^>]*>([\s\S]*?)<\/p>/g)){
+    if(block[1].includes("**") || block[1].includes("`"))
+      problems.push(path+": Markdown emphasis/code is literal inside HTML paragraph");
+  }
   if((source.match(/^\s*```/gm)||[]).length%2)problems.push(path+": unclosed code fence");
   if(["SDK/README.md","CLI/README.md","cookbooks/README.md"].includes(path)){
     if(!/lang="fa"[^>]*dir="rtl"|dir="rtl"[^>]*lang="fa"/.test(source))problems.push(path+": missing explicit Persian direction context");
