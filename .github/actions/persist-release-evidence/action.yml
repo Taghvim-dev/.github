@@ -1,0 +1,22 @@
+name: Persist redacted release checkpoint in private GitHub Issue ledger
+description: Durable, deduplicated release attempt receipt; not an approval or a deployment
+inputs:
+  component:
+    description: engine or landing; selects the existing PRIVATE release issue
+    required: true
+  result:
+    description: GitHub deploy job status (success, failure or cancelled)
+    required: true
+runs:
+  using: composite
+  steps:
+    - name: Append idempotent source/run/receipt fingerprints to private issue
+      shell: bash
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+        COMPONENT: ${{ inputs.component }}
+        JOB_RESULT: ${{ inputs.result }}
+        REGISTRY_SCRIPT: ${{ github.action_path }}/persist-release-evidence.mjs
+      run: |
+        set -euo pipefail
+        node "$REGISTRY_SCRIPT" "$COMPONENT" "$JOB_RESULT"
