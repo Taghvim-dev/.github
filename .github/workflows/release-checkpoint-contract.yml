@@ -1,0 +1,72 @@
+name: release-checkpoint-contract
+on:
+  pull_request:
+    paths:
+      - ".github/actions/release-checkpoint/**"
+      - ".github/workflows/release-checkpoint-contract.yml"
+  push:
+    branches: [main]
+    paths:
+      - ".github/actions/release-checkpoint/**"
+      - ".github/workflows/release-checkpoint-contract.yml"
+permissions:
+  contents: read
+jobs:
+  checkpoint-contract:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: "22"
+      - name: Validate action's shape
+        run: |
+          test -f .github/actions/release-checkpoint/action.yml
+          ! grep -Eq 'CLOUDFLARE_API_TOKEN|secret put|wrangler deploy' .github/actions/release-checkpoint/action.yml
+      - uses: ./.github/actions/release-checkpoint
+        with:
+          component: engine
+          stage: authorized
+      - uses: ./.github/actions/release-checkpoint
+        with:
+          component: engine
+          stage: checks_passed
+      - uses: ./.github/actions/release-checkpoint
+        with:
+          component: engine
+          stage: migrations_started
+      - uses: ./.github/actions/release-checkpoint
+        with:
+          component: engine
+          stage: migrations_applied
+      - uses: ./.github/actions/release-checkpoint
+        with:
+          component: engine
+          stage: deploy_started
+      - uses: ./.github/actions/release-checkpoint
+        with:
+          component: engine
+          stage: deployed
+      - uses: ./.github/actions/release-checkpoint
+        with:
+          component: engine
+          stage: postdeploy_verified
+      - name: Verify immutable monotonic receipt without any real side effects
+        run: |
+          node --input-type=module <<'JS'
+          import {readFileSync} from "node:fs";
+          import assert from "node:assert/strict";
+          const c=JSON.parse(readFileSync("release-evidence.json","utf8"));
+          assert.equal(c.engine_sha,process.env.GITHUB_SHA);
+          assert.equal(c.workflow_run,process.env.GITHUB_RUN_ID);
+          assert.equal(c.ga_approved,false);
+          assert.equal(c.declared_state,"CONTRACT_OBSERVED_NOT_GA");
+          assert.deepEqual(c.checkpoints.map(x=>x.stage),[
+            "authorized","checks_passed","migrations_started","migrations_applied",
+            "deploy_started","deployed","postdeploy_verified"
+          ]);
+          console.log("Checkpoint action contract verified; no deployment executed.");
+          JS
