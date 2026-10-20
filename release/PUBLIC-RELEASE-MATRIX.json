@@ -10,19 +10,18 @@
   "repositories": [
     {
       "name": "SDK",
-      "commit": "5d0592bef66f2a04f7c214f002a8b1f3e1de9965",
-      "ci_run": "39437487298"
+      "commit": "b0d9020a312d11a9085a86cca8e758694eb1c160",
+      "ci_run": "39441059188"
     },
     {
       "name": "CLI",
-      "commit": "09e6d82fcc9d9fb6046d4a37c14a5ca2d7aab9b2",
-      "ci_run": "39437339615"
+      "commit": "b5a627a13a7c46c3a56eb2d15f484ffae4ba4bb3",
+      "ci_run": "39441070265"
     },
     {
       "name": "cookbooks",
-      "commit": "46ce4d0bbd7e887ed4c367e34b30a34609f5d16c",
-      "ci_run": null,
-      "prior_verified_pr_run": "39437400603"
+      "commit": "9dc43e779fb6a1a4143cc5b5534ac5bad2cfff0f",
+      "ci_run": "39441175621"
     }
   ],
   "deployment_observation": {
@@ -45,14 +44,20 @@
   "source_verification": {
     "date": "2026-10-20",
     "phase": "source-integrated-not-deployed",
-    "engine_main_merge_sha": "6b4c0512287a4c33317859e23685452f18c48baf",
+    "engine_main_merge_sha": "01625fb064b269c1b88843c3e572d0833be2bdcc",
     "engine_offline_ci_run": "39439068261",
     "engine_live_gate_ci_run": "39439068311",
-    "landing_main_merge_sha": "bc0175cc5f903b5c873def157cb6755a12a8bb70",
+    "landing_main_merge_sha": "42becc1758e4809dd8612ab44d53b7f1749a2e34",
     "landing_integration_merge_sha": "793753e489b4a8a90065eb0c016b6ec06fdb6f91",
     "landing_integration_ci_run": "39438283229",
     "landing_rtl_ci_run": "39438283155",
     "landing_two_phase_release_ci_run": "39440013499",
-    "note": "Verified source-level candidate and approvals logic; deployed API 2.0.0 and published Landing 2.0.0 remain observed drift until an authorized release. CI runs validate PR heads, not post-deploy state."
+    "note": "Verified source-level candidate and approvals logic; deployed API 2.0.0 and published Landing 2.0.0 remain observed drift until an authorized release. CI runs validate PR heads, not post-deploy state.",
+    "engine_node24_action_test": "39441189301",
+    "landing_node24_action_test": "39441203096",
+    "landing_node24_rtl_test": "39441203134",
+    "coordinated_public_ci_run": "39441050643",
+    "node_setup": "actions/setup-node@v7.1.0",
+    "warning_regression": "No DEP0040, no GitHub warning/error annotations in all six verified PR-head logs; does not certify deployed production"
   }
 }
