@@ -1,0 +1,26 @@
+name: Verify remote D1 applied migration ledger
+description: Fail closed unless D1's applied-migrations table matches exactly the reviewed release SQL files
+inputs:
+  database:
+    description: Production D1 database name
+    required: true
+runs:
+  using: composite
+  steps:
+    - name: Query the applied-migrations table, not the pending list
+      shell: bash
+      env:
+        D1_DATABASE: ${{ inputs.database }}
+      run: |
+        set -euo pipefail
+        case "$D1_DATABASE" in taghvim-engine|taghvim-web) ;; *) echo "::error::Invalid D1 target"; exit 1;; esac
+        npx wrangler d1 execute "$D1_DATABASE" --remote --json --command "SELECT name FROM d1_migrations ORDER BY id" > release-d1-applied-raw.json
+    - name: Validate signed-off source against remote applied ledger
+      shell: bash
+      env:
+        D1_DATABASE: ${{ inputs.database }}
+        VERIFIER: ${{ github.action_path }}/verify-d1-ledger.mjs
+      run: |
+        set -euo pipefail
+        node "$VERIFIER" "$D1_DATABASE" migrations release-d1-applied-raw.json release-d1-applied-evidence.json
+        rm -f release-d1-applied-raw.json
