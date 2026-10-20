@@ -1,0 +1,13 @@
+name: Require independently protected production environment
+description: Read-only fail-closed GitHub configuration attestation before remote Cloudflare writes
+runs:
+  using: composite
+  steps:
+    - name: Attest required reviewer, no self-review and main branch protection
+      shell: bash
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+        PROTECTION_SCRIPT: ${{ github.action_path }}/verify-environment.mjs
+      run: |
+        set -euo pipefail
+        node "$PROTECTION_SCRIPT"
