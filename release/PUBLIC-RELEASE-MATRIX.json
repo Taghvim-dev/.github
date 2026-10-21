@@ -142,6 +142,17 @@
       "requirement": "Independent required GitHub production reviewers; prevent_self_review=true; only protected/main branch; fail closed before remote D1 or deploy",
       "live_policy_verified": false,
       "note": "GitHub repository environment settings cannot be read/managed by current connector. Actual deploy job independently verifies via GitHub API; no production action authorized yet."
+    },
+    "latest_checked": {
+      "date": "2026-10-21",
+      "engine_sha": "65726602e01593bcbfe223008820c971fef76ff3",
+      "engine_ci": "39572569270",
+      "landing_sha": "6c7ac68bc33b6f48f2cf28693b272acba87c5acb",
+      "landing_ci": "39573298266",
+      "shared_release_actions_sha": "aff8450bc753a75ba5c9b922cd61c5956a61be8e",
+      "vendored_engine_files_matched": 11,
+      "sandbox_to_production_status": "NO_GO",
+      "production_workflow_runs": 0
     }
   }
 }
