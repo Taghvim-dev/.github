@@ -39,13 +39,26 @@ export function verifyCurrentRelease({repo,sha,release,controls}){
  if(!["PREVIEW","READY"].includes(release.state))fail("unknown release lifecycle state");
  if(c.sandbox_to_production_status==="GO"&&release.general_availability_approved!==true)
    fail("invalid promotion status claiming an unapproved GA release");
- if(t.current_source?.shared_policy_sha!==s.t0_infrastructure_source?.shared_action_sha)
-   fail("shared release policy identity drift");
+ const shared=t.current_source?.shared_policy_sha;
+ const origin=s.t0_infrastructure_source?.shared_action_sha;
+ const pinned=t.current_source?.prewrite_source_policy_sha;
+ const approved=s.t0_cross_repo_source_admission?.policy_main_sha;
+ if(![shared,origin,pinned,approved].every(x=>SHA.test(x||""))||
+   shared!==origin||pinned!==approved)
+   fail("missing or divergent immutable release policy SHA");
  if(!Array.isArray(t.controls)||t.controls.length<11||new Set(t.controls.map(x=>x.id)).size!==t.controls.length)
    fail("T0 requirement ledger incomplete or duplicated");
  const ci=label==="engine"?c.engine_ci:c.landing_ci;
- if(!/^\d+$/.test(String(ci||"")))fail("source does not have an independently tested CI receipt");
- // SHA-locked admission (not deployment success). No provider token is put in proof.
+ if(!/^[0-9]+$/.test(String(ci||"")))fail("source does not have an independently tested CI receipt");
+ const proof=s.t0_cross_repo_source_admission||{};
+ const testedHead=proof[label+"_reviewed_head"];
+ if(proof[label+"_main_sha"]!==sha||proof[label+"_ci_run"]!==ci||!SHA.test(testedHead||""))
+   fail("CI receipt, reviewed PR head or main SHA is not bound to current source");
+ if(proof.cross_repo_immutable_ref!==true||proof.post_facto_ga_authorization!==false||
+   proof.admission_scope!=="MUTATION_BLOCKING_SOURCE_ONLY")
+   fail("canonical source attestation scope is not reviewed and immutable");
+ // A receipt number by itself never proves CI success. The async admission
+ // independently checks GitHub's workflow run and the tested full Git tree.
  return {schema_version:1,kind:"taghvim_t0_source_admission",
   repository:repo,source_sha:sha,contract_version:release.contract_version,
   control_count:t.controls.length,ci_receipt:String(ci),
@@ -88,7 +101,36 @@ export async function attestCurrentRelease({repo,sha,token,fetcher=fetch}){
   catch{fail("canonical GitHub JSON invalid: "+path)}
  }
  const [release,controls]=await Promise.all(PATHS.map(get));
- return {...verifyCurrentRelease({repo,sha,release,controls}),registry_sha:registrySha};
+ const proof=verifyCurrentRelease({repo,sha,release,controls});
+ const label=repo.split("/")[1],ad=release.source_verification.t0_cross_repo_source_admission;
+ const ciResponse=await fetcher("https://api.github.com/repos/"+repo+"/actions/runs/"+proof.ci_receipt,{
+  method:"GET",redirect:"error",cache:"no-store",headers,signal:AbortSignal.timeout(12000)});
+ if(ciResponse?.status!==200)fail("independently read-only CI run verification failed");
+ const ci=await ciResponse.json();
+ const expectedWorkflow=label==="engine"?"test":"landing-verify";
+ if(ci?.id!==Number(proof.ci_receipt)||ci?.name!==expectedWorkflow||
+    ci?.repository?.full_name!==repo||!new Set(["push","pull_request"]).has(ci?.event)||
+    ci?.status!=="completed"||ci?.conclusion!=="success"||!SHA.test(ci?.head_sha||""))
+    fail("CI run is not the completed successful source workflow for this repository");
+ const reviewedSHA=ad[label+"_reviewed_head"];
+ if(ci.head_sha!==sha&&ci.head_sha!==reviewedSHA)
+   fail("successful workflow was not run on the approved source or reviewed PR head");
+ // Squash merges produce new commit SHAs: require equality of the ENTIRE Git
+ // tree for the tested source and the actual release HEAD, not just files.
+ async function gitTree(commit){
+  const res=await fetcher("https://api.github.com/repos/"+repo+"/git/commits/"+commit,{
+   method:"GET",redirect:"error",cache:"no-store",headers,signal:AbortSignal.timeout(12000)});
+  if(res?.status!==200)fail("cannot independently attest immutable Git tree");
+  const body=await res.json(),tree=body?.tree?.sha;
+  if(body?.sha!==commit||!SHA.test(tree||""))fail("missing Git tree SHA attestation");
+  return tree;
+ }
+ const liveTree=await gitTree(sha);
+ const testedTree=ci.head_sha===sha?liveTree:await gitTree(ci.head_sha);
+ if(liveTree!==testedTree)fail("successful source tree differs from squash-merged main tree");
+ return {...proof,registry_sha:registrySha,source_tree_sha:liveTree,
+  tested_workflow:expectedWorkflow,tested_head_sha:ci.head_sha,
+  tested_ci_status:"completed_success",commit_tree_identity_verified:true};
 }
 async function main(){
  if(process.env.GITHUB_REF!=="refs/heads/main")
