@@ -44,15 +44,15 @@
   "source_verification": {
     "date": "2026-10-21",
     "phase": "source-integrated-not-deployed",
-    "engine_main_merge_sha": "c0685e89450c3f859fdfbe9a60c304d1004ef450",
-    "engine_offline_ci_run": "39682732188",
+    "engine_main_merge_sha": "cc66f1b9e7cfe8ebbab428c8df4dd70af69be56d",
+    "engine_offline_ci_run": "39684217261",
     "engine_live_gate_ci_run": "39439068311",
     "landing_main_merge_sha": "85d5a0b7f3b14d621a92aa4ae39d6016154e3fda",
     "landing_integration_merge_sha": "238f44960dfceeabad605a43ec2706114d790987",
     "landing_integration_ci_run": "39682489394",
     "landing_rtl_ci_run": "39438283155",
     "landing_two_phase_release_ci_run": "39440013499",
-    "note": "T=0 source gates merged and CI tested: upstream Engine source attestation, Cloudflare account-owned sandbox URL, step-scoped Cloudflare tokens and nonpersistent synthetic operator token. Current source heads reconciled to Engine c0685e and Landing 85d5a0. Remote D1/Workers/sandbox/production and user onboarding evidence still missing; GA remains blocked.",
+    "note": "Current Engine main cc66f1b9e7cf verified in PR CI run 39684217261 (both Ubuntu runner legs); Landing main 85d5a0b7f3b verified by CI 39682489394; 2.1.0 shared T0 controls and source tests integrated, but Sandbox/Production Cloudflare remote writes and GA remain NOT DISPATCHED, UNVERIFIED.",
     "engine_node24_action_test": "39441189301",
     "landing_node24_action_test": "39441203096",
     "landing_node24_rtl_test": "39441203134",
@@ -145,8 +145,8 @@
     },
     "latest_checked": {
       "date": "2026-10-21",
-      "engine_sha": "c0685e89450c3f859fdfbe9a60c304d1004ef450",
-      "engine_ci": "39682732188",
+      "engine_sha": "cc66f1b9e7cfe8ebbab428c8df4dd70af69be56d",
+      "engine_ci": "39684217261",
       "landing_sha": "85d5a0b7f3b14d621a92aa4ae39d6016154e3fda",
       "landing_ci": "39682489394",
       "shared_release_actions_sha": "c195c8bfde573b6195bd1b3bd00e3535accc9040",
@@ -172,8 +172,8 @@
       "date": "2026-10-21",
       "shared_action_sha": "c195c8bfde573b6195bd1b3bd00e3535accc9040",
       "action_test_run": "39681975240",
-      "engine_main_sha": "c0685e89450c3f859fdfbe9a60c304d1004ef450",
-      "engine_ci_run": "39682732188",
+      "engine_main_sha": "cc66f1b9e7cfe8ebbab428c8df4dd70af69be56d",
+      "engine_ci_run": "39684217261",
       "landing_main_sha": "85d5a0b7f3b14d621a92aa4ae39d6016154e3fda",
       "landing_ci_run": "39682489394",
       "control_matrix": "release/T0-CONTROL-MATRIX.json",
@@ -181,7 +181,9 @@
       "credential_scope": "Cloudflare keys only on origin verification and remote write/read steps; ephemeral sandbox operator credential only in deploy/attest step",
       "remote_origin_proof": "MISSING",
       "actual_sandbox_promotion": "NOT_DISPATCHED",
-      "actual_production_deployment": "NOT_DISPATCHED"
+      "actual_production_deployment": "NOT_DISPATCHED",
+      "credential_cleanup_sha": "cc66f1b9e7cfe8ebbab428c8df4dd70af69be56d",
+      "credential_cleanup_ci_run": "39684217261"
     }
   }
 }

@@ -3,6 +3,8 @@ on:
   pull_request:
     paths:
       - "release/PUBLIC-RELEASE-MATRIX.json"
+      - "release/T0-CONTROL-MATRIX.json"
+      - "release/CI-INCIDENT-ROOT-CAUSES.json"
       - "scripts/check-public-release.mjs"
       - ".github/workflows/coordinated-public-release.yml"
   push:
@@ -10,6 +12,8 @@ on:
     tags: ["public-release-*"]
     paths:
       - "release/PUBLIC-RELEASE-MATRIX.json"
+      - "release/T0-CONTROL-MATRIX.json"
+      - "release/CI-INCIDENT-ROOT-CAUSES.json"
       - "scripts/check-public-release.mjs"
       - ".github/workflows/coordinated-public-release.yml"
   workflow_dispatch:

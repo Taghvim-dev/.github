@@ -1,0 +1,122 @@
+{
+  "schema_version": 1,
+  "product": "Taghvim.dev",
+  "as_of": "2026-10-21",
+  "scope": "Taghvim-dev organization only. Do not mix alerts from unrelated repositories or equate failed historical PR heads with current main.",
+  "root_cause_groups": [
+    {
+      "id": "CI-ROOT-001",
+      "class": "Stale assertions after protected release architecture migration",
+      "examples": [
+        {
+          "repo": "Taghvim-dev/landing",
+          "failed_run": "39487564529",
+          "symptom": "test expected direct wrangler deploy; source policy correctly disabled direct production writes"
+        }
+      ],
+      "current_evidence": {
+        "repo": "Taghvim-dev/landing",
+        "merged_main_sha": "85d5a0b7f3b14d621a92aa4ae39d6016154e3fda",
+        "tested_pr_head_sha": "238f44960dfceeabad605a43ec2706114d790987",
+        "passing_run": "39682489394",
+        "evidence_scope": "PR_HEAD_SOURCE_TEST_ONLY; not a same-SHA main push, Cloudflare or runtime attestation"
+      },
+      "state": "REVIEWED_PR_SOURCE_CI_GREEN; MAIN_PUSH_CI_NOT_ATTESTED",
+      "production_attested": false
+    },
+    {
+      "id": "CI-ROOT-002",
+      "class": "Shared Actions pinned SHA vs tests/fixture drift",
+      "examples": [
+        {
+          "repo": "Taghvim-dev/engine",
+          "failed_run": "39569265781",
+          "symptom": "test expected stale persist-release-evidence action ref"
+        },
+        {
+          "repo": "Taghvim-dev/.github",
+          "failed_run": "39554017938",
+          "symptom": "D1 recovery fixture did not pass updated receipt admission"
+        }
+      ],
+      "current_evidence": {
+        "repo": "Taghvim-dev/engine",
+        "merged_main_sha": "cc66f1b9e7cfe8ebbab428c8df4dd70af69be56d",
+        "tested_pr_head_sha": "a63e199de462274cead2ec854c9d342bf0d3ff8e",
+        "passing_run": "39684217261",
+        "evidence_scope": "PR_HEAD_SOURCE_TEST_ONLY; not a same-SHA main push, Cloudflare or runtime attestation"
+      },
+      "state": "REVIEWED_PR_SOURCE_CI_GREEN; MAIN_PUSH_CI_NOT_ATTESTED",
+      "production_attested": false
+    },
+    {
+      "id": "CI-ROOT-003",
+      "class": "Fragile text/substring CI tests instead of parsed executable structure",
+      "examples": [
+        {
+          "repo": "Taghvim-dev/engine",
+          "failed_run": "39683943428",
+          "symptom": "EXIT trap was mistaken for post-deploy secret cleanup"
+        }
+      ],
+      "current_evidence": {
+        "repo": "Taghvim-dev/engine",
+        "merged_main_sha": "cc66f1b9e7cfe8ebbab428c8df4dd70af69be56d",
+        "tested_pr_head_sha": "a63e199de462274cead2ec854c9d342bf0d3ff8e",
+        "passing_run": "39684217261",
+        "evidence_scope": "PR_HEAD_SOURCE_TEST_ONLY; not a same-SHA main push, Cloudflare or runtime attestation"
+      },
+      "state": "REVIEWED_PR_SOURCE_CI_GREEN; MAIN_PUSH_CI_NOT_ATTESTED",
+      "production_attested": false
+    },
+    {
+      "id": "CI-ROOT-004",
+      "class": "Cross-repository SDK/cookbook dependency and contract-fetch instability",
+      "examples": [
+        {
+          "repo": "Taghvim-dev/SDK",
+          "failed_run": "39429556824",
+          "symptom": "remote cookbook contract parity HTTP 404"
+        }
+      ],
+      "current_evidence": {
+        "repo": "Taghvim-dev/.github",
+        "merged_main_sha": "7bf5bf7d6d45b574a4d345d8c83c7302637d540b",
+        "tested_pr_head_sha": "bce3425bc699d3ddb636e01d7a25c6c77b90280c",
+        "passing_run": "39683176654",
+        "evidence_scope": "PR_HEAD_SOURCE_TEST_ONLY; not a same-SHA main push, Cloudflare or runtime attestation"
+      },
+      "state": "REVIEWED_PR_SOURCE_CI_GREEN; MAIN_PUSH_CI_NOT_ATTESTED",
+      "production_attested": false
+    },
+    {
+      "id": "CI-ROOT-005",
+      "class": "Deprecated GitHub Actions runtime and noncanonical workflow pins",
+      "examples": [
+        {
+          "repo": "Taghvim-dev/engine",
+          "failed_run": "39439362557",
+          "symptom": "check-workflows rejected actions/checkout@v4 in public release observation"
+        }
+      ],
+      "current_evidence": {
+        "repo": "Taghvim-dev/engine",
+        "merged_main_sha": "cc66f1b9e7cfe8ebbab428c8df4dd70af69be56d",
+        "tested_pr_head_sha": "a63e199de462274cead2ec854c9d342bf0d3ff8e",
+        "passing_run": "39684217261",
+        "evidence_scope": "PR_HEAD_SOURCE_TEST_ONLY; not a same-SHA main push, Cloudflare or runtime attestation"
+      },
+      "state": "REVIEWED_PR_SOURCE_CI_GREEN; MAIN_PUSH_CI_NOT_ATTESTED",
+      "production_attested": false
+    }
+  ],
+  "unresolved_production_gates": [
+    "GitHub protected branch/environments",
+    "Cloudflare Sandbox account-owned origin attestation",
+    "remote production D1 bookmark/applied migration ledger",
+    "2.1.0 live API + Landing parity",
+    "real tenant onboarding, metering, billing and E2E"
+  ],
+  "no_rewrite_of_historical_failures": true,
+  "no_runtime_approval_from_email_or_source_ci": true
+}
