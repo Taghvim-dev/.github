@@ -65,7 +65,7 @@ function fakeApi({ciPatch={},treeOverride={},sourceHead=engine}={}){
    if(url.endsWith("/"+name+"?ref="+registrySha))
     return {status:200,json:async()=>({type:"file",encoding:"base64",content:Buffer.from(JSON.stringify(data)).toString("base64")})};
   if(url.endsWith("/engine/actions/runs/12345"))
-    return {status:200,json:async()=>({id:12345,name:"test",repository:{full_name:"Taghvim-dev/engine"},
+    return {status:200,json:async()=>({id:12345,name:"test",workflow_id:372423484,repository:{full_name:"Taghvim-dev/engine"},
      event:"pull_request",status:"completed",conclusion:"success",head_sha:testedSHA,...ciPatch})};
   for(const sha of [engine,testedSHA])
    if(url.endsWith("/engine/git/commits/"+sha))
@@ -82,13 +82,14 @@ test("T0 reads exact successful CI run and compares complete PR tree against squ
  assert.equal(actual.tested_head_sha,testedSHA);
  assert.equal(actual.commit_tree_identity_verified,true);
  assert.equal(actual.tested_ci_status,"completed_success");
+ assert.equal(actual.tested_workflow_id,372423484);
  assert.equal(api.calls.length,7);
  assert.equal(api.calls.filter(x=>x.includes("?ref="+registrySha)).length,2);
 });
 test("T0 blocks success receipts from untested SHAs, failure, wrong workflow/repository and mismatched Git trees",async()=>{
  for(const ciPatch of [
   {status:"in_progress",conclusion:null},{conclusion:"failure"},
-  {name:"lint"},{repository:{full_name:"Taghvim-dev/landing"}},{id:999},
+  {name:"lint"},{workflow_id:999},{workflow_id:null},{repository:{full_name:"Taghvim-dev/landing"}},{id:999},
   {head_sha:"3".repeat(40)},{event:"workflow_dispatch"}]){
   const {fetcher}=fakeApi({ciPatch});
   await assert.rejects(attestCurrentRelease({repo:"Taghvim-dev/engine",sha:engine,
@@ -105,4 +106,11 @@ test("T0 never accepts a superseded main revision, unavailable CI or absent read
  assert.equal(stale.calls.length,1);
  await assert.rejects(attestCurrentRelease({repo:"Taghvim-dev/engine",sha:engine,token:""}),
  /T0_SOURCE_ADMISSION_BLOCKED/);
+});
+
+test("T0 refuses a successful workflow with duplicate display name and different ID",async()=>{
+ const {fetcher}=fakeApi({ciPatch:{name:"test",workflow_id:390048334}});
+ await assert.rejects(attestCurrentRelease({
+  repo:"Taghvim-dev/engine",sha:engine,token:"test-read-token",fetcher
+ }),/T0_SOURCE_ADMISSION_BLOCKED/);
 });
