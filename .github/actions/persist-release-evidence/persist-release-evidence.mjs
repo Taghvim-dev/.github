@@ -30,7 +30,7 @@ export function receipt({repo,issue,component,sha,run,attempt,status,checkpoint=
     applied.database===(component==="engine"?"taghvim-engine":"taghvim-web");
   const sr=sandbox?.record;
   const expectedChecks=component==="engine"
-    ? {health:true,readiness:true,openapi:true,d1_ledger:true}
+    ? {health:true,readiness:true,openapi:true,d1_ledger:true,synthetic_onboarding:true,tenant_isolation:true,key_replay_blocked:true,key_revocation:true,calendar_request:true}
     : {health:true,readiness:true,openapi:true,d1_ledger:true,synthetic_form:true,mail_suppressed:true};
   const sandboxOK=!!sr && sr.schema_version===1 &&
     sr.kind==="taghvim_"+component+"_sandbox_promotion" &&
