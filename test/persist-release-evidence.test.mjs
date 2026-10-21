@@ -49,3 +49,21 @@ test("sandbox 2.1.0 SHA/run-bound receipts are persisted without implying GA",()
 test("unknown sandbox state cannot masquerade as a successful job",()=>{
   assert.throws(()=>receipt({...sample,sandboxStatus:"approved"}),/Invalid sandbox result/);
 });
+
+test("only a real SHA-bound D1 recovery bookmark is journalled for manual restoration",()=>{
+  const bookmark="00000085-0000024c-00004c6d-8e61117bf38d7adb71b934ebbf891683";
+  const r={schema_version:1,kind:"d1_pre_migration_recovery",status:"VERIFIED",
+    component:"engine",database:"taghvim-engine",source_sha:SHA,workflow_run:run,
+    captured_at:"2026-10-21T00:00:00Z",bookmark,
+    restore_mode:"MANUAL_ONLY_DESTRUCTIVE",automatic_restore_allowed:false};
+  const proof=receipt({...sample,recovery:{record:r,sha256:"f".repeat(64)}});
+  assert.equal(proof.recoveryOK,true);
+  assert.match(proof.body,/Manual-only recovery bookmark/);
+  assert.match(proof.body,/00000085-0000024c/);
+  assert.match(proof.body,/NOT CERTIFIED/);
+  for(const wrong of [{...r,source_sha:"b".repeat(40)},
+    {...r,automatic_restore_allowed:true},
+    {...r,bookmark:"invalid"},
+    {...r,database:"taghvim-web"}])
+    assert.equal(receipt({...sample,recovery:{record:wrong}}).recoveryOK,false);
+});

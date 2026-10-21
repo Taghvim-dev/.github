@@ -13,7 +13,7 @@ const read=(name)=>{
   const bytes=readFileSync(name);
   try{return {record:JSON.parse(bytes.toString("utf8")),sha256:sha256(bytes)}}catch{return {error:"invalid_json",sha256:sha256(bytes)}}
 };
-export function receipt({repo,issue,component,sha,run,attempt,status,checkpoint=null,migrations=null,sandbox=null,sandboxStatus="unknown"}) {
+export function receipt({repo,issue,component,sha,run,attempt,status,checkpoint=null,migrations=null,sandbox=null,sandboxStatus="unknown",recovery=null}) {
   if(!/^[0-9a-f]{40}$/.test(sha)||!/^\d+$/.test(run)||!/^\d+$/.test(attempt))
     throw Error("Missing immutable workflow identity");
   const expectedIssue=component==="engine"?9:component==="landing"?13:null;
@@ -40,6 +40,14 @@ export function receipt({repo,issue,component,sha,run,attempt,status,checkpoint=
     Array.isArray(sr.migrations) && sr.migrations.length>0 &&
     Object.entries(expectedChecks).every(([key,value])=>sr.checks?.[key]===value) &&
     Object.keys(sr.checks||{}).length===Object.keys(expectedChecks).length;
+  const rr=recovery?.record;
+  const recoveryOK=!!rr && rr.schema_version===1 &&
+    rr.kind==="d1_pre_migration_recovery" && rr.status==="VERIFIED" &&
+    rr.component===component && rr.source_sha===sha && rr.workflow_run===run &&
+    rr.database===(component==="engine"?"taghvim-engine":"taghvim-web") &&
+    rr.automatic_restore_allowed===false && rr.restore_mode==="MANUAL_ONLY_DESTRUCTIVE" &&
+    /^[0-9a-f]{8}-[0-9a-f]{8}-[0-9a-f]{8}-[0-9a-f]{32}$/i.test(rr.bookmark||"") &&
+    Number.isFinite(Date.parse(rr.captured_at||""));
   const marker="taghvim-release:"+component+":"+run+":"+attempt;
   const body=[
     "<!-- "+marker+" -->",
@@ -52,11 +60,13 @@ export function receipt({repo,issue,component,sha,run,attempt,status,checkpoint=
     "- Sandbox promotion receipt: **"+(sandboxOK?"VERIFIED":"MISSING_OR_INVALID")+"**; artifact SHA-256: \`"+(sandbox?.sha256||"MISSING")+"\`",
     "- Checkpoint: **"+(identityOK?ck.phase:"UNVERIFIED")+"**; artifact SHA-256: \`"+(checkpoint?.sha256||"MISSING")+"\`",
     "- Remote D1 applied-ledger: **"+(appliedOK?"VERIFIED":"MISSING_OR_INVALID")+"**; evidence SHA-256: \`"+(migrations?.sha256||"MISSING")+"\`",
+    "- D1 pre-migration recovery: **"+(recoveryOK?"VERIFIED":"MISSING_OR_INVALID")+"**; artifact SHA-256: \`"+(recovery?.sha256||"MISSING")+"\`",
+    "- Manual-only recovery bookmark: \`"+(recoveryOK?rr.bookmark:"MISSING")+"\` (private Issue; expires under the account Time Travel window)",
     "- Production GA: **NOT CERTIFIED** — live E2E, tenant isolation, billing, restore and approval remain independent requirements.",
     "- Source workflow: https://github.com/"+repo+"/actions/runs/"+run,
     "",
   ].join("\n");
-  return {marker,body,checkpointOK:identityOK,migrationsOK:appliedOK,sandboxOK};
+  return {marker,body,checkpointOK:identityOK,migrationsOK:appliedOK,sandboxOK,recoveryOK};
 }
 
 async function main() {
@@ -66,7 +76,8 @@ async function main() {
   const issue=component==="engine"?9:13;
   const built=receipt({repo,issue,component,sha,run,attempt,status,
     checkpoint:read("release-evidence.json"),migrations:read("release-d1-applied-evidence.json"),
-    sandbox:read("sandbox-promotion-receipt.json"),sandboxStatus:process.env.SANDBOX_RESULT||"unknown"});
+    sandbox:read("sandbox-promotion-receipt.json"),sandboxStatus:process.env.SANDBOX_RESULT||"unknown",
+    recovery:read("release-d1-recovery-bookmark.json")});
   const token=process.env.GITHUB_TOKEN;
   if(!token)throw Error("GITHUB_TOKEN missing: durable registry is mandatory");
   const path="https://api.github.com/repos/"+repo+"/issues/"+issue+"/comments";
@@ -88,7 +99,7 @@ async function main() {
   }
   await request(path,{method:"POST",body:JSON.stringify({body:built.body})});
   console.log("DURABLE_RELEASE_REGISTRY_WRITTEN",built.marker,
-    "checkpoint",built.checkpointOK,"migration_receipt",built.migrationsOK,"sandbox",built.sandboxOK);
+    "checkpoint",built.checkpointOK,"migration_receipt",built.migrationsOK,"sandbox",built.sandboxOK,"recovery",built.recoveryOK);
 }
 if(process.argv[1]&&fileURLToPath(import.meta.url)===process.argv[1]){
   main().catch(e=>{console.error("::error::DURABLE_RELEASE_REGISTRY_FAILED: "+e.message);process.exitCode=1});
