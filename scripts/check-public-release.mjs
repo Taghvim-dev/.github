@@ -14,6 +14,34 @@ assert.equal(t0.general_availability_approved,candidate.general_availability_app
 assert.equal(t0.current_source.engine_main_sha,candidate.source_verification.latest_checked.engine_sha,"T0 Engine source identity drift");
 assert.equal(t0.current_source.landing_main_sha,candidate.source_verification.latest_checked.landing_sha,"T0 Landing source identity drift");
 assert.equal(t0.current_source.shared_policy_sha,candidate.source_verification.t0_infrastructure_source?.shared_action_sha,"T0 Cloudflare guard pin drift");
+// Historical CI failures are immutable observations, not evidence of a
+// currently broken main or proof of a fixed production runtime. Force a
+// reviewer-tested PR SHA and its squash-merge main SHA to be distinct fields.
+const incidents=JSON.parse(readFileSync(new URL("../release/CI-INCIDENT-ROOT-CAUSES.json",import.meta.url)));
+assert.equal(incidents.schema_version,1,"CI incident ledger schema drift");
+assert.equal(incidents.product,candidate.product,"CI incident ledger product drift");
+assert.equal(incidents.no_runtime_approval_from_email_or_source_ci,true,"Email/CI evidence cannot approve production");
+assert.equal(incidents.no_rewrite_of_historical_failures,true,"Historical failed run evidence is append-only");
+const incidentIds=new Set();
+for(const incident of incidents.root_cause_groups||[]){
+ assert.match(incident.id||"",/^CI-ROOT-[0-9]{3}$/,"Invalid root-cause incident ID");
+ assert.ok(!incidentIds.has(incident.id),"Duplicate root-cause incident "+incident.id);
+ incidentIds.add(incident.id);
+ assert.ok(Array.isArray(incident.examples)&&incident.examples.length,"Root cause lacks failed-run evidence");
+ for(const example of incident.examples){
+   assert.match(example.repo||"",/^Taghvim-dev\/[A-Za-z0-9.-]+$/);
+   assert.match(example.failed_run||"",/^\d+$/);
+ }
+ const proof=incident.current_evidence||{};
+ assert.match(proof.merged_main_sha||"",/^[0-9a-f]{40}$/);
+ assert.match(proof.tested_pr_head_sha||"",/^[0-9a-f]{40}$/);
+ assert.match(proof.passing_run||"",/^\d+$/);
+ assert.ok(proof.evidence_scope?.includes("PR_HEAD_SOURCE_TEST_ONLY"),"CI incident claims unscoped source proof");
+ if(proof.repo==="Taghvim-dev/engine")assert.equal(proof.merged_main_sha,t0.current_source.engine_main_sha,"CI Engine main SHA drift");
+ if(proof.repo==="Taghvim-dev/landing")assert.equal(proof.merged_main_sha,t0.current_source.landing_main_sha,"CI Landing main SHA drift");
+ assert.equal(incident.production_attested,false,"CI success is not live production attestation");
+}
+assert.ok(incidentIds.size>=5,"Incomplete recovered CI root-cause coverage");
 const requiredT0=["T0-SOURCE-001","T0-INFRA-002","T0-SECRET-003","T0-PROMOTE-004",
 "T0-D1-005","T0-EXEC-006","T0-API-007","T0-ONBOARD-008","T0-RELEASE-009","T0-GA-010"];
 assert.deepEqual(t0.controls.map(c=>c.id).sort(),requiredT0.sort(),"T0 capability coverage drift");
