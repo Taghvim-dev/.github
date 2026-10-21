@@ -10,18 +10,18 @@
   "repositories": [
     {
       "name": "SDK",
-      "commit": "b0d9020a312d11a9085a86cca8e758694eb1c160",
-      "ci_run": "39441059188"
+      "commit": "cc68bffeb1d7be5360d87d0afee356a914d2d709",
+      "ci_run": "39695120246"
     },
     {
       "name": "CLI",
-      "commit": "b5a627a13a7c46c3a56eb2d15f484ffae4ba4bb3",
-      "ci_run": "39441070265"
+      "commit": "9ae9e29625178ed95d2f3045f4a6650c1f9ecaf5",
+      "ci_run": "39695189982"
     },
     {
       "name": "cookbooks",
-      "commit": "59bf14c7b51ec97dd3d3d406a11b127ca5e47511",
-      "ci_run": "39441175621"
+      "commit": "3608f997eefe2a6ad9ba2ac95833a62722e093f8",
+      "ci_run": "39695473444"
     }
   ],
   "deployment_observation": {
@@ -42,17 +42,17 @@
   },
   "owner_action": "Do not declare GA or enable live billing until all prerequisites have evidence and pass their gates.",
   "source_verification": {
-    "date": "2026-10-21",
+    "date": "2026-10-22",
     "phase": "source-integrated-not-deployed",
-    "engine_main_merge_sha": "6da5ba97d4a6122f740c9444a2cff6c10ad31bfa",
-    "engine_offline_ci_run": "39692042596",
+    "engine_main_merge_sha": "b11654a8110bfeb5c525f1052434d90a7e332e9f",
+    "engine_offline_ci_run": "39694999445",
     "engine_live_gate_ci_run": "39439068311",
-    "landing_main_merge_sha": "e0bbde9480f74441b17708ed173a2e979e8b3609",
-    "landing_integration_merge_sha": "36ab616ae31695f4dd489eee315d270198c8bdff",
-    "landing_integration_ci_run": "39692047509",
-    "landing_rtl_ci_run": "39438283155",
+    "landing_main_merge_sha": "577aefc7297884302c75bf6dadbbc02735b543db",
+    "landing_integration_merge_sha": "efe9c90733c8776bd1d3102fdb6f80e4e1dcc116",
+    "landing_integration_ci_run": "39695693934",
+    "landing_rtl_ci_run": "39695693924",
     "landing_two_phase_release_ci_run": "39440013499",
-    "note": "Current source Engine 6da5ba97d4a6122f740c9444a2cff6c10ad31bfa and Landing e0bbde9480f74441b17708ed173a2e979e8b3609 commit-tested at PR heads afcc16a83ff11f69ad9850ae6ece4bc91b5c4380 and 36ab616ae31695f4dd489eee315d270198c8bdff (CI 39692042596/39692047509). Exact identity-pinned successful test workflow IDs: Engine 372423484, Landing 390048334. Shared source admission action f3bc8d18c5c31fd1125dd4da4887c86b9e3f8447 passed source CI 39691890610. Production, D1 recovery, environment protection and customer onboarding remain NOT ATTESTED; GA=false and promotion NO_GO.",
+    "note": "T0 Taghvim 2.1.0: Engine b11654a8110bfeb5c525f1052434d90a7e332e9f (tested PR 6ede66c150771144d2d4fd5d5b4c52f7fc67321e, CI 39694999445); Landing 577aefc7297884302c75bf6dadbbc02735b543db (tested PR efe9c90733c8776bd1d3102fdb6f80e4e1dcc116, full CI 39695693934, RTL 39695693924). SDK cc68bffeb1d7be5360d87d0afee356a914d2d709; CLI 9ae9e29625178ed95d2f3045f4a6650c1f9ecaf5; cookbooks 3608f997eefe2a6ad9ba2ac95833a62722e093f8. All product packages/lock metadata/API contract 2.1.0; Engine 11-file git blobs independently matched and Landing vendored new canonical Engine config. Deployed public API, Cloudflare credentials, remote D1 migrations, branch protections and authorized onboarding NOT attested. GA=false and promotion NO_GO.",
     "engine_node24_action_test": "39441189301",
     "landing_node24_action_test": "39441203096",
     "landing_node24_rtl_test": "39441203134",
@@ -75,7 +75,10 @@
       "verified_files": 11,
       "matching_git_blobs": 11,
       "contract_version": "2.1.0",
-      "contract_git_blob": "c0d163f8e2d883125fc3778b17842bd19fe3f6bf"
+      "contract_git_blob": "c0d163f8e2d883125fc3778b17842bd19fe3f6bf",
+      "engine_commit": "b11654a8110bfeb5c525f1052434d90a7e332e9f",
+      "landing_main_sha": "577aefc7297884302c75bf6dadbbc02735b543db",
+      "source_ci_run": "39695693934"
     },
     "browser_freshness_main_sha": "33cc1f86995812780b72ac70d5852a6bd4c3ed25",
     "browser_freshness_pr_ci": "39449793285",
@@ -144,17 +147,17 @@
       "note": "GitHub repository environment settings cannot be read/managed by current connector. Actual deploy job independently verifies via GitHub API; no production action authorized yet."
     },
     "latest_checked": {
-      "date": "2026-10-21",
-      "engine_sha": "6da5ba97d4a6122f740c9444a2cff6c10ad31bfa",
-      "engine_ci": "39692042596",
-      "landing_sha": "e0bbde9480f74441b17708ed173a2e979e8b3609",
-      "landing_ci": "39692047509",
+      "date": "2026-10-22",
+      "engine_sha": "b11654a8110bfeb5c525f1052434d90a7e332e9f",
+      "engine_ci": "39694999445",
+      "landing_sha": "577aefc7297884302c75bf6dadbbc02735b543db",
+      "landing_ci": "39695693934",
       "shared_release_actions_sha": "c195c8bfde573b6195bd1b3bd00e3535accc9040",
       "vendored_engine_files_matched": 11,
       "sandbox_to_production_status": "NO_GO",
       "production_workflow_runs": 0,
-      "landing_integration_sha": "36ab616ae31695f4dd489eee315d270198c8bdff",
-      "landing_integration_ci": "39692047509"
+      "landing_integration_sha": "efe9c90733c8776bd1d3102fdb6f80e4e1dcc116",
+      "landing_integration_ci": "39695693934"
     },
     "independent_engine_source_gate": {
       "status": "SOURCE_TESTED; REMOTE CHECKOUT NOT DISPATCHED",
@@ -166,16 +169,19 @@
       "upstream_file_count": 11,
       "sandbox_and_production_environment_secret": "TAGHVIM_ENGINE_READ_TOKEN",
       "live_upstream_attestation_receipt": "MISSING",
-      "note": "Git checkout of private Engine at immutable manifest SHA is required separately in both protected release stages; CI tests only synthetic fixtures."
+      "note": "Historical PR #53 source proof remains at old commit for provenance; the new 11-blob source manifest at Engine b11654a8110bfeb5c525f1052434d90a7e332e9f is tested in Landing PR #58. Independent protected release checkout is still NOT DISPATCHED.",
+      "current_required_engine_commit": "b11654a8110bfeb5c525f1052434d90a7e332e9f",
+      "current_landing_main_sha": "577aefc7297884302c75bf6dadbbc02735b543db",
+      "current_landing_source_ci": "39695693934"
     },
     "t0_infrastructure_source": {
-      "date": "2026-10-21",
+      "date": "2026-10-22",
       "shared_action_sha": "c195c8bfde573b6195bd1b3bd00e3535accc9040",
       "action_test_run": "39681975240",
-      "engine_main_sha": "6da5ba97d4a6122f740c9444a2cff6c10ad31bfa",
-      "engine_ci_run": "39692042596",
-      "landing_main_sha": "e0bbde9480f74441b17708ed173a2e979e8b3609",
-      "landing_ci_run": "39692047509",
+      "engine_main_sha": "b11654a8110bfeb5c525f1052434d90a7e332e9f",
+      "engine_ci_run": "39694999445",
+      "landing_main_sha": "577aefc7297884302c75bf6dadbbc02735b543db",
+      "landing_ci_run": "39695693934",
       "control_matrix": "release/T0-CONTROL-MATRIX.json",
       "enforced_origin": "Exact authorized account *.workers.dev Worker, not arbitrary workers.dev host",
       "credential_scope": "Cloudflare keys only on origin verification and remote write/read steps; ephemeral sandbox operator credential only in deploy/attest step",
@@ -187,27 +193,28 @@
     },
     "engine_package_contract_identity": {
       "status": "SOURCE_TESTED_NOT_LIVE",
-      "source_main_sha": "6da5ba97d4a6122f740c9444a2cff6c10ad31bfa",
-      "reviewed_pr": "Taghvim-dev/engine #52, #53, #54, #55",
-      "source_test_sha": "afcc16a83ff11f69ad9850ae6ece4bc91b5c4380",
-      "ci_run": "39692042596",
+      "source_main_sha": "b11654a8110bfeb5c525f1052434d90a7e332e9f",
+      "reviewed_pr": "Taghvim-dev/engine#56",
+      "source_test_sha": "6ede66c150771144d2d4fd5d5b4c52f7fc67321e",
+      "ci_run": "39694999445",
       "api_version": "2.1.0",
       "package_version": "2.1.0",
       "lock_root_version": "2.1.0",
       "license": "Apache-2.0",
       "live_engine_release": "NOT_DISPATCHED",
-      "live_cloudflare_evidence": "MISSING"
+      "live_cloudflare_evidence": "MISSING",
+      "lock_metadata_version": "2.1.0"
     },
     "t0_cross_repo_source_admission": {
       "policy_main_sha": "f3bc8d18c5c31fd1125dd4da4887c86b9e3f8447",
       "policy_pr": "Taghvim-dev/.github PR #47",
       "policy_test_run": "39691890610",
-      "engine_main_sha": "6da5ba97d4a6122f740c9444a2cff6c10ad31bfa",
-      "engine_reviewed_head": "afcc16a83ff11f69ad9850ae6ece4bc91b5c4380",
-      "engine_ci_run": "39692042596",
-      "landing_main_sha": "e0bbde9480f74441b17708ed173a2e979e8b3609",
-      "landing_reviewed_head": "36ab616ae31695f4dd489eee315d270198c8bdff",
-      "landing_ci_run": "39692047509",
+      "engine_main_sha": "b11654a8110bfeb5c525f1052434d90a7e332e9f",
+      "engine_reviewed_head": "6ede66c150771144d2d4fd5d5b4c52f7fc67321e",
+      "engine_ci_run": "39694999445",
+      "landing_main_sha": "577aefc7297884302c75bf6dadbbc02735b543db",
+      "landing_reviewed_head": "efe9c90733c8776bd1d3102fdb6f80e4e1dcc116",
+      "landing_ci_run": "39695693934",
       "admission_scope": "MUTATION_BLOCKING_SOURCE_ONLY",
       "runtime_cloudflare_gate": "NOT_DISPATCHED",
       "cross_repo_immutable_ref": true,
@@ -216,6 +223,43 @@
       "source_pr_main_git_tree_parity": "REQUIRED_AT_SANDBOX_AND_PRODUCTION",
       "tested_engine_workflow_id": 372423484,
       "tested_landing_workflow_id": 390048334
+    }
+  },
+  "package_identity": {
+    "contract_version": "2.1.0",
+    "source_only": true,
+    "remote_runtime_attested": false,
+    "engine": {
+      "commit": "b11654a8110bfeb5c525f1052434d90a7e332e9f",
+      "package": "2.1.0",
+      "lock": "2.1.0",
+      "ci": "39694999445"
+    },
+    "landing": {
+      "commit": "577aefc7297884302c75bf6dadbbc02735b543db",
+      "package": "2.1.0",
+      "lock": "2.1.0",
+      "ci": "39695693934"
+    },
+    "SDK": {
+      "commit": "cc68bffeb1d7be5360d87d0afee356a914d2d709",
+      "root": "2.1.0",
+      "javascript": "2.1.0",
+      "python": "2.1.0",
+      "ci": "39695120246",
+      "registry_published": false
+    },
+    "CLI": {
+      "commit": "9ae9e29625178ed95d2f3045f4a6650c1f9ecaf5",
+      "package": "2.1.0",
+      "ci": "39695189982",
+      "registry_published": false
+    },
+    "cookbooks": {
+      "commit": "3608f997eefe2a6ad9ba2ac95833a62722e093f8",
+      "package": "2.1.0",
+      "sdk_source_commit": "cc68bffeb1d7be5360d87d0afee356a914d2d709",
+      "ci": "39695473444"
     }
   }
 }
