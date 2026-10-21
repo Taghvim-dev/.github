@@ -49,11 +49,19 @@ export function verifyCurrentRelease({repo,sha,release,controls}){
 
 export async function attestCurrentRelease({repo,sha,token,fetcher=fetch}){
  if(!token)fail("GitHub read token unavailable");
+ const headers={authorization:"Bearer "+token,accept:"application/vnd.github+json",
+  "x-github-api-version":"2022-11-28"};
+ const base="https://api.github.com/repos/"+OWNER+"/.github";
+ const headResponse=await fetcher(base+"/git/ref/heads/main",{
+  method:"GET",redirect:"error",cache:"no-store",headers,signal:AbortSignal.timeout(12000)});
+ if(headResponse?.status!==200)fail("cannot independently pin canonical registry main SHA");
+ const head=await headResponse.json(),registrySha=head?.object?.sha;
+ if(head?.ref!=="refs/heads/main"||head?.object?.type!=="commit"||!SHA.test(registrySha||""))
+  fail("canonical registry main ref is not a verified Git commit");
  async function get(path){
-  const url="https://api.github.com/repos/"+OWNER+"/.github/contents/"+path+"?ref=main";
+  const url=base+"/contents/"+path+"?ref="+registrySha;
   const res=await fetcher(url,{method:"GET",redirect:"error",cache:"no-store",
-    headers:{authorization:"Bearer "+token,accept:"application/vnd.github+json",
-      "x-github-api-version":"2022-11-28"},
+    headers,
     signal:AbortSignal.timeout(12000)});
   if(!res||res.status!==200)fail("canonical GitHub ledger not readable: "+path+" HTTP "+res?.status);
   const envelope=await res.json();
@@ -63,7 +71,7 @@ export async function attestCurrentRelease({repo,sha,token,fetcher=fetch}){
   catch{fail("canonical GitHub JSON invalid: "+path)}
  }
  const [release,controls]=await Promise.all(PATHS.map(get));
- return verifyCurrentRelease({repo,sha,release,controls});
+ return {...verifyCurrentRelease({repo,sha,release,controls}),registry_sha:registrySha};
 }
 async function main(){
  if(process.env.GITHUB_REF!=="refs/heads/main")
