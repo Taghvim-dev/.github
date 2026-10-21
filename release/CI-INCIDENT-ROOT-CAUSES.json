@@ -16,10 +16,12 @@
       ],
       "current_evidence": {
         "repo": "Taghvim-dev/landing",
-        "source_sha": "85d5a0b7f3b14d621a92aa4ae39d6016154e3fda",
-        "passing_run": "39682489394"
+        "merged_main_sha": "85d5a0b7f3b14d621a92aa4ae39d6016154e3fda",
+        "tested_pr_head_sha": "238f44960dfceeabad605a43ec2706114d790987",
+        "passing_run": "39682489394",
+        "evidence_scope": "PR_HEAD_SOURCE_TEST_ONLY; not a same-SHA main push, Cloudflare or runtime attestation"
       },
-      "state": "CURRENT_SOURCE_CI_GREEN",
+      "state": "REVIEWED_PR_SOURCE_CI_GREEN; MAIN_PUSH_CI_NOT_ATTESTED",
       "production_attested": false
     },
     {
@@ -39,10 +41,12 @@
       ],
       "current_evidence": {
         "repo": "Taghvim-dev/engine",
-        "source_sha": "cc66f1b9e7cfe8ebbab428c8df4dd70af69be56d",
-        "passing_run": "39684217261"
+        "merged_main_sha": "cc66f1b9e7cfe8ebbab428c8df4dd70af69be56d",
+        "tested_pr_head_sha": "a63e199de462274cead2ec854c9d342bf0d3ff8e",
+        "passing_run": "39684217261",
+        "evidence_scope": "PR_HEAD_SOURCE_TEST_ONLY; not a same-SHA main push, Cloudflare or runtime attestation"
       },
-      "state": "CURRENT_SOURCE_CI_GREEN",
+      "state": "REVIEWED_PR_SOURCE_CI_GREEN; MAIN_PUSH_CI_NOT_ATTESTED",
       "production_attested": false
     },
     {
@@ -57,10 +61,12 @@
       ],
       "current_evidence": {
         "repo": "Taghvim-dev/engine",
-        "source_sha": "cc66f1b9e7cfe8ebbab428c8df4dd70af69be56d",
-        "passing_run": "39684217261"
+        "merged_main_sha": "cc66f1b9e7cfe8ebbab428c8df4dd70af69be56d",
+        "tested_pr_head_sha": "a63e199de462274cead2ec854c9d342bf0d3ff8e",
+        "passing_run": "39684217261",
+        "evidence_scope": "PR_HEAD_SOURCE_TEST_ONLY; not a same-SHA main push, Cloudflare or runtime attestation"
       },
-      "state": "CURRENT_SOURCE_CI_GREEN",
+      "state": "REVIEWED_PR_SOURCE_CI_GREEN; MAIN_PUSH_CI_NOT_ATTESTED",
       "production_attested": false
     },
     {
@@ -75,10 +81,12 @@
       ],
       "current_evidence": {
         "repo": "Taghvim-dev/.github",
-        "source_sha": "7bf5bf7d6d45b574a4d345d8c83c7302637d540b",
-        "passing_run": "39683176654"
+        "merged_main_sha": "7bf5bf7d6d45b574a4d345d8c83c7302637d540b",
+        "tested_pr_head_sha": "bce3425bc699d3ddb636e01d7a25c6c77b90280c",
+        "passing_run": "39683176654",
+        "evidence_scope": "PR_HEAD_SOURCE_TEST_ONLY; not a same-SHA main push, Cloudflare or runtime attestation"
       },
-      "state": "COORDINATED_SOURCE_CI_GREEN",
+      "state": "REVIEWED_PR_SOURCE_CI_GREEN; MAIN_PUSH_CI_NOT_ATTESTED",
       "production_attested": false
     },
     {
@@ -93,10 +101,12 @@
       ],
       "current_evidence": {
         "repo": "Taghvim-dev/engine",
-        "source_sha": "cc66f1b9e7cfe8ebbab428c8df4dd70af69be56d",
-        "passing_run": "39684217261"
+        "merged_main_sha": "cc66f1b9e7cfe8ebbab428c8df4dd70af69be56d",
+        "tested_pr_head_sha": "a63e199de462274cead2ec854c9d342bf0d3ff8e",
+        "passing_run": "39684217261",
+        "evidence_scope": "PR_HEAD_SOURCE_TEST_ONLY; not a same-SHA main push, Cloudflare or runtime attestation"
       },
-      "state": "CURRENT_SOURCE_CI_GREEN",
+      "state": "REVIEWED_PR_SOURCE_CI_GREEN; MAIN_PUSH_CI_NOT_ATTESTED",
       "production_attested": false
     }
   ],
