@@ -19,6 +19,26 @@ assert.equal(t0.general_availability_approved,candidate.general_availability_app
 assert.equal(t0.current_source.engine_main_sha,candidate.source_verification.latest_checked.engine_sha,"T0 Engine source identity drift");
 assert.equal(t0.current_source.landing_main_sha,candidate.source_verification.latest_checked.landing_sha,"T0 Landing source identity drift");
 assert.equal(t0.current_source.shared_policy_sha,candidate.source_verification.t0_infrastructure_source?.shared_action_sha,"T0 Cloudflare guard pin drift");
+// No release component can skip the source-first cross-repository admission.
+// The reviewed action pin, tested heads, current main SHAs and CI proofs must
+// be mutually identical before a candidate is admitted for Cloudflare writes.
+const ad=candidate.source_verification?.t0_cross_repo_source_admission || {};
+const ap=t0.controls.find(x=>x.id==="T0-PREWRITE-012");
+assert.equal(ad.policy_main_sha,t0.current_source.prewrite_source_policy_sha,"T0 immutable source admission policy drift");
+assert.match(ad.policy_main_sha||"",/^[0-9a-f]{40}$/,"T0 source admission policy must have immutable SHA");
+assert.equal(ap?.policy_main_sha,ad.policy_main_sha,"T0 control points to different source admission policy");
+assert.equal(ap?.source_ci_run,ad.policy_test_run,"T0 shared admission source CI drift");
+assert.equal(ad.engine_main_sha,candidate.source_verification.latest_checked.engine_sha,"T0 admission Engine current main drift");
+assert.equal(ad.landing_main_sha,candidate.source_verification.latest_checked.landing_sha,"T0 admission Landing current main drift");
+assert.equal(ad.engine_ci_run,candidate.source_verification.latest_checked.engine_ci,"T0 Engine gate CI drift");
+assert.equal(ad.landing_ci_run,candidate.source_verification.latest_checked.landing_ci,"T0 Landing gate CI drift");
+assert.equal(ap?.dependent_component_ci?.engine,ad.engine_ci_run,"T0 Engine gate CI proof not linked to control");
+assert.equal(ap?.dependent_component_ci?.landing,ad.landing_ci_run,"T0 Landing gate CI proof not linked to control");
+assert.equal(ad.admission_scope,"MUTATION_BLOCKING_SOURCE_ONLY","T0 source-only gate must not claim runtime evidence");
+assert.equal(ad.cross_repo_immutable_ref,true,"T0 ledger reads must use one immutable Git commit");
+assert.equal(ad.post_facto_ga_authorization,false,"T0 forbids retrospective GA authorization");
+assert.equal(ad.runtime_cloudflare_gate,"NOT_DISPATCHED","T0 remote Cloudflare admission has not been observed");
+assert.equal(ap?.production_remote_receipt,null,"T0 source-only admission is not a production deployment");
 // Historical CI failures are immutable observations, not evidence of a
 // currently broken main or proof of a fixed production runtime. Force a
 // reviewer-tested PR SHA and its squash-merge main SHA to be distinct fields.
@@ -53,7 +73,7 @@ for(const incident of incidents.root_cause_groups||[]){
 }
 assert.ok(incidentIds.size>=5,"Incomplete recovered CI root-cause coverage");
 const requiredT0=["T0-SOURCE-001","T0-INFRA-002","T0-SECRET-003","T0-PROMOTE-004",
-"T0-D1-005","T0-EXEC-006","T0-API-007","T0-ONBOARD-008","T0-RELEASE-009","T0-GA-010","T0-IDENTITY-011"];
+"T0-D1-005","T0-EXEC-006","T0-API-007","T0-ONBOARD-008","T0-RELEASE-009","T0-GA-010","T0-IDENTITY-011","T0-PREWRITE-012"];
 assert.deepEqual(t0.controls.map(c=>c.id).sort(),requiredT0.sort(),"T0 capability coverage drift");
 // Mirror the current Engine release facts into the central declaration and
 // bind their evidence to the exact reviewed main revision and source CI run.
