@@ -69,8 +69,13 @@ assert.equal(identity?.api_version,candidate.contract_version,"Engine identity A
 assert.equal(identity?.package_version,candidate.contract_version,"Engine npm version drift");
 assert.equal(identity?.lock_root_version,candidate.contract_version,"Engine npm lock root version drift");
 assert.equal(identity?.license,"Apache-2.0","Engine package license drift");
-assert.equal(identity?.live_engine_release,"NOT_DISPATCHED","Live engine release cannot be source-only attested");
-assert.equal(identity?.live_cloudflare_evidence,"MISSING","Cloudflare provenance is unverified");
+if(!candidate.general_availability_approved){
+ assert.equal(identity?.live_engine_release,"NOT_DISPATCHED","Do not fabricate a completed Engine deployment");
+ assert.equal(identity?.live_cloudflare_evidence,"MISSING","Do not fabricate Cloudflare proof");
+}else{
+ assert.equal(identity?.live_engine_release,"VERIFIED","GA requires independently reviewed Engine production evidence");
+ assert.match(identity?.live_cloudflare_evidence||"",/^[a-f0-9]{64}$/,"GA needs immutable Cloudflare evidence digest");
+}
 assert.equal(identityControl.source_ci_run,current?.engine_ci,"T0 source gate CI receipt drift");
 for(const control of t0.controls){
  assert.ok(Array.isArray(control.code)&&control.code.length,"T0 missing code link "+control.id);
