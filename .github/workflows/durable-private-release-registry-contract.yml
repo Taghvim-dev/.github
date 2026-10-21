@@ -4,12 +4,14 @@ on:
     paths:
       - '.github/actions/persist-release-evidence/**'
       - 'test/persist-release-evidence.test.mjs'
+      - '.github/actions/d1-recovery-bookmark/**'
       - '.github/workflows/durable-private-release-registry-contract.yml'
   push:
     branches: [main]
     paths:
       - '.github/actions/persist-release-evidence/**'
       - 'test/persist-release-evidence.test.mjs'
+      - '.github/actions/d1-recovery-bookmark/**'
       - '.github/workflows/durable-private-release-registry-contract.yml'
 permissions:
   contents: read
