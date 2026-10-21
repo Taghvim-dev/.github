@@ -42,8 +42,13 @@ for(const incident of incidents.root_cause_groups||[]){
  assert.match(proof.tested_pr_head_sha||"",/^[0-9a-f]{40}$/);
  assert.match(proof.passing_run||"",/^\d+$/);
  assert.ok(proof.evidence_scope?.includes("PR_HEAD_SOURCE_TEST_ONLY"),"CI incident claims unscoped source proof");
- if(proof.repo==="Taghvim-dev/engine")assert.equal(proof.merged_main_sha,t0.current_source.engine_main_sha,"CI Engine main SHA drift");
- if(proof.repo==="Taghvim-dev/landing")assert.equal(proof.merged_main_sha,t0.current_source.landing_main_sha,"CI Landing main SHA drift");
+ // Incident receipts describe the *historical fix commit*, not the latest
+ // main. Requiring equality creates perpetual red CI whenever a repo evolves,
+ // or forces illegal rewriting of append-only incident evidence.
+ assert.notEqual(proof.merged_main_sha,proof.tested_pr_head_sha,
+   "Historical squash main and independently reviewed PR head must be recorded separately");
+ assert.ok(["Taghvim-dev/engine","Taghvim-dev/landing","Taghvim-dev/.github"].includes(proof.repo),
+   "Incident proof references an unrelated repository");
  assert.equal(incident.production_attested,false,"CI success is not live production attestation");
 }
 assert.ok(incidentIds.size>=5,"Incomplete recovered CI root-cause coverage");
