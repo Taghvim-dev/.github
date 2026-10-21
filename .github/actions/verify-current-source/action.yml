@@ -1,0 +1,13 @@
+name: T0 current release source admission
+description: Fail-closed independent source and T0 ledger parity before Cloudflare writes
+runs:
+  using: composite
+  steps:
+    - name: Read immutable source and control matrix from canonical Taghvim GitHub main
+      shell: bash
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+        ADMISSION_SCRIPT: ${{ github.action_path }}/verify-current-source.mjs
+      run: |
+        set -euo pipefail
+        node "$ADMISSION_SCRIPT"
