@@ -1,0 +1,21 @@
+name: T0 Cloudflare sandbox origin attestation
+description: Read-only, fail-closed account ownership check before any sandbox write or operator credential
+inputs:
+  worker:
+    description: Immutable sandbox Worker name (taghvim-api-sandbox or taghvim-web-sandbox)
+    required: true
+  origin:
+    description: Exact sandbox Worker HTTPS origin
+    required: true
+runs:
+  using: composite
+  steps:
+    - name: Verify Cloudflare owns the exact sandbox origin and expected Worker
+      shell: bash
+      env:
+        TAGHVIM_EXPECTED_SANDBOX_WORKER: ${{ inputs.worker }}
+        TAGHVIM_SANDBOX_ORIGIN: ${{ inputs.origin }}
+        VERIFY_SCRIPT: ${{ github.action_path }}/verify-sandbox-origin.mjs
+      run: |
+        set -euo pipefail
+        node "$VERIFY_SCRIPT"

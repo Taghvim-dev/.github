@@ -1,0 +1,35 @@
+name: sandbox-origin-ownership-contract
+on:
+  pull_request:
+    paths:
+      - ".github/actions/verify-sandbox-origin/**"
+      - "test/sandbox-origin-ownership.test.mjs"
+      - ".github/workflows/sandbox-origin-ownership-contract.yml"
+  push:
+    branches: [main]
+    paths:
+      - ".github/actions/verify-sandbox-origin/**"
+      - "test/sandbox-origin-ownership.test.mjs"
+      - ".github/workflows/sandbox-origin-ownership-contract.yml"
+permissions:
+  contents: read
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  contract:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: "22"
+      - run: node --test test/sandbox-origin-ownership.test.mjs
+      - name: Reject Cloudflare mutation methods in a read-only origin policy
+        shell: bash
+        run: |
+          set -euo pipefail
+          ! grep -E 'method:[[:space:]]*["\x27](POST|PUT|PATCH|DELETE)' .github/actions/verify-sandbox-origin/verify-sandbox-origin.mjs
