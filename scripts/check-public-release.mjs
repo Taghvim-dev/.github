@@ -49,6 +49,10 @@ assert.equal(ciControl?.reviewed_action_main_sha,ad.policy_main_sha,"T0 strong C
 assert.equal(ciControl?.source_ci_run,ad.policy_test_run,"T0 CI run verifier contract test is not current");
 assert.equal(ciControl?.component_source_ci?.engine,ad.engine_ci_run,"T0 tested Engine CI proof drift");
 assert.equal(ciControl?.component_source_ci?.landing,ad.landing_ci_run,"T0 tested Landing CI proof drift");
+for(const [name,id] of [["engine",372423484],["landing",390048334]]){
+ assert.equal(ad["tested_"+name+"_workflow_id"],id,"T0 false success possible: noncanonical "+name+" test workflow identity");
+ assert.equal(ciControl?.expected_workflow_ids?.[name],id,"T0 CI control references another "+name+" workflow");
+}
 if(!candidate.general_availability_approved){
  assert.equal(ciControl?.state,"LIVE_UNVERIFIED","CI runtime proof cannot be retroactively marked live");
  assert.equal(ciControl?.live_evidence,null,"No real release runtime receipt exists yet");
