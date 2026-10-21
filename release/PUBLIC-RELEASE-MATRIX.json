@@ -44,15 +44,15 @@
   "source_verification": {
     "date": "2026-10-21",
     "phase": "source-integrated-not-deployed",
-    "engine_main_merge_sha": "65726602e01593bcbfe223008820c971fef76ff3",
-    "engine_offline_ci_run": "39572569270",
+    "engine_main_merge_sha": "c0685e89450c3f859fdfbe9a60c304d1004ef450",
+    "engine_offline_ci_run": "39682732188",
     "engine_live_gate_ci_run": "39439068311",
-    "landing_main_merge_sha": "e0b8a7741a73be2fec0c4337081d18d66c494afd",
-    "landing_integration_merge_sha": "2b6520a48ffa950101c5f77d612bb01b734e8980",
-    "landing_integration_ci_run": "39594302905",
+    "landing_main_merge_sha": "85d5a0b7f3b14d621a92aa4ae39d6016154e3fda",
+    "landing_integration_merge_sha": "238f44960dfceeabad605a43ec2706114d790987",
+    "landing_integration_ci_run": "39682489394",
     "landing_rtl_ci_run": "39438283155",
     "landing_two_phase_release_ci_run": "39440013499",
-    "note": "Latest Landing source integration PR head 2b6520a48f passed 39594302905 and was merged to main e0b8a7741a73. Main and integration SHAs intentionally differ; both are tracked. Engine main 65726602 passed 39572569270. No live sandbox/production release receipt or GA approval.",
+    "note": "T=0 source gates merged and CI tested: upstream Engine source attestation, Cloudflare account-owned sandbox URL, step-scoped Cloudflare tokens and nonpersistent synthetic operator token. Current source heads reconciled to Engine c0685e and Landing 85d5a0. Remote D1/Workers/sandbox/production and user onboarding evidence still missing; GA remains blocked.",
     "engine_node24_action_test": "39441189301",
     "landing_node24_action_test": "39441203096",
     "landing_node24_rtl_test": "39441203134",
@@ -145,16 +145,16 @@
     },
     "latest_checked": {
       "date": "2026-10-21",
-      "engine_sha": "65726602e01593bcbfe223008820c971fef76ff3",
-      "engine_ci": "39572569270",
-      "landing_sha": "e0b8a7741a73be2fec0c4337081d18d66c494afd",
-      "landing_ci": "39594302905",
-      "shared_release_actions_sha": "aff8450bc753a75ba5c9b922cd61c5956a61be8e",
+      "engine_sha": "c0685e89450c3f859fdfbe9a60c304d1004ef450",
+      "engine_ci": "39682732188",
+      "landing_sha": "85d5a0b7f3b14d621a92aa4ae39d6016154e3fda",
+      "landing_ci": "39682489394",
+      "shared_release_actions_sha": "c195c8bfde573b6195bd1b3bd00e3535accc9040",
       "vendored_engine_files_matched": 11,
       "sandbox_to_production_status": "NO_GO",
       "production_workflow_runs": 0,
-      "landing_integration_sha": "2b6520a48ffa950101c5f77d612bb01b734e8980",
-      "landing_integration_ci": "39594302905"
+      "landing_integration_sha": "238f44960dfceeabad605a43ec2706114d790987",
+      "landing_integration_ci": "39682489394"
     },
     "independent_engine_source_gate": {
       "status": "SOURCE_TESTED; REMOTE CHECKOUT NOT DISPATCHED",
@@ -167,6 +167,21 @@
       "sandbox_and_production_environment_secret": "TAGHVIM_ENGINE_READ_TOKEN",
       "live_upstream_attestation_receipt": "MISSING",
       "note": "Git checkout of private Engine at immutable manifest SHA is required separately in both protected release stages; CI tests only synthetic fixtures."
+    },
+    "t0_infrastructure_source": {
+      "date": "2026-10-21",
+      "shared_action_sha": "c195c8bfde573b6195bd1b3bd00e3535accc9040",
+      "action_test_run": "39681975240",
+      "engine_main_sha": "c0685e89450c3f859fdfbe9a60c304d1004ef450",
+      "engine_ci_run": "39682732188",
+      "landing_main_sha": "85d5a0b7f3b14d621a92aa4ae39d6016154e3fda",
+      "landing_ci_run": "39682489394",
+      "control_matrix": "release/T0-CONTROL-MATRIX.json",
+      "enforced_origin": "Exact authorized account *.workers.dev Worker, not arbitrary workers.dev host",
+      "credential_scope": "Cloudflare keys only on origin verification and remote write/read steps; ephemeral sandbox operator credential only in deploy/attest step",
+      "remote_origin_proof": "MISSING",
+      "actual_sandbox_promotion": "NOT_DISPATCHED",
+      "actual_production_deployment": "NOT_DISPATCHED"
     }
   }
 }

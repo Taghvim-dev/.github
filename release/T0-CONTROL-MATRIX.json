@@ -1,0 +1,183 @@
+{
+  "schema_version": 1,
+  "principle": "T0 integrated-by-construction: code + infrastructure + contracts + security + CI + recovery + immutable evidence; no post-facto silo acceptance",
+  "product": "Taghvim.dev",
+  "contract_version": "2.1.0",
+  "current_source": {
+    "engine_main_sha": "c0685e89450c3f859fdfbe9a60c304d1004ef450",
+    "landing_main_sha": "85d5a0b7f3b14d621a92aa4ae39d6016154e3fda",
+    "shared_policy_sha": "c195c8bfde573b6195bd1b3bd00e3535accc9040"
+  },
+  "general_availability_approved": false,
+  "controls": [
+    {
+      "id": "T0-SOURCE-001",
+      "area": "canonical engine provenance",
+      "state": "SOURCE_VERIFIED",
+      "requires_live_proof": false,
+      "code": [
+        "landing/scripts/verify-engine-source.mjs",
+        "landing/scripts/sync-engine.mjs"
+      ],
+      "test": [
+        "landing/test/engine-source-provenance.test.mjs"
+      ],
+      "source_ci_run": "39594302905",
+      "live_evidence": null
+    },
+    {
+      "id": "T0-INFRA-002",
+      "area": "Cloudflare account owns exact sandbox Worker origin",
+      "state": "LIVE_UNVERIFIED",
+      "requires_live_proof": true,
+      "code": [
+        ".github/.github/actions/verify-sandbox-origin",
+        "engine/.github/workflows/production-release.yml",
+        "landing/.github/workflows/production-release.yml"
+      ],
+      "test": [
+        ".github/test/sandbox-origin-ownership.test.mjs",
+        "engine/test/promotion-first.test.mjs",
+        "landing/test/promotion-first.test.mjs"
+      ],
+      "source_ci_run": "39681975240",
+      "live_evidence": null
+    },
+    {
+      "id": "T0-SECRET-003",
+      "area": "step-scoped tokens, no npm install secret inheritance or persistent operator token",
+      "state": "SOURCE_VERIFIED",
+      "requires_live_proof": false,
+      "code": [
+        "engine/.github/workflows/production-release.yml",
+        "landing/.github/workflows/production-release.yml"
+      ],
+      "test": [
+        "engine/test/promotion-first.test.mjs",
+        "landing/test/promotion-first.test.mjs"
+      ],
+      "source_ci_run": "39682732188",
+      "live_evidence": null
+    },
+    {
+      "id": "T0-PROMOTE-004",
+      "area": "same-run SHA-locked sandbox to reviewed production",
+      "state": "LIVE_UNVERIFIED",
+      "requires_live_proof": true,
+      "code": [
+        "engine/scripts/promotion-first.mjs",
+        "landing/scripts/promotion-first.mjs",
+        ".github/.github/actions/verify-production-environment"
+      ],
+      "test": [
+        "engine/test/promotion-first.test.mjs",
+        "landing/test/promotion-first.test.mjs"
+      ],
+      "source_ci_run": "39682489394",
+      "live_evidence": null
+    },
+    {
+      "id": "T0-D1-005",
+      "area": "physical D1 identity, applied migrations and pre-migration recovery bookmark",
+      "state": "LIVE_UNVERIFIED",
+      "requires_live_proof": true,
+      "code": [
+        ".github/.github/actions/d1-recovery-bookmark",
+        ".github/.github/actions/verify-d1-ledger"
+      ],
+      "test": [
+        ".github/test/d1-recovery-bookmark.test.mjs"
+      ],
+      "source_ci_run": "39456618077",
+      "live_evidence": null
+    },
+    {
+      "id": "T0-EXEC-006",
+      "area": "durable independent release checkpoints and private issue evidence",
+      "state": "LIVE_UNVERIFIED",
+      "requires_live_proof": true,
+      "code": [
+        ".github/.github/actions/release-checkpoint",
+        ".github/.github/actions/persist-release-evidence"
+      ],
+      "test": [
+        "engine/test/promotion-first.test.mjs",
+        "landing/test/promotion-first.test.mjs"
+      ],
+      "source_ci_run": "39459162015",
+      "live_evidence": null
+    },
+    {
+      "id": "T0-API-007",
+      "area": "Engine 2.1.0 API, Landing contract and public SDK operation parity",
+      "state": "LIVE_UNVERIFIED",
+      "requires_live_proof": true,
+      "code": [
+        "engine/contracts/openapi.json",
+        "landing/vendor/engine/contracts/openapi.json",
+        ".github/scripts/check-public-release.mjs"
+      ],
+      "test": [
+        "landing/test/release-bundle.test.mjs"
+      ],
+      "source_ci_run": "39594302905",
+      "live_evidence": null
+    },
+    {
+      "id": "T0-ONBOARD-008",
+      "area": "real isolated tenant, one-time key, revocation, form consent and no-email sandbox",
+      "state": "LIVE_UNVERIFIED",
+      "requires_live_proof": true,
+      "code": [
+        "engine/scripts/sandbox-onboarding.mjs",
+        "landing/scripts/promotion-first.mjs"
+      ],
+      "test": [
+        "engine/test/sandbox-onboarding.test.mjs",
+        "landing/test/promotion-first.test.mjs"
+      ],
+      "source_ci_run": "39682732188",
+      "live_evidence": null
+    },
+    {
+      "id": "T0-RELEASE-009",
+      "area": "protected branch and independently reviewed protected production environments",
+      "state": "LIVE_UNVERIFIED",
+      "requires_live_proof": true,
+      "code": [
+        ".github/.github/actions/verify-production-environment"
+      ],
+      "test": [
+        "engine/test/promotion-first.test.mjs"
+      ],
+      "source_ci_run": "39482582126",
+      "live_evidence": null
+    },
+    {
+      "id": "T0-GA-010",
+      "area": "metering, payment reconciliation, data protection, accessibility and production rollback approval",
+      "state": "LIVE_UNVERIFIED",
+      "requires_live_proof": true,
+      "code": [
+        "engine/src/metering",
+        "engine/src/billing",
+        "landing/src/forms-api.js"
+      ],
+      "test": [
+        "engine/test",
+        "landing/test"
+      ],
+      "source_ci_run": null,
+      "live_evidence": null
+    }
+  ],
+  "evidence_rules": {
+    "source_ci_is_not_deployment": true,
+    "no_approval_without_actual_immutable_remote_receipt": true,
+    "no_secret_or_token_in_receipt": true,
+    "no_post_facto_state_backfill": true,
+    "no_cloudflare_production_write_by_chat": true,
+    "no_state_advance_without_parent_dependency": true,
+    "retry_reads_existing_state_before_mutation": true
+  }
+}
