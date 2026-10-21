@@ -5,6 +5,11 @@ import {readFileSync} from "node:fs";
 import {execFileSync} from "node:child_process";
 const candidate=JSON.parse(readFileSync(new URL("../release/PUBLIC-RELEASE-MATRIX.json",import.meta.url)));
 const isLive=process.argv.includes("--live");
+// A T=0 policy is not enforceable if edits to its canonical ledger skip CI.
+// Both pull_request and push must include the entire control matrix path.
+const releaseWorkflow=readFileSync(new URL("../.github/workflows/coordinated-public-release.yml",import.meta.url),"utf8");
+const t0Triggers=[...releaseWorkflow.matchAll(/^\s+- ["']release\/T0-CONTROL-MATRIX\.json["']\s*$/gm)];
+assert.equal(t0Triggers.length,2,"T0 matrix changes must trigger cohesive CI on PR and main push");
 // Constitutional T=0 release ledger: every requirement must have source, test,
 // verified commit identity and independently demonstrated live admission proof.
 const t0=JSON.parse(readFileSync(new URL("../release/T0-CONTROL-MATRIX.json",import.meta.url)));
