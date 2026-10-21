@@ -1,5 +1,6 @@
 import {test} from "node:test";
 import assert from "node:assert/strict";
+import {readFileSync} from "node:fs";
 import {attestSandboxOrigin,verifySandboxOrigin} from "../.github/actions/verify-sandbox-origin/verify-sandbox-origin.mjs";
 const accountId="a".repeat(32),token="sandbox-scoped-test-token";
 const base={worker:"taghvim-api-sandbox",origin:"https://taghvim-api-sandbox.tgv-owned.workers.dev",subdomain:"tgv-owned",accountId};
@@ -49,4 +50,17 @@ test("failure or forged Cloudflare responses never yield an allowed origin",asyn
   {status:200,json:async()=>({success:true,result:{subdomain:"attacker.workers.dev"}})}
  ])await assert.rejects(attestSandboxOrigin({worker:base.worker,origin:base.origin,accountId,token,fetcher:async()=>response}),/SANDBOX_ORIGIN_BLOCKED/);
  await assert.rejects(attestSandboxOrigin({worker:base.worker,origin:base.origin,accountId,token:"",fetcher:async()=>{throw Error("no network")}}),/SANDBOX_ORIGIN_BLOCKED/);
+});
+
+test("all mutations are rejected by the source-level read-only contract regardless of JavaScript quote style",()=>{
+ const source=readFileSync(new URL("../.github/actions/verify-sandbox-origin/verify-sandbox-origin.mjs",import.meta.url),"utf8");
+ // Static policy is intentionally independent of the function-under-test;
+ // both single-quoted and double-quoted method fields must fail.
+ const hasMutation=code=>/\bmethod\s*:\s*['"`](?:POST|PUT|PATCH|DELETE)\b/i.test(code);
+ assert.equal(hasMutation(source),false);
+ assert.match(source,/\bmethod\s*:\s*["'`]GET\b/);
+ for(const fake of [
+   "method: 'POST'", 'method: "PUT"', "method: `PATCH`", "method:'DELETE'",
+   "method : 'post'"
+ ]) assert.equal(hasMutation(fake),true,"Mutation detection missed "+fake);
 });
