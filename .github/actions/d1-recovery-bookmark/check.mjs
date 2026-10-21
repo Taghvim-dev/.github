@@ -5,6 +5,8 @@ import {readFileSync,writeFileSync} from "node:fs";
 import {pathToFileURL} from "node:url";
 const WORKERS={"taghvim-engine":"taghvim-api","taghvim-web":"taghvim-web"};
 const UUID=/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i;
+// Cloudflare account IDs are 32-character hex, unlike D1 database UUIDs.
+const ACCOUNT_ID=/^[a-f0-9]{32}$/i;
 const BOOKMARK=/^[a-f0-9]{8}-[a-f0-9]{8}-[a-f0-9]{8}-[a-f0-9]{32}$/i;
 const fail=msg=>{throw Error("D1_RECOVERY_BLOCKED: "+msg)};
 export function databaseId(config,database){
@@ -29,7 +31,7 @@ export function receipt(body,{database,dbId,sha,run,at}){
 }
 export async function capture({database,config,token,account,sha,run,at=new Date().toISOString(),request=fetch}){
   const dbId=databaseId(config,database);
-  if(!UUID.test(account||"")||!token)fail("Cloudflare account credentials missing");
+  if(!ACCOUNT_ID.test(account||"")||!token)fail("Cloudflare account credentials missing or malformed");
   const url="https://api.cloudflare.com/client/v4/accounts/"+account+"/d1/database/"+dbId+"/time_travel/bookmark";
   const response=await request(url,{method:"GET",headers:{authorization:"Bearer "+token,accept:"application/json"},
     signal:AbortSignal.timeout(20000)});
