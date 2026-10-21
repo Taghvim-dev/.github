@@ -1,0 +1,17 @@
+name: Verify production D1 recovery bookmark
+description: Fail-closed read-only pre-migration Cloudflare D1 bookmark verification
+inputs:
+  database:
+    description: taghvim-engine or taghvim-web
+    required: true
+runs:
+  using: composite
+  steps:
+    - name: Attest remote D1 recovery coordinate, without modifying data
+      shell: bash
+      env:
+        DB: ${{ inputs.database }}
+        SCRIPT: ${{ github.action_path }}/check.mjs
+      run: |
+        set -euo pipefail
+        node "$SCRIPT" "$DB" release-d1-recovery-bookmark.json
