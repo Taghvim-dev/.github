@@ -44,15 +44,15 @@
   "source_verification": {
     "date": "2026-10-21",
     "phase": "source-integrated-not-deployed",
-    "engine_main_merge_sha": "cc66f1b9e7cfe8ebbab428c8df4dd70af69be56d",
-    "engine_offline_ci_run": "39684217261",
+    "engine_main_merge_sha": "8bcad635b3a6d4cdd61f3b77934ea198ce88086f",
+    "engine_offline_ci_run": "39686653205",
     "engine_live_gate_ci_run": "39439068311",
     "landing_main_merge_sha": "85d5a0b7f3b14d621a92aa4ae39d6016154e3fda",
     "landing_integration_merge_sha": "238f44960dfceeabad605a43ec2706114d790987",
     "landing_integration_ci_run": "39682489394",
     "landing_rtl_ci_run": "39438283155",
     "landing_two_phase_release_ci_run": "39440013499",
-    "note": "Current Engine main cc66f1b9e7cf verified in PR CI run 39684217261 (both Ubuntu runner legs); Landing main 85d5a0b7f3b verified by CI 39682489394; 2.1.0 shared T0 controls and source tests integrated, but Sandbox/Production Cloudflare remote writes and GA remain NOT DISPATCHED, UNVERIFIED.",
+    "note": "Engine source main 8bcad635b3a6 reviewed CI 39686653205 PASS; package+lock+OpenAPI identity 2.1.0 and Apache-2.0 enforced in code. Landing source main 85d5a0b7f3 still pins immutable Engine 6572660 for unchanged vendored 11-file API/calendar surface. Cloudflare deployments, D1 and tenant onboarding not verified; GA false.",
     "engine_node24_action_test": "39441189301",
     "landing_node24_action_test": "39441203096",
     "landing_node24_rtl_test": "39441203134",
@@ -145,8 +145,8 @@
     },
     "latest_checked": {
       "date": "2026-10-21",
-      "engine_sha": "cc66f1b9e7cfe8ebbab428c8df4dd70af69be56d",
-      "engine_ci": "39684217261",
+      "engine_sha": "8bcad635b3a6d4cdd61f3b77934ea198ce88086f",
+      "engine_ci": "39686653205",
       "landing_sha": "85d5a0b7f3b14d621a92aa4ae39d6016154e3fda",
       "landing_ci": "39682489394",
       "shared_release_actions_sha": "c195c8bfde573b6195bd1b3bd00e3535accc9040",
@@ -172,8 +172,8 @@
       "date": "2026-10-21",
       "shared_action_sha": "c195c8bfde573b6195bd1b3bd00e3535accc9040",
       "action_test_run": "39681975240",
-      "engine_main_sha": "cc66f1b9e7cfe8ebbab428c8df4dd70af69be56d",
-      "engine_ci_run": "39684217261",
+      "engine_main_sha": "8bcad635b3a6d4cdd61f3b77934ea198ce88086f",
+      "engine_ci_run": "39686653205",
       "landing_main_sha": "85d5a0b7f3b14d621a92aa4ae39d6016154e3fda",
       "landing_ci_run": "39682489394",
       "control_matrix": "release/T0-CONTROL-MATRIX.json",
@@ -184,6 +184,19 @@
       "actual_production_deployment": "NOT_DISPATCHED",
       "credential_cleanup_sha": "cc66f1b9e7cfe8ebbab428c8df4dd70af69be56d",
       "credential_cleanup_ci_run": "39684217261"
+    },
+    "engine_package_contract_identity": {
+      "status": "SOURCE_TESTED_NOT_LIVE",
+      "source_main_sha": "8bcad635b3a6d4cdd61f3b77934ea198ce88086f",
+      "reviewed_pr": "Taghvim-dev/engine#52",
+      "source_test_sha": "6270acd0715de3e4b567f7db4887d160bf61f489",
+      "ci_run": "39686653205",
+      "api_version": "2.1.0",
+      "package_version": "2.1.0",
+      "lock_root_version": "2.1.0",
+      "license": "Apache-2.0",
+      "live_engine_release": "NOT_DISPATCHED",
+      "live_cloudflare_evidence": "MISSING"
     }
   }
 }

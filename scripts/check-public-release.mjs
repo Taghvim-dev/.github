@@ -42,14 +42,41 @@ for(const incident of incidents.root_cause_groups||[]){
  assert.match(proof.tested_pr_head_sha||"",/^[0-9a-f]{40}$/);
  assert.match(proof.passing_run||"",/^\d+$/);
  assert.ok(proof.evidence_scope?.includes("PR_HEAD_SOURCE_TEST_ONLY"),"CI incident claims unscoped source proof");
- if(proof.repo==="Taghvim-dev/engine")assert.equal(proof.merged_main_sha,t0.current_source.engine_main_sha,"CI Engine main SHA drift");
- if(proof.repo==="Taghvim-dev/landing")assert.equal(proof.merged_main_sha,t0.current_source.landing_main_sha,"CI Landing main SHA drift");
+ // Incident receipts describe the *historical fix commit*, not the latest
+ // main. Requiring equality creates perpetual red CI whenever a repo evolves,
+ // or forces illegal rewriting of append-only incident evidence.
+ assert.notEqual(proof.merged_main_sha,proof.tested_pr_head_sha,
+   "Historical squash main and independently reviewed PR head must be recorded separately");
+ assert.ok(["Taghvim-dev/engine","Taghvim-dev/landing","Taghvim-dev/.github"].includes(proof.repo),
+   "Incident proof references an unrelated repository");
  assert.equal(incident.production_attested,false,"CI success is not live production attestation");
 }
 assert.ok(incidentIds.size>=5,"Incomplete recovered CI root-cause coverage");
 const requiredT0=["T0-SOURCE-001","T0-INFRA-002","T0-SECRET-003","T0-PROMOTE-004",
-"T0-D1-005","T0-EXEC-006","T0-API-007","T0-ONBOARD-008","T0-RELEASE-009","T0-GA-010"];
+"T0-D1-005","T0-EXEC-006","T0-API-007","T0-ONBOARD-008","T0-RELEASE-009","T0-GA-010","T0-IDENTITY-011"];
 assert.deepEqual(t0.controls.map(c=>c.id).sort(),requiredT0.sort(),"T0 capability coverage drift");
+// Mirror the current Engine release facts into the central declaration and
+// bind their evidence to the exact reviewed main revision and source CI run.
+// Historical incident receipts remain unchanged and cannot substitute current CI.
+const identity=candidate.source_verification?.engine_package_contract_identity;
+const current=candidate.source_verification?.latest_checked;
+const identityControl=t0.controls.find(c=>c.id==="T0-IDENTITY-011");
+assert.ok(identityControl&&identityControl.state==="SOURCE_VERIFIED","Missing Engine release identity gate");
+assert.equal(identity?.status,"SOURCE_TESTED_NOT_LIVE","Engine release identity may not falsely claim Cloudflare production");
+assert.equal(identity?.source_main_sha,current?.engine_sha,"Engine package identity references stale commit");
+assert.equal(identity?.ci_run,current?.engine_ci,"Engine package identity references stale CI run");
+assert.equal(identity?.api_version,candidate.contract_version,"Engine identity API contract drift");
+assert.equal(identity?.package_version,candidate.contract_version,"Engine npm version drift");
+assert.equal(identity?.lock_root_version,candidate.contract_version,"Engine npm lock root version drift");
+assert.equal(identity?.license,"Apache-2.0","Engine package license drift");
+if(!candidate.general_availability_approved){
+ assert.equal(identity?.live_engine_release,"NOT_DISPATCHED","Do not fabricate a completed Engine deployment");
+ assert.equal(identity?.live_cloudflare_evidence,"MISSING","Do not fabricate Cloudflare proof");
+}else{
+ assert.equal(identity?.live_engine_release,"VERIFIED","GA requires independently reviewed Engine production evidence");
+ assert.match(identity?.live_cloudflare_evidence||"",/^[a-f0-9]{64}$/,"GA needs immutable Cloudflare evidence digest");
+}
+assert.equal(identityControl.source_ci_run,current?.engine_ci,"T0 source gate CI receipt drift");
 for(const control of t0.controls){
  assert.ok(Array.isArray(control.code)&&control.code.length,"T0 missing code link "+control.id);
  assert.ok(Array.isArray(control.test)&&control.test.length,"T0 missing test link "+control.id);

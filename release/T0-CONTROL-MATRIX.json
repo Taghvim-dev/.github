@@ -4,7 +4,7 @@
   "product": "Taghvim.dev",
   "contract_version": "2.1.0",
   "current_source": {
-    "engine_main_sha": "cc66f1b9e7cfe8ebbab428c8df4dd70af69be56d",
+    "engine_main_sha": "8bcad635b3a6d4cdd61f3b77934ea198ce88086f",
     "landing_main_sha": "85d5a0b7f3b14d621a92aa4ae39d6016154e3fda",
     "shared_policy_sha": "c195c8bfde573b6195bd1b3bd00e3535accc9040"
   },
@@ -168,6 +168,23 @@
         "landing/test"
       ],
       "source_ci_run": null,
+      "live_evidence": null
+    },
+    {
+      "id": "T0-IDENTITY-011",
+      "area": "same version and license across canonical API, npm package and lockfile",
+      "state": "SOURCE_VERIFIED",
+      "requires_live_proof": false,
+      "code": [
+        "engine/scripts/release-identity.mjs",
+        "engine/scripts/check-data.mjs",
+        "engine/package.json",
+        "engine/package-lock.json"
+      ],
+      "test": [
+        "engine/test/release-identity.test.mjs"
+      ],
+      "source_ci_run": "39686653205",
       "live_evidence": null
     }
   ],
