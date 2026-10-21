@@ -1,0 +1,30 @@
+name: t0-current-source-admission-contract
+on:
+  pull_request:
+    paths:
+      - ".github/actions/verify-current-source/**"
+      - "test/t0-current-source-admission.test.mjs"
+      - ".github/workflows/t0-current-source-admission-contract.yml"
+  push:
+    branches: [main]
+    paths:
+      - ".github/actions/verify-current-source/**"
+      - "test/t0-current-source-admission.test.mjs"
+      - ".github/workflows/t0-current-source-admission-contract.yml"
+permissions:
+  contents: read
+jobs:
+  policy:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: "22"
+      - name: Source gate denies all split-brain and post-facto source promotions
+        run: node --test test/t0-current-source-admission.test.mjs
+      - name: Validate production source gate script syntax
+        run: node --check .github/actions/verify-current-source/verify-current-source.mjs
