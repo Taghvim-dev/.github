@@ -17,10 +17,10 @@ const D1_UUID=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 export function canonicalD1Id(config,component) {
   const worker=component==="engine"?"taghvim-api":component==="landing"?"taghvim-web":null;
   const database=component==="engine"?"taghvim-engine":component==="landing"?"taghvim-web":null;
-  if(!worker||config.match(/^name\\s*=\\s*"([^"]+)"/m)?.[1]!==worker)return null;
-  const matches=[...config.matchAll(/^\\[\\[d1_databases\\]\\]([\\s\\S]*?)(?=^\\[|$(?![\\s\\S]))/gm)]
-    .filter(x=>x[1].match(/^\\s*database_name\\s*=\\s*"([^"]+)"/m)?.[1]===database)
-    .map(x=>x[1].match(/^\\s*database_id\\s*=\\s*"([^"]+)"/m)?.[1]);
+  if(!worker||config.match(/^name\s*=\s*"([^"]+)"/m)?.[1]!==worker)return null;
+  const matches=[...config.matchAll(/^\[\[d1_databases\]\]([\s\\S]*?)(?=^\[|$(?![\s\\S]))/gm)]
+    .filter(x=>x[1].match(/^\s*database_name\s*=\s*"([^"]+)"/m)?.[1]===database)
+    .map(x=>x[1].match(/^\s*database_id\s*=\s*"([^"]+)"/m)?.[1]);
   return matches.length===1&&D1_UUID.test(matches[0]||"")?matches[0]:null;
 }
 export function receipt({repo,issue,component,sha,run,attempt,status,checkpoint=null,migrations=null,sandbox=null,sandboxStatus="unknown",recovery=null,expectedD1Id=null}) {
