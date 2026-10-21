@@ -55,6 +55,23 @@ assert.ok(incidentIds.size>=5,"Incomplete recovered CI root-cause coverage");
 const requiredT0=["T0-SOURCE-001","T0-INFRA-002","T0-SECRET-003","T0-PROMOTE-004",
 "T0-D1-005","T0-EXEC-006","T0-API-007","T0-ONBOARD-008","T0-RELEASE-009","T0-GA-010","T0-IDENTITY-011"];
 assert.deepEqual(t0.controls.map(c=>c.id).sort(),requiredT0.sort(),"T0 capability coverage drift");
+// Mirror the current Engine release facts into the central declaration and
+// bind their evidence to the exact reviewed main revision and source CI run.
+// Historical incident receipts remain unchanged and cannot substitute current CI.
+const identity=candidate.source_verification?.engine_package_contract_identity;
+const current=candidate.source_verification?.latest_checked;
+const identityControl=t0.controls.find(c=>c.id==="T0-IDENTITY-011");
+assert.ok(identityControl&&identityControl.state==="SOURCE_VERIFIED","Missing Engine release identity gate");
+assert.equal(identity?.status,"SOURCE_TESTED_NOT_LIVE","Engine release identity may not falsely claim Cloudflare production");
+assert.equal(identity?.source_main_sha,current?.engine_sha,"Engine package identity references stale commit");
+assert.equal(identity?.ci_run,current?.engine_ci,"Engine package identity references stale CI run");
+assert.equal(identity?.api_version,candidate.contract_version,"Engine identity API contract drift");
+assert.equal(identity?.package_version,candidate.contract_version,"Engine npm version drift");
+assert.equal(identity?.lock_root_version,candidate.contract_version,"Engine npm lock root version drift");
+assert.equal(identity?.license,"Apache-2.0","Engine package license drift");
+assert.equal(identity?.live_engine_release,"NOT_DISPATCHED","Live engine release cannot be source-only attested");
+assert.equal(identity?.live_cloudflare_evidence,"MISSING","Cloudflare provenance is unverified");
+assert.equal(identityControl.source_ci_run,current?.engine_ci,"T0 source gate CI receipt drift");
 for(const control of t0.controls){
  assert.ok(Array.isArray(control.code)&&control.code.length,"T0 missing code link "+control.id);
  assert.ok(Array.isArray(control.test)&&control.test.length,"T0 missing test link "+control.id);
