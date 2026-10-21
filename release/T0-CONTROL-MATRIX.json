@@ -4,7 +4,7 @@
   "product": "Taghvim.dev",
   "contract_version": "2.1.0",
   "current_source": {
-    "engine_main_sha": "c0685e89450c3f859fdfbe9a60c304d1004ef450",
+    "engine_main_sha": "cc66f1b9e7cfe8ebbab428c8df4dd70af69be56d",
     "landing_main_sha": "85d5a0b7f3b14d621a92aa4ae39d6016154e3fda",
     "shared_policy_sha": "c195c8bfde573b6195bd1b3bd00e3535accc9040"
   },
@@ -56,7 +56,7 @@
         "engine/test/promotion-first.test.mjs",
         "landing/test/promotion-first.test.mjs"
       ],
-      "source_ci_run": "39682732188",
+      "source_ci_run": "39684217261",
       "live_evidence": null
     },
     {
@@ -104,7 +104,7 @@
         "engine/test/promotion-first.test.mjs",
         "landing/test/promotion-first.test.mjs"
       ],
-      "source_ci_run": "39459162015",
+      "source_ci_run": "39684217261",
       "live_evidence": null
     },
     {
