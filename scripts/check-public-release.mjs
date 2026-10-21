@@ -10,8 +10,8 @@ const isLive=process.argv.includes("--live");
 const src=candidate.source_verification || {},checked=src.latest_checked || {};
 for(const [canonical,latest] of [
   ["date","date"],["engine_main_merge_sha","engine_sha"],["engine_offline_ci_run","engine_ci"],
-  ["landing_main_merge_sha","landing_sha"],["landing_integration_ci_run","landing_ci"],
-  ["landing_integration_merge_sha","landing_sha"]
+  ["landing_main_merge_sha","landing_sha"],["landing_integration_ci_run","landing_integration_ci"],
+  ["landing_integration_merge_sha","landing_integration_sha"]
 ]) {
   assert.ok(checked[latest], "Missing current source proof: "+latest);
   assert.equal(src[canonical],checked[latest],"RELEASE_MATRIX_SPLIT_BRAIN: "+canonical+" differs from latest_checked."+latest);
