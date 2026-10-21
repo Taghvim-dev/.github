@@ -38,6 +38,21 @@ assert.equal(ad.admission_scope,"MUTATION_BLOCKING_SOURCE_ONLY","T0 source-only 
 assert.equal(ad.cross_repo_immutable_ref,true,"T0 ledger reads must use one immutable Git commit");
 assert.equal(ad.post_facto_ga_authorization,false,"T0 forbids retrospective GA authorization");
 assert.equal(ad.runtime_cloudflare_gate,"NOT_DISPATCHED","T0 remote Cloudflare admission has not been observed");
+assert.equal(ad.source_run_verification,"REQUIRED_AT_SANDBOX_AND_PRODUCTION",
+ "T0 release must independently query actual CI metadata before both writes");
+assert.equal(ad.source_pr_main_git_tree_parity,"REQUIRED_AT_SANDBOX_AND_PRODUCTION",
+ "T0 release must prove all source bytes match the tested revision");
+for(const [name,sha] of [["engine",ad.engine_reviewed_head],["landing",ad.landing_reviewed_head]])
+ assert.match(sha||"",/^[a-f0-9]{40}$/,"T0 missing reviewed "+name+" PR commit");
+const ciControl=t0.controls.find(c=>c.id==="T0-CI-BOUND-013");
+assert.equal(ciControl?.reviewed_action_main_sha,ad.policy_main_sha,"T0 strong CI guard policy SHA split-brain");
+assert.equal(ciControl?.source_ci_run,ad.policy_test_run,"T0 CI run verifier contract test is not current");
+assert.equal(ciControl?.component_source_ci?.engine,ad.engine_ci_run,"T0 tested Engine CI proof drift");
+assert.equal(ciControl?.component_source_ci?.landing,ad.landing_ci_run,"T0 tested Landing CI proof drift");
+if(!candidate.general_availability_approved){
+ assert.equal(ciControl?.state,"LIVE_UNVERIFIED","CI runtime proof cannot be retroactively marked live");
+ assert.equal(ciControl?.live_evidence,null,"No real release runtime receipt exists yet");
+}
 assert.equal(ap?.production_remote_receipt,null,"T0 source-only admission is not a production deployment");
 // Historical CI failures are immutable observations, not evidence of a
 // currently broken main or proof of a fixed production runtime. Force a
@@ -73,7 +88,7 @@ for(const incident of incidents.root_cause_groups||[]){
 }
 assert.ok(incidentIds.size>=5,"Incomplete recovered CI root-cause coverage");
 const requiredT0=["T0-SOURCE-001","T0-INFRA-002","T0-SECRET-003","T0-PROMOTE-004",
-"T0-D1-005","T0-EXEC-006","T0-API-007","T0-ONBOARD-008","T0-RELEASE-009","T0-GA-010","T0-IDENTITY-011","T0-PREWRITE-012"];
+"T0-D1-005","T0-EXEC-006","T0-API-007","T0-ONBOARD-008","T0-RELEASE-009","T0-GA-010","T0-IDENTITY-011","T0-PREWRITE-012,"T0-CI-BOUND-013"];
 assert.deepEqual(t0.controls.map(c=>c.id).sort(),requiredT0.sort(),"T0 capability coverage drift");
 // Mirror the current Engine release facts into the central declaration and
 // bind their evidence to the exact reviewed main revision and source CI run.
