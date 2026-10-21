@@ -28,8 +28,5 @@ jobs:
         with:
           node-version: "22"
       - run: node --test test/sandbox-origin-ownership.test.mjs
-      - name: Reject Cloudflare mutation methods in a read-only origin policy
-        shell: bash
-        run: |
-          set -euo pipefail
-          ! grep -E 'method:[[:space:]]*["\x27](POST|PUT|PATCH|DELETE)' .github/actions/verify-sandbox-origin/verify-sandbox-origin.mjs
+      - name: Validate executable origin guard syntax (negative-method tests run above)
+        run: node --check .github/actions/verify-sandbox-origin/verify-sandbox-origin.mjs
