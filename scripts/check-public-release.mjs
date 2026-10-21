@@ -5,6 +5,17 @@ import {readFileSync} from "node:fs";
 import {execFileSync} from "node:child_process";
 const candidate=JSON.parse(readFileSync(new URL("../release/PUBLIC-RELEASE-MATRIX.json",import.meta.url)));
 const isLive=process.argv.includes("--live");
+// Prevent split-brain release reports: canonical and latest_checked must describe
+// the same Engine/Landing source revisions, test receipts, and audit date.
+const src=candidate.source_verification || {},checked=src.latest_checked || {};
+for(const [canonical,latest] of [
+  ["date","date"],["engine_main_merge_sha","engine_sha"],["engine_offline_ci_run","engine_ci"],
+  ["landing_main_merge_sha","landing_sha"],["landing_integration_ci_run","landing_integration_ci"],
+  ["landing_integration_merge_sha","landing_integration_sha"]
+]) {
+  assert.ok(checked[latest], "Missing current source proof: "+latest);
+  assert.equal(src[canonical],checked[latest],"RELEASE_MATRIX_SPLIT_BRAIN: "+canonical+" differs from latest_checked."+latest);
+}
 const fail=(msg)=>{throw new Error(msg)};
 const indexes=[];
 for(const {name,commit} of candidate.repositories){
