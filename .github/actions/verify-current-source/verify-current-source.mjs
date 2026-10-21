@@ -24,7 +24,14 @@ export function verifyCurrentRelease({repo,sha,release,controls}){
  const canonical=label==="engine"?s.engine_main_merge_sha:s.landing_main_merge_sha;
  const current=label==="engine"?c.engine_sha:c.landing_sha;
  if(canonical!==sha||current!==sha)fail("running "+label+" main SHA differs from canonical and current release matrix");
- if(t.current_source?.[label+"_main_sha"]!==sha)fail("T0 control matrix source SHA differs from candidate");
+ // Neither repo may silently diverge even when this run belongs to the other.
+ for(const component of ["engine","landing"]){
+  const canonicalValue=component==="engine"?s.engine_main_merge_sha:s.landing_main_merge_sha;
+  const currentValue=component==="engine"?c.engine_sha:c.landing_sha;
+  const t0Value=t.current_source?.[component+"_main_sha"];
+  if(!SHA.test(canonicalValue||"")||canonicalValue!==currentValue||currentValue!==t0Value)
+   fail("cross-repository "+component+" canonical/checked/T0 SHA drift");
+ }
  if(s.date!==c.date)fail("canonical vs current observation date drift");
  if(release.contract_version!=="2.1.0"||t.contract_version!==release.contract_version)fail("contract version mismatch");
  if(release.general_availability_approved!==t.general_availability_approved)
@@ -51,6 +58,16 @@ export async function attestCurrentRelease({repo,sha,token,fetcher=fetch}){
  if(!token)fail("GitHub read token unavailable");
  const headers={authorization:"Bearer "+token,accept:"application/vnd.github+json",
   "x-github-api-version":"2022-11-28"};
+ if(!SHA.test(sha||"")||!["Taghvim-dev/engine","Taghvim-dev/landing"].includes(repo))
+  fail("unexpected production repository or immutable source SHA");
+ // Reject an in-flight checkout of a superseded main commit, even if a stale
+ // registry still names it. This prevents after-the-fact code promotion.
+ const sourceHead=await fetcher("https://api.github.com/repos/"+repo+"/git/ref/heads/main",{
+  method:"GET",redirect:"error",cache:"no-store",headers,signal:AbortSignal.timeout(12000)});
+ if(sourceHead?.status!==200)fail("cannot read current component main HEAD");
+ const sourceRef=await sourceHead.json();
+ if(sourceRef?.ref!=="refs/heads/main"||sourceRef?.object?.type!=="commit"||sourceRef?.object?.sha!==sha)
+  fail("running revision is not the current component main HEAD");
  const base="https://api.github.com/repos/"+OWNER+"/.github";
  const headResponse=await fetcher(base+"/git/ref/heads/main",{
   method:"GET",redirect:"error",cache:"no-store",headers,signal:AbortSignal.timeout(12000)});
