@@ -24,10 +24,14 @@ test("real-shaped Cloudflare bookmark evidence is fail-closed and cannot authori
 test("only HTTPS GET to the canonical production D1 bookmark endpoint, no data writes",async()=>{
   const calls=[];
   const request=async(url,init)=>{calls.push({url,init});return {ok:true,json:async()=>({success:true,errors:[],result:{bookmark}})}};
-  const r=await capture({...data,config,account:"aaaaaaaa-bbbb-4ccc-8ddd-eeeeeeeeeeee",token:"dummy-token",request});
+  const r=await capture({...data,config,account:"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",token:"dummy-token",request});
   assert.equal(r.status,"VERIFIED");
   assert.equal(calls.length,1);
   assert.equal(calls[0].init.method,"GET");
-  assert.equal(calls[0].url,"https://api.cloudflare.com/client/v4/accounts/aaaaaaaa-bbbb-4ccc-8ddd-eeeeeeeeeeee/d1/database/"+dbId+"/time_travel/bookmark");
+  assert.equal(calls[0].url,"https://api.cloudflare.com/client/v4/accounts/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/d1/database/"+dbId+"/time_travel/bookmark");
   assert.ok(!JSON.stringify(r).includes("dummy-token"));
+});
+
+test("reject mistaken UUID account IDs; require actual 32-character Cloudflare account ID",async()=>{
+  await assert.rejects(()=>capture({...data,config,account:"aaaaaaaa-bbbb-4ccc-8ddd-eeeeeeeeeeee",token:"test",request:async()=>{throw Error("must never reach API");}}),/D1_RECOVERY_BLOCKED/);
 });
