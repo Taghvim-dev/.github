@@ -35,7 +35,7 @@ test("sandbox 2.1.0 SHA/run-bound receipts are persisted without implying GA",()
   const base={schema_version:1,kind:"taghvim_engine_sandbox_promotion",environment:"sandbox",
     source_sha:SHA,workflow_run:run,api_version:"2.1.0",contract_sha256:"d".repeat(64),
     migrations:[{name:"0001_control.sql",sha256:"e".repeat(64)}],
-    checks:{health:true,readiness:true,openapi:true,d1_ledger:true},production_approved:false};
+    checks:{health:true,readiness:true,openapi:true,d1_ledger:true,synthetic_onboarding:true,tenant_isolation:true,key_replay_blocked:true,key_revocation:true,calendar_request:true},production_approved:false};
   const valid=receipt({...sample,status:"skipped",sandboxStatus:"failure",
     sandbox:{record:base,sha256:"f".repeat(64)}});
   assert.equal(valid.sandboxOK,true);
@@ -66,4 +66,14 @@ test("only a real SHA-bound D1 recovery bookmark is journalled for manual restor
     {...r,bookmark:"invalid"},
     {...r,database:"taghvim-web"}])
     assert.equal(receipt({...sample,recovery:{record:wrong}}).recoveryOK,false);
+});
+
+test("sandbox 2.1.0 must prove isolated tenant/key issuance, revocation, replay safety and real date call",()=>{
+  const sandbox={schema_version:1,kind:"taghvim_engine_sandbox_promotion",
+    environment:"sandbox",api_version:"2.1.0",source_sha:SHA,workflow_run:run,
+    contract_sha256:"a".repeat(64),migrations:[{name:"0001_control.sql",sha256:"b".repeat(64)}],
+    production_approved:false,checks:{health:true,readiness:true,openapi:true,d1_ledger:true}};
+  const candidate=receipt({...sample,sandbox:{record:sandbox}});
+  assert.equal(candidate.sandboxOK,false);
+  assert.match(candidate.body,/MISSING_OR_INVALID/);
 });
