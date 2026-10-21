@@ -48,7 +48,7 @@ for(const incident of incidents.root_cause_groups||[]){
 }
 assert.ok(incidentIds.size>=5,"Incomplete recovered CI root-cause coverage");
 const requiredT0=["T0-SOURCE-001","T0-INFRA-002","T0-SECRET-003","T0-PROMOTE-004",
-"T0-D1-005","T0-EXEC-006","T0-API-007","T0-ONBOARD-008","T0-RELEASE-009","T0-GA-010"];
+"T0-D1-005","T0-EXEC-006","T0-API-007","T0-ONBOARD-008","T0-RELEASE-009","T0-GA-010","T0-IDENTITY-011"];
 assert.deepEqual(t0.controls.map(c=>c.id).sort(),requiredT0.sort(),"T0 capability coverage drift");
 for(const control of t0.controls){
  assert.ok(Array.isArray(control.code)&&control.code.length,"T0 missing code link "+control.id);
