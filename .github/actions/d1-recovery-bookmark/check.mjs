@@ -5,7 +5,7 @@ import {readFileSync,writeFileSync} from "node:fs";
 import {pathToFileURL} from "node:url";
 const WORKERS={"taghvim-engine":"taghvim-api","taghvim-web":"taghvim-web"};
 const UUID=/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i;
-const BOOKMARK=/^[a-f0-9]{8}-[a-f0-9]{8}-[a-f0-9]{8}-[a-f0-9]{24}$/i;
+const BOOKMARK=/^[a-f0-9]{8}-[a-f0-9]{8}-[a-f0-9]{8}-[a-f0-9]{32}$/i;
 const fail=msg=>{throw Error("D1_RECOVERY_BLOCKED: "+msg)};
 export function databaseId(config,database){
   if(!WORKERS[database])fail("unapproved D1 target");
