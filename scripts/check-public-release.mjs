@@ -49,6 +49,27 @@ assert.equal(ciControl?.reviewed_action_main_sha,ad.policy_main_sha,"T0 strong C
 assert.equal(ciControl?.source_ci_run,ad.policy_test_run,"T0 CI run verifier contract test is not current");
 assert.equal(ciControl?.component_source_ci?.engine,ad.engine_ci_run,"T0 tested Engine CI proof drift");
 assert.equal(ciControl?.component_source_ci?.landing,ad.landing_ci_run,"T0 tested Landing CI proof drift");
+const packageControl=t0.controls.find(c=>c.id==="T0-PACKAGES-014");
+assert.equal(packageControl?.state,"SOURCE_VERIFIED","T0 product package contract proof missing");
+assert.equal(packageControl?.package_contract_version,candidate.contract_version,"T0 package identity contract drift");
+assert.equal(candidate.package_identity?.contract_version,candidate.contract_version,"T0 package manifest version drift");
+assert.equal(candidate.package_identity?.remote_runtime_attested,false,"T0 source package proof cannot assert deployment");
+for(const name of ["engine","landing","SDK","CLI","cookbooks"]){
+ const expected=name==="engine"?ad.engine_main_sha:name==="landing"?ad.landing_main_sha:
+   candidate.repositories.find(r=>r.name===name)?.commit;
+ const currentCI=name==="engine"?ad.engine_ci_run:name==="landing"?ad.landing_ci_run:
+   candidate.repositories.find(r=>r.name===name)?.ci_run;
+ assert.equal(candidate.package_identity?.[name]?.commit,expected,"T0 "+name+" package commit split-brain");
+ assert.equal(candidate.package_identity?.[name]?.ci,currentCI,"T0 "+name+" package CI split-brain");
+ assert.equal(packageControl?.dependent_component_ci?.[name],currentCI,"T0 "+name+" package evidence control split-brain");
+}
+assert.equal(candidate.package_identity?.engine?.lock,candidate.contract_version,"T0 Engine lock metadata version drift");
+assert.equal(candidate.package_identity?.landing?.lock,candidate.contract_version,"T0 Landing lock metadata version drift");
+assert.equal(candidate.package_identity?.SDK?.root,candidate.contract_version,"T0 SDK root version drift");
+assert.equal(candidate.package_identity?.SDK?.javascript,candidate.contract_version,"T0 SDK JS version drift");
+assert.equal(candidate.package_identity?.SDK?.python,candidate.contract_version,"T0 SDK Python version drift");
+assert.equal(candidate.package_identity?.CLI?.package,candidate.contract_version,"T0 CLI version drift");
+assert.equal(candidate.package_identity?.cookbooks?.package,candidate.contract_version,"T0 Cookbook version drift");
 for(const [name,id] of [["engine",372423484],["landing",390048334]]){
  assert.equal(ad["tested_"+name+"_workflow_id"],id,"T0 false success possible: noncanonical "+name+" test workflow identity");
  assert.equal(ciControl?.expected_workflow_ids?.[name],id,"T0 CI control references another "+name+" workflow");
@@ -92,7 +113,7 @@ for(const incident of incidents.root_cause_groups||[]){
 }
 assert.ok(incidentIds.size>=5,"Incomplete recovered CI root-cause coverage");
 const requiredT0=["T0-SOURCE-001","T0-INFRA-002","T0-SECRET-003","T0-PROMOTE-004",
-"T0-D1-005","T0-EXEC-006","T0-API-007","T0-ONBOARD-008","T0-RELEASE-009","T0-GA-010","T0-IDENTITY-011","T0-PREWRITE-012","T0-CI-BOUND-013"];
+"T0-D1-005","T0-EXEC-006","T0-API-007","T0-ONBOARD-008","T0-RELEASE-009","T0-GA-010","T0-IDENTITY-011","T0-PREWRITE-012","T0-CI-BOUND-013","T0-PACKAGES-014"];
 assert.deepEqual(t0.controls.map(c=>c.id).sort(),requiredT0.sort(),"T0 capability coverage drift");
 // Mirror the current Engine release facts into the central declaration and
 // bind their evidence to the exact reviewed main revision and source CI run.
@@ -146,6 +167,29 @@ for(const {name,commit} of candidate.repositories){
   const index=JSON.parse(readFileSync(new URL("../"+name+"/contracts/operation-index.json",import.meta.url)));
   assert.equal(index.contractVersion,candidate.contract_version);
   assert.equal(index.openApiGitBlobSHA,candidate.openapi_source_git_blob_sha);
+  const pkg=JSON.parse(readFileSync(new URL("../"+name+"/package.json",import.meta.url)));
+  assert.equal(pkg.version,candidate.contract_version,name+" NPM package version split-brain");
+  assert.equal(pkg.private,true,name+" source package must not publish before GA authorization");
+  if(name==="SDK"){
+    const js=JSON.parse(readFileSync(new URL("../SDK/javascript/package.json",import.meta.url)));
+    const py=readFileSync(new URL("../SDK/python/pyproject.toml",import.meta.url),"utf8");
+    const pyVer=py.match(/^version\s*=\s*"([^"]+)"/m)?.[1];
+    assert.equal(js.version,candidate.contract_version,"SDK JavaScript version drift");
+    assert.equal(pyVer,candidate.contract_version,"SDK Python version drift");
+    assert.equal(js.private,true,"SDK package cannot silently publish to npm");
+  }
+  if(name==="cookbooks"){
+    const pinned=JSON.parse(readFileSync(new URL("../cookbooks/release/SDK-SOURCE.json",import.meta.url)));
+    const sdkCommit=candidate.repositories.find(r=>r.name==="SDK")?.commit;
+    assert.equal(pinned.commit,sdkCommit,"Cookbooks SDK source pin is stale");
+    assert.equal(pinned.contract_version,candidate.contract_version,"Cookbooks SDK contract version drift");
+    assert.equal(pinned.sdk_package_version,candidate.contract_version,"Cookbooks SDK package version drift");
+    assert.equal(pinned.approved_for_production,false,"Source-only SDK receipt cannot authorize GA");
+    const workflow=readFileSync(new URL("../cookbooks/.github/workflows/verify.yml",import.meta.url),"utf8");
+    assert.ok(workflow.includes("ref: "+sdkCommit),"Cookbooks CI checkout does not match approved SDK main");
+  }
+  const id=candidate.package_identity?.[name];
+  assert.equal(id?.commit,commit,name+" current package source SHA drift");
   indexes.push(index);
 }
 const ref=JSON.stringify(indexes[0]);
