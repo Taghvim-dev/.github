@@ -12,6 +12,10 @@ import {fileURLToPath} from "node:url";
 const OWNER="Taghvim-dev";
 const PATHS=["release/PUBLIC-RELEASE-MATRIX.json","release/T0-CONTROL-MATRIX.json"];
 const SHA=/^[a-f0-9]{40}$/;
+const AUTHORIZED_TEST_WORKFLOWS=Object.freeze({
+ engine:Object.freeze({name:"test",id:372423484}),
+ landing:Object.freeze({name:"landing-verify",id:390048334})
+});
 const fail=message=>{throw Error("T0_SOURCE_ADMISSION_BLOCKED: "+message)};
 
 export function verifyCurrentRelease({repo,sha,release,controls}){
@@ -107,8 +111,9 @@ export async function attestCurrentRelease({repo,sha,token,fetcher=fetch}){
   method:"GET",redirect:"error",cache:"no-store",headers,signal:AbortSignal.timeout(12000)});
  if(ciResponse?.status!==200)fail("independently read-only CI run verification failed");
  const ci=await ciResponse.json();
- const expectedWorkflow=label==="engine"?"test":"landing-verify";
- if(ci?.id!==Number(proof.ci_receipt)||ci?.name!==expectedWorkflow||
+ const expectedWorkflow=AUTHORIZED_TEST_WORKFLOWS[label];
+ if(ci?.id!==Number(proof.ci_receipt)||
+    ci?.name!==expectedWorkflow.name||ci?.workflow_id!==expectedWorkflow.id||
     ci?.repository?.full_name!==repo||!new Set(["push","pull_request"]).has(ci?.event)||
     ci?.status!=="completed"||ci?.conclusion!=="success"||!SHA.test(ci?.head_sha||""))
     fail("CI run is not the completed successful source workflow for this repository");
@@ -129,7 +134,7 @@ export async function attestCurrentRelease({repo,sha,token,fetcher=fetch}){
  const testedTree=ci.head_sha===sha?liveTree:await gitTree(ci.head_sha);
  if(liveTree!==testedTree)fail("successful source tree differs from squash-merged main tree");
  return {...proof,registry_sha:registrySha,source_tree_sha:liveTree,
-  tested_workflow:expectedWorkflow,tested_head_sha:ci.head_sha,
+  tested_workflow:expectedWorkflow.name,tested_workflow_id:expectedWorkflow.id,tested_head_sha:ci.head_sha,
   tested_ci_status:"completed_success",commit_tree_identity_verified:true};
 }
 async function main(){
