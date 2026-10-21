@@ -48,11 +48,11 @@
     "engine_offline_ci_run": "39572569270",
     "engine_live_gate_ci_run": "39439068311",
     "landing_main_merge_sha": "e0b8a7741a73be2fec0c4337081d18d66c494afd",
-    "landing_integration_merge_sha": "e0b8a7741a73be2fec0c4337081d18d66c494afd",
+    "landing_integration_merge_sha": "2b6520a48ffa950101c5f77d612bb01b734e8980",
     "landing_integration_ci_run": "39594302905",
     "landing_rtl_ci_run": "39438283155",
     "landing_two_phase_release_ci_run": "39440013499",
-    "note": "Current canonical Engine/Landing source pins and test receipts reconciled on 2026-10-21. Independent upstream 11-blob check is now integrated in Landing release preflight, but has not run remotely. Public 2.1.0 promotion and GA still lack protected live evidence.",
+    "note": "Latest Landing source integration PR head 2b6520a48f passed 39594302905 and was merged to main e0b8a7741a73. Main and integration SHAs intentionally differ; both are tracked. Engine main 65726602 passed 39572569270. No live sandbox/production release receipt or GA approval.",
     "engine_node24_action_test": "39441189301",
     "landing_node24_action_test": "39441203096",
     "landing_node24_rtl_test": "39441203134",
@@ -152,7 +152,9 @@
       "shared_release_actions_sha": "aff8450bc753a75ba5c9b922cd61c5956a61be8e",
       "vendored_engine_files_matched": 11,
       "sandbox_to_production_status": "NO_GO",
-      "production_workflow_runs": 0
+      "production_workflow_runs": 0,
+      "landing_integration_sha": "2b6520a48ffa950101c5f77d612bb01b734e8980",
+      "landing_integration_ci": "39594302905"
     },
     "independent_engine_source_gate": {
       "status": "SOURCE_TESTED; REMOTE CHECKOUT NOT DISPATCHED",
