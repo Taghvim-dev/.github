@@ -77,3 +77,20 @@ test("sandbox 2.1.0 must prove isolated tenant/key issuance, revocation, replay 
   assert.equal(candidate.sandboxOK,false);
   assert.match(candidate.body,/MISSING_OR_INVALID/);
 });
+
+
+test("physical D1 identity is unique, source-bound and cannot be substituted",()=>{
+ const id="08e29424-2c68-4aef-bde3-3d5cad47ccc8";
+ const config='name = "taghvim-api"\n[[d1_databases]]\nbinding = "DB"\ndatabase_name = "taghvim-engine"\ndatabase_id = "'+id+'"\n[[queues.producers]]\n';
+ assert.equal(canonicalD1Id(config,"engine"),id);
+ assert.equal(canonicalD1Id(config,"landing"),null);
+ assert.equal(canonicalD1Id(config+config.slice(config.indexOf("[[d1_databases]]")),"engine"),null);
+ const good={schema_version:1,kind:"d1_pre_migration_recovery",status:"VERIFIED",
+   component:"engine",database:"taghvim-engine",database_id:id,source_sha:SHA,workflow_run:run,
+   captured_at:"2026-10-21T00:00:00Z",
+   bookmark:"00000085-0000024c-00004c6d-8e61117bf38d7adb71b934ebbf891683",
+   restore_mode:"MANUAL_ONLY_DESTRUCTIVE",automatic_restore_allowed:false};
+ assert.equal(receipt({...sample,recovery:{record:good},expectedD1Id:id}).recoveryOK,true);
+ assert.equal(receipt({...sample,recovery:{record:good},expectedD1Id:"13bac632-9138-485f-9f6d-eda7375d0cf2"}).recoveryOK,false);
+ assert.equal(receipt({...sample,recovery:{record:{...good,database_id:null}},expectedD1Id:id}).recoveryOK,false);
+});
