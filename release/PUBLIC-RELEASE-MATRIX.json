@@ -47,12 +47,12 @@
     "engine_main_merge_sha": "cf1dcb7816cad967b0361f9517d0c939601e9dd4",
     "engine_offline_ci_run": "39704449577",
     "engine_live_gate_ci_run": "39439068311",
-    "landing_main_merge_sha": "3deecbe57b6d4d2b6e2ad5c788ceeb2089d5c90c",
-    "landing_integration_merge_sha": "08273c9f66167877e83d07851c4812bdd0dadfcb",
-    "landing_integration_ci_run": "39705208640",
+    "landing_main_merge_sha": "a5677879747ffff6913c56b5b0d844587162bbc5",
+    "landing_integration_merge_sha": "76e6f4feb2c9de48f683556f62577098e4dc4159",
+    "landing_integration_ci_run": "39706144672",
     "landing_rtl_ci_run": "39705208783",
     "landing_two_phase_release_ci_run": "39440013499",
-    "note": "Current 2.1.0 source: Engine cf1dcb7816cad967b0361f9517d0c939601e9dd4 (PR tree==main, CI 39704449577 and green main 39705334469), Landing 3deecbe57b6d4d2b6e2ad5c788ceeb2089d5c90c (PR tree==main, CI 39705208640, visual RTL 39705208783, green main 39705365062). Read-only post-promotion customer acceptance gates added. Commercial pricebook still illustrative so paid checkout MUST NOT be certified. Real Cloudflare sandbox, D1, environment approval, production versions, billing, delivered email and user onboarding are unverified; GA=false and promotion=NO_GO.",
+    "note": "Source 2.1.0: Engine main cf1dcb7816cad967b0361f9517d0c939601e9dd4 (live checkout now requires owner-approved pricebook), Landing main a5677879747ffff6913c56b5b0d844587162bbc5 (sandbox-only suppressed Comms readiness, no real mail) reviewed head 76e6f4feb2c9de48f683556f62577098e4dc4159 and green CI 39706144672 plus visual RTL; exact PR/main Git tree parity verified. GitHub main protections, Cloudflare release dispatch, D1/Comms live evidence and customer activation remain BLOCKED/UNVERIFIED. GA=false, PREVIEW, NO_GO.",
     "engine_node24_action_test": "39441189301",
     "landing_node24_action_test": "39441203096",
     "landing_node24_rtl_test": "39441203134",
@@ -77,8 +77,8 @@
       "contract_version": "2.1.0",
       "contract_git_blob": "c0d163f8e2d883125fc3778b17842bd19fe3f6bf",
       "engine_commit": "b11654a8110bfeb5c525f1052434d90a7e332e9f",
-      "landing_main_sha": "3deecbe57b6d4d2b6e2ad5c788ceeb2089d5c90c",
-      "source_ci_run": "39705208640"
+      "landing_main_sha": "a5677879747ffff6913c56b5b0d844587162bbc5",
+      "source_ci_run": "39706144672"
     },
     "browser_freshness_main_sha": "33cc1f86995812780b72ac70d5852a6bd4c3ed25",
     "browser_freshness_pr_ci": "39449793285",
@@ -150,14 +150,14 @@
       "date": "2026-10-22",
       "engine_sha": "cf1dcb7816cad967b0361f9517d0c939601e9dd4",
       "engine_ci": "39704449577",
-      "landing_sha": "3deecbe57b6d4d2b6e2ad5c788ceeb2089d5c90c",
-      "landing_ci": "39705208640",
+      "landing_sha": "a5677879747ffff6913c56b5b0d844587162bbc5",
+      "landing_ci": "39706144672",
       "shared_release_actions_sha": "c195c8bfde573b6195bd1b3bd00e3535accc9040",
       "vendored_engine_files_matched": 11,
       "sandbox_to_production_status": "NO_GO",
       "production_workflow_runs": 0,
-      "landing_integration_sha": "08273c9f66167877e83d07851c4812bdd0dadfcb",
-      "landing_integration_ci": "39705208640"
+      "landing_integration_sha": "76e6f4feb2c9de48f683556f62577098e4dc4159",
+      "landing_integration_ci": "39706144672"
     },
     "independent_engine_source_gate": {
       "status": "SOURCE_TESTED; REMOTE CHECKOUT NOT DISPATCHED",
@@ -171,8 +171,8 @@
       "live_upstream_attestation_receipt": "MISSING",
       "note": "Historical PR #53 source proof remains at old commit for provenance; the new 11-blob source manifest at Engine b11654a8110bfeb5c525f1052434d90a7e332e9f is tested in Landing PR #58. Independent protected release checkout is still NOT DISPATCHED.",
       "current_required_engine_commit": "b11654a8110bfeb5c525f1052434d90a7e332e9f",
-      "current_landing_main_sha": "3deecbe57b6d4d2b6e2ad5c788ceeb2089d5c90c",
-      "current_landing_source_ci": "39705208640"
+      "current_landing_main_sha": "a5677879747ffff6913c56b5b0d844587162bbc5",
+      "current_landing_source_ci": "39706144672"
     },
     "t0_infrastructure_source": {
       "date": "2026-10-22",
@@ -180,8 +180,8 @@
       "action_test_run": "39681975240",
       "engine_main_sha": "cf1dcb7816cad967b0361f9517d0c939601e9dd4",
       "engine_ci_run": "39704449577",
-      "landing_main_sha": "3deecbe57b6d4d2b6e2ad5c788ceeb2089d5c90c",
-      "landing_ci_run": "39705208640",
+      "landing_main_sha": "a5677879747ffff6913c56b5b0d844587162bbc5",
+      "landing_ci_run": "39706144672",
       "control_matrix": "release/T0-CONTROL-MATRIX.json",
       "enforced_origin": "Exact authorized account *.workers.dev Worker, not arbitrary workers.dev host",
       "credential_scope": "Cloudflare keys only on origin verification and remote write/read steps; ephemeral sandbox operator credential only in deploy/attest step",
@@ -212,9 +212,9 @@
       "engine_main_sha": "cf1dcb7816cad967b0361f9517d0c939601e9dd4",
       "engine_reviewed_head": "3851aa04ecff40e0dff5d97f0891e9bf8d5dc88d",
       "engine_ci_run": "39704449577",
-      "landing_main_sha": "3deecbe57b6d4d2b6e2ad5c788ceeb2089d5c90c",
-      "landing_reviewed_head": "08273c9f66167877e83d07851c4812bdd0dadfcb",
-      "landing_ci_run": "39705208640",
+      "landing_main_sha": "a5677879747ffff6913c56b5b0d844587162bbc5",
+      "landing_reviewed_head": "76e6f4feb2c9de48f683556f62577098e4dc4159",
+      "landing_ci_run": "39706144672",
       "admission_scope": "MUTATION_BLOCKING_SOURCE_ONLY",
       "runtime_cloudflare_gate": "NOT_DISPATCHED",
       "cross_repo_immutable_ref": true,
@@ -262,10 +262,10 @@
       "ci": "39704449577"
     },
     "landing": {
-      "commit": "3deecbe57b6d4d2b6e2ad5c788ceeb2089d5c90c",
+      "commit": "a5677879747ffff6913c56b5b0d844587162bbc5",
       "package": "2.1.0",
       "lock": "2.1.0",
-      "ci": "39705208640"
+      "ci": "39706144672"
     },
     "SDK": {
       "commit": "cc68bffeb1d7be5360d87d0afee356a914d2d709",
