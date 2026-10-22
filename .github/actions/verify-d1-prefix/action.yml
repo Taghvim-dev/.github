@@ -7,14 +7,33 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: Read authoritative applied ledger from remote D1 before writes
+    - name: Inspect canonical remote D1 schema read-only before first bootstrap
       shell: bash
       env:
         D1_DATABASE: ${{ inputs.database }}
       run: |
         set -euo pipefail
         case "$D1_DATABASE" in taghvim-engine|taghvim-web) ;; *) echo "::error::Invalid D1 target"; exit 1;; esac
-        npx wrangler d1 execute "$D1_DATABASE" --remote --json --command "SELECT name FROM d1_migrations ORDER BY id" > release-d1-preflight-raw.json
+        npx wrangler d1 execute "$D1_DATABASE" --remote --json --command "SELECT name,type FROM sqlite_master WHERE type IN ('table','view','trigger') AND name NOT LIKE 'sqlite_%' ORDER BY name" > release-d1-schema-before.json
+    - name: Fail closed on unknown existing D1 tables or read actual migration ledger
+      shell: bash
+      env:
+        D1_DATABASE: ${{ inputs.database }}
+        INSPECT: ${{ github.action_path }}/verify-d1-prefix.mjs
+      run: |
+        set -euo pipefail
+        trap 'rm -f release-d1-schema-before.json' EXIT
+        MODE="$(node "$INSPECT" inspect "$D1_DATABASE" release-d1-schema-before.json)"
+        case "$MODE" in
+          PRISTINE_EMPTY)
+            # The only safe first-migration exception: no user tables, views or triggers.
+            printf '[{"success":true,"results":[]}]\\n' > release-d1-preflight-raw.json
+            ;;
+          EXISTING_LEDGER)
+            npx wrangler d1 execute "$D1_DATABASE" --remote --json --command "SELECT name FROM d1_migrations ORDER BY id" > release-d1-preflight-raw.json
+            ;;
+          *) echo "::error::Unverified D1 schema"; exit 1;;
+        esac
     - name: Refuse unknown historic migrations and out-of-order ledgers
       shell: bash
       env:

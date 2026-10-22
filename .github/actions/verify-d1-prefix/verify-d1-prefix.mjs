@@ -19,6 +19,20 @@ export function rowsOf(json){
    throw Error("D1_PREFLIGHT_INVALID_REMOTE_QUERY");
  return blocks[0].results;
 }
+export function classifyRemoteSchema({database,response}){
+ if(!DATABASES.has(database))throw Error("D1_PREFLIGHT_UNAPPROVED_DATABASE");
+ const rows=rowsOf(response);
+ if(rows.some(x=>typeof x?.name!=="string"||typeof x?.type!=="string"))
+  throw Error("D1_PREFLIGHT_MALFORMED_SQLITE_SCHEMA");
+ const objects=rows.filter(x=>!x.name.startsWith("sqlite_"));
+ if(new Set(objects.map(x=>x.name)).size!==objects.length)
+  throw Error("D1_PREFLIGHT_DUPLICATE_SCHEMA_OBJECT");
+ const ledger=objects.filter(x=>x.name==="d1_migrations");
+ if(ledger.length===1&&ledger[0].type==="table")return "EXISTING_LEDGER";
+ if(ledger.length||objects.length)
+  throw Error("D1_PREFLIGHT_UNTRACKED_NONEMPTY_DATABASE");
+ return "PRISTINE_EMPTY";
+}
 export function verifyPrefix({database,source,remote,sha,run}){
  if(!DATABASES.has(database))throw Error("D1_PREFLIGHT_UNAPPROVED_DATABASE");
  if(!/^[a-f0-9]{40}$/.test(sha||"")||!/^\d+$/.test(run||""))
@@ -41,7 +55,14 @@ export function verifyPrefix({database,source,remote,sha,run}){
    source_migrations:source,production_mutation_authorized:false};
 }
 function main(){
- const [database,rawFile,outputFile]=process.argv.slice(2);
+ const [command,...args]=process.argv.slice(2);
+ if(command==="inspect"){
+  const [database,rawFile]=args;
+  if(!database||!rawFile||args.length!==2)throw Error("D1_PREFLIGHT_BAD_INSPECT_ARGS");
+  console.log(classifyRemoteSchema({database,response:JSON.parse(readFileSync(rawFile,"utf8"))}));
+  return;
+ }
+ const [database,rawFile,outputFile]=[command,...args];
  if(!database||!rawFile||outputFile!=="release-d1-preflight-evidence.json")
   throw Error("D1_PREFLIGHT_BAD_ARGS");
  const out=verifyPrefix({database,source:expectedMigrations(),
