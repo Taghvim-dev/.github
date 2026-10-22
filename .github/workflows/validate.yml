@@ -47,6 +47,8 @@ jobs:
         run: node --test test/npm-audit.test.mjs
       - name: T0 owner-release authentication and protected-dispatch invariants
         run: node --test test/owner-release-dispatch.test.mjs
+      - name: T0 independent human GitHub reviewer authorization in private repositories
+        run: node --test test/verify-production-environment.test.mjs test/independent-production-review.test.mjs
       - name: T0 verify independent SHA-bound authenticated owner approval
         run: node --test test/verify-owner-approval.test.mjs
       - name: T0 same-run missing-artifact preflight contracts
