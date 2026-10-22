@@ -20,7 +20,7 @@ export async function verifyOwnerApproval({repo,sha,phrase,commentId,token,reque
  const x=await response.json();
  if(x?.id!==Number(commentId)||x.user?.login!=="007dude"||
    x.issue_url!=="https://api.github.com/repos/"+repo+"/issues/"+cfg.issue||
-   x.body!=="/taghvim-promote "+cfg.component+" "+sha||x.author_association==="NONE")
+   x.body!=="/taghvim-promote "+cfg.component+" "+sha)
    fail("GitHub owner, issue, body or immutable SHA mismatch");
  return {kind:"taghvim_t0_owner_comment_approval",repository:repo,source_sha:sha,
   comment_id:String(commentId),owner_verified:true,production_approved:false,
