@@ -3,11 +3,18 @@
 import assert from "node:assert/strict";
 import {readFileSync} from "node:fs";
 import {execFileSync} from "node:child_process";
+import {resolvePins} from "./release-pins.mjs";
 const candidate=JSON.parse(readFileSync(new URL("../release/PUBLIC-RELEASE-MATRIX.json",import.meta.url)));
+const pinnedCheckouts=resolvePins(candidate);
 const isLive=process.argv.includes("--live");
 // T=0 source-to-CI reachability: a ledger update must execute this exact gate
 // on both pull requests and main-branch pushes, never silently skip validation.
 const releaseWorkflow=readFileSync(new URL("../.github/workflows/coordinated-public-release.yml",import.meta.url),"utf8");
+for(const key of ["sdk","cli","cookbooks"]){
+ const exact="ref: $"+"{{ steps.release-pins.outputs."+key+" }}";
+ assert.ok(releaseWorkflow.includes(exact),"T0 checkout must follow canonical release matrix: "+key);
+}
+assert.ok(releaseWorkflow.includes("node scripts/release-pins.mjs >>"),"T0 release pins resolver absent");
 const t0Triggers=[...releaseWorkflow.matchAll(/^\s+- ["']release\/T0-CONTROL-MATRIX\.json["']\s*$/gm)];
 assert.equal(t0Triggers.length,2,"T0 control ledger must trigger both PR and main release validation");
 // Constitutional T=0 release ledger: every requirement must have source, test,

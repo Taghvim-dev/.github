@@ -6,6 +6,8 @@ on:
       - "release/T0-CONTROL-MATRIX.json"
       - "release/CI-INCIDENT-ROOT-CAUSES.json"
       - "scripts/check-public-release.mjs"
+      - "scripts/release-pins.mjs"
+      - "test/release-pins.test.mjs"
       - ".github/workflows/coordinated-public-release.yml"
   push:
     branches: [main]
@@ -15,6 +17,8 @@ on:
       - "release/T0-CONTROL-MATRIX.json"
       - "release/CI-INCIDENT-ROOT-CAUSES.json"
       - "scripts/check-public-release.mjs"
+      - "scripts/release-pins.mjs"
+      - "test/release-pins.test.mjs"
       - ".github/workflows/coordinated-public-release.yml"
   workflow_dispatch:
     inputs:
@@ -35,27 +39,32 @@ jobs:
       - uses: actions/checkout@v5
         with:
           persist-credentials: false
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: "22"
+      - name: Resolve exact immutable sibling SHAs from this candidate release matrix
+        id: release-pins
+        run: |
+          node --test test/release-pins.test.mjs
+          node scripts/release-pins.mjs >> "$GITHUB_OUTPUT"
       - uses: actions/checkout@v5
         with:
           repository: Taghvim-dev/SDK
-          ref: cc68bffeb1d7be5360d87d0afee356a914d2d709
+          ref: ${{ steps.release-pins.outputs.sdk }}
           path: SDK
           persist-credentials: false
       - uses: actions/checkout@v5
         with:
           repository: Taghvim-dev/CLI
-          ref: 9ae9e29625178ed95d2f3045f4a6650c1f9ecaf5
+          ref: ${{ steps.release-pins.outputs.cli }}
           path: CLI
           persist-credentials: false
       - uses: actions/checkout@v5
         with:
           repository: Taghvim-dev/cookbooks
-          ref: 3fd7a7a25f0e4634affbdcc5e9d07dbc592570c3
+          ref: ${{ steps.release-pins.outputs.cookbooks }}
           path: cookbooks
           persist-credentials: false
-      - uses: actions/setup-node@v7.1.0
-        with:
-          node-version: "22"
       - name: Validate cohesive public manifest and exact contract index
         run: node scripts/check-public-release.mjs
       - name: Require full live website ↔ API contract parity on manual request
