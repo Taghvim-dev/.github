@@ -6,6 +6,8 @@ on:
       - "release/T0-CONTROL-MATRIX.json"
       - "release/CI-INCIDENT-ROOT-CAUSES.json"
       - "scripts/check-public-release.mjs"
+      - "scripts/release-runtime-provenance.mjs"
+      - "test/release-runtime-provenance.test.mjs"
       - "scripts/release-pins.mjs"
       - "test/release-pins.test.mjs"
       - ".github/workflows/coordinated-public-release.yml"
@@ -17,6 +19,8 @@ on:
       - "release/T0-CONTROL-MATRIX.json"
       - "release/CI-INCIDENT-ROOT-CAUSES.json"
       - "scripts/check-public-release.mjs"
+      - "scripts/release-runtime-provenance.mjs"
+      - "test/release-runtime-provenance.test.mjs"
       - "scripts/release-pins.mjs"
       - "test/release-pins.test.mjs"
       - ".github/workflows/coordinated-public-release.yml"
@@ -65,6 +69,8 @@ jobs:
           ref: ${{ steps.release-pins.outputs.cookbooks }}
           path: cookbooks
           persist-credentials: false
+      - name: Verify immutable deployed Cloudflare source is independent of evolving GitHub SHA
+        run: node --test test/release-runtime-provenance.test.mjs
       - name: Validate cohesive public manifest and exact contract index
         run: node scripts/check-public-release.mjs
       - name: Require full live website ↔ API contract parity on manual request
