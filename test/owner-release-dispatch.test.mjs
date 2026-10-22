@@ -32,7 +32,7 @@ test("T0 dispatches protected workflow, not direct Cloudflare, only after full C
  assert.match(hits[0].url,/\/actions\/workflows\/production-release\.yml\/dispatches$/);
  assert.equal(hits[0].opts.method,"POST");
  assert.deepEqual(JSON.parse(hits[0].opts.body),{ref:"main",
- inputs:{expected_sha:sha,approval_phrase:"RELEASE_TAGHVIM_ENGINE"}});
+ inputs:{expected_sha:sha,approval_phrase:"RELEASE_TAGHVIM_ENGINE",approval_comment_id:"427"}});
  assert.equal(result.status,"ACCEPTED_BY_GITHUB_NOT_DEPLOYED");
  assert.equal(result.production_approved,false);
  assert.equal(result.production_mutation,false);
