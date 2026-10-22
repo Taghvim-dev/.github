@@ -1,5 +1,6 @@
 import {test} from "node:test";
 import assert from "node:assert/strict";
+import {readFileSync} from "node:fs";
 import {verifyPrefix,rowsOf,classifyRemoteSchema} from "../.github/actions/verify-d1-prefix/verify-d1-prefix.mjs";
 const source=[{name:"0001_first.sql",sha256:"a".repeat(64)},{name:"0002_second.sql",sha256:"b".repeat(64)}];
 const remote=(names)=>[{success:true,results:names.map(name=>({name}))}];
