@@ -37,6 +37,27 @@ export async function dispatchRelease({repo,event,token,
    admission?.commit_tree_identity_verified!==true||
    admission?.tested_ci_status!=="completed_success")
    fail("current source and approved CI are not independently attested");
+ // T=0 concurrency: independently inspect real active release runs for this
+ // exact main SHA. The calling workflow is serialized by repository + issue,
+ // not by comment ID. No second Sandbox/Production dispatch while one is active.
+ const inspect="https://api.github.com/repos/"+repo+
+  "/actions/workflows/production-release.yml/runs?event=workflow_dispatch&per_page=100";
+ const query=await request(inspect,{method:"GET",redirect:"error",signal:AbortSignal.timeout(16000),
+  headers:{authorization:"Bearer "+token,accept:"application/vnd.github+json",
+   "x-github-api-version":"2022-11-28"}});
+ if(query?.status!==200)fail("cannot attest active release inventory: HTTP "+query?.status);
+ const body=await query.json();
+ if(!Array.isArray(body?.workflow_runs))fail("malformed release inventory");
+ const active=body.workflow_runs.find(x=>x?.head_sha===sha &&
+  x?.event==="workflow_dispatch" &&
+  ["queued","requested","pending","waiting","in_progress"].includes(x?.status));
+ if(active){
+  return {kind:"t0_owner_explicit_release_dispatch",component,sha,comment_id,
+   source_ci_run:admission.ci_receipt,source_tree:admission.source_tree_sha,
+   owner_request:true,release_workflow:"production-release.yml",
+   already_active_run:active.id,sandbox_completed:false,production_approved:false,
+   production_mutation:false,status:"DUPLICATE_SKIPPED_EXISTING_ACTIVE_RELEASE"};
+ }
  const endpoint="https://api.github.com/repos/"+repo+"/actions/workflows/production-release.yml/dispatches";
  const response=await request(endpoint,{
   method:"POST",redirect:"error",signal:AbortSignal.timeout(16000),
