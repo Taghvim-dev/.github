@@ -20,8 +20,8 @@
     },
     {
       "name": "cookbooks",
-      "commit": "3608f997eefe2a6ad9ba2ac95833a62722e093f8",
-      "ci_run": "39695473444"
+      "commit": "3fd7a7a25f0e4634affbdcc5e9d07dbc592570c3",
+      "ci_run": "39696439898"
     }
   ],
   "deployment_observation": {
@@ -47,12 +47,12 @@
     "engine_main_merge_sha": "b11654a8110bfeb5c525f1052434d90a7e332e9f",
     "engine_offline_ci_run": "39694999445",
     "engine_live_gate_ci_run": "39439068311",
-    "landing_main_merge_sha": "577aefc7297884302c75bf6dadbbc02735b543db",
-    "landing_integration_merge_sha": "efe9c90733c8776bd1d3102fdb6f80e4e1dcc116",
-    "landing_integration_ci_run": "39695693934",
+    "landing_main_merge_sha": "c3e6448ba9653d0bf97fda2655d15f7fc1590b8d",
+    "landing_integration_merge_sha": "94c3f92f370300b32dd093faddcec04066805cba",
+    "landing_integration_ci_run": "39696798762",
     "landing_rtl_ci_run": "39695693924",
     "landing_two_phase_release_ci_run": "39440013499",
-    "note": "T0 Taghvim 2.1.0: Engine b11654a8110bfeb5c525f1052434d90a7e332e9f (tested PR 6ede66c150771144d2d4fd5d5b4c52f7fc67321e, CI 39694999445); Landing 577aefc7297884302c75bf6dadbbc02735b543db (tested PR efe9c90733c8776bd1d3102fdb6f80e4e1dcc116, full CI 39695693934, RTL 39695693924). SDK cc68bffeb1d7be5360d87d0afee356a914d2d709; CLI 9ae9e29625178ed95d2f3045f4a6650c1f9ecaf5; cookbooks 3608f997eefe2a6ad9ba2ac95833a62722e093f8. All product packages/lock metadata/API contract 2.1.0; Engine 11-file git blobs independently matched and Landing vendored new canonical Engine config. Deployed public API, Cloudflare credentials, remote D1 migrations, branch protections and authorized onboarding NOT attested. GA=false and promotion NO_GO.",
+    "note": "Taghvim canonical source release 2.1.0; Engine main b11654a8110bfeb5c525f1052434d90a7e332e9f (CI 39694999445), Landing main c3e6448ba9653d0bf97fda2655d15f7fc1590b8d (CI 39696798762, exact PR Git tree parity), SDK cc68bffeb1d7be5360d87d0afee356a914d2d709 (CI 39695120246), CLI 9ae9e29625178ed95d2f3045f4a6650c1f9ecaf5 (CI 39695189982), Cookbooks 3fd7a7a25f0e4634affbdcc5e9d07dbc592570c3 (CI 39696439898, Python+JS parity). Full 2.1.0 package & OpenAPI source checks only. Protected production, Cloudflare runtime, remote D1, tenant onboarding and GA remain unverified; promotion NO_GO.",
     "engine_node24_action_test": "39441189301",
     "landing_node24_action_test": "39441203096",
     "landing_node24_rtl_test": "39441203134",
@@ -77,8 +77,8 @@
       "contract_version": "2.1.0",
       "contract_git_blob": "c0d163f8e2d883125fc3778b17842bd19fe3f6bf",
       "engine_commit": "b11654a8110bfeb5c525f1052434d90a7e332e9f",
-      "landing_main_sha": "577aefc7297884302c75bf6dadbbc02735b543db",
-      "source_ci_run": "39695693934"
+      "landing_main_sha": "c3e6448ba9653d0bf97fda2655d15f7fc1590b8d",
+      "source_ci_run": "39696798762"
     },
     "browser_freshness_main_sha": "33cc1f86995812780b72ac70d5852a6bd4c3ed25",
     "browser_freshness_pr_ci": "39449793285",
@@ -150,14 +150,14 @@
       "date": "2026-10-22",
       "engine_sha": "b11654a8110bfeb5c525f1052434d90a7e332e9f",
       "engine_ci": "39694999445",
-      "landing_sha": "577aefc7297884302c75bf6dadbbc02735b543db",
-      "landing_ci": "39695693934",
+      "landing_sha": "c3e6448ba9653d0bf97fda2655d15f7fc1590b8d",
+      "landing_ci": "39696798762",
       "shared_release_actions_sha": "c195c8bfde573b6195bd1b3bd00e3535accc9040",
       "vendored_engine_files_matched": 11,
       "sandbox_to_production_status": "NO_GO",
       "production_workflow_runs": 0,
-      "landing_integration_sha": "efe9c90733c8776bd1d3102fdb6f80e4e1dcc116",
-      "landing_integration_ci": "39695693934"
+      "landing_integration_sha": "94c3f92f370300b32dd093faddcec04066805cba",
+      "landing_integration_ci": "39696798762"
     },
     "independent_engine_source_gate": {
       "status": "SOURCE_TESTED; REMOTE CHECKOUT NOT DISPATCHED",
@@ -171,8 +171,8 @@
       "live_upstream_attestation_receipt": "MISSING",
       "note": "Historical PR #53 source proof remains at old commit for provenance; the new 11-blob source manifest at Engine b11654a8110bfeb5c525f1052434d90a7e332e9f is tested in Landing PR #58. Independent protected release checkout is still NOT DISPATCHED.",
       "current_required_engine_commit": "b11654a8110bfeb5c525f1052434d90a7e332e9f",
-      "current_landing_main_sha": "577aefc7297884302c75bf6dadbbc02735b543db",
-      "current_landing_source_ci": "39695693934"
+      "current_landing_main_sha": "c3e6448ba9653d0bf97fda2655d15f7fc1590b8d",
+      "current_landing_source_ci": "39696798762"
     },
     "t0_infrastructure_source": {
       "date": "2026-10-22",
@@ -180,8 +180,8 @@
       "action_test_run": "39681975240",
       "engine_main_sha": "b11654a8110bfeb5c525f1052434d90a7e332e9f",
       "engine_ci_run": "39694999445",
-      "landing_main_sha": "577aefc7297884302c75bf6dadbbc02735b543db",
-      "landing_ci_run": "39695693934",
+      "landing_main_sha": "c3e6448ba9653d0bf97fda2655d15f7fc1590b8d",
+      "landing_ci_run": "39696798762",
       "control_matrix": "release/T0-CONTROL-MATRIX.json",
       "enforced_origin": "Exact authorized account *.workers.dev Worker, not arbitrary workers.dev host",
       "credential_scope": "Cloudflare keys only on origin verification and remote write/read steps; ephemeral sandbox operator credential only in deploy/attest step",
@@ -212,9 +212,9 @@
       "engine_main_sha": "b11654a8110bfeb5c525f1052434d90a7e332e9f",
       "engine_reviewed_head": "6ede66c150771144d2d4fd5d5b4c52f7fc67321e",
       "engine_ci_run": "39694999445",
-      "landing_main_sha": "577aefc7297884302c75bf6dadbbc02735b543db",
-      "landing_reviewed_head": "efe9c90733c8776bd1d3102fdb6f80e4e1dcc116",
-      "landing_ci_run": "39695693934",
+      "landing_main_sha": "c3e6448ba9653d0bf97fda2655d15f7fc1590b8d",
+      "landing_reviewed_head": "94c3f92f370300b32dd093faddcec04066805cba",
+      "landing_ci_run": "39696798762",
       "admission_scope": "MUTATION_BLOCKING_SOURCE_ONLY",
       "runtime_cloudflare_gate": "NOT_DISPATCHED",
       "cross_repo_immutable_ref": true,
@@ -236,10 +236,10 @@
       "ci": "39694999445"
     },
     "landing": {
-      "commit": "577aefc7297884302c75bf6dadbbc02735b543db",
+      "commit": "c3e6448ba9653d0bf97fda2655d15f7fc1590b8d",
       "package": "2.1.0",
       "lock": "2.1.0",
-      "ci": "39695693934"
+      "ci": "39696798762"
     },
     "SDK": {
       "commit": "cc68bffeb1d7be5360d87d0afee356a914d2d709",
@@ -256,10 +256,10 @@
       "registry_published": false
     },
     "cookbooks": {
-      "commit": "3608f997eefe2a6ad9ba2ac95833a62722e093f8",
+      "commit": "3fd7a7a25f0e4634affbdcc5e9d07dbc592570c3",
       "package": "2.1.0",
       "sdk_source_commit": "cc68bffeb1d7be5360d87d0afee356a914d2d709",
-      "ci": "39695473444"
+      "ci": "39696439898"
     }
   }
 }
