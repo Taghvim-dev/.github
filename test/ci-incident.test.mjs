@@ -1,0 +1,47 @@
+import { test } from "node:test";
+import assert from "node:assert/strict";
+import { classify, incidentKey } from "../.github/actions/ci-incident/reconcile.mjs";
+
+const repo = "Taghvim-dev/engine";
+const run = {
+  id: 123, name: "test", workflow_id: 8, head_branch: "main", head_sha: "ab".repeat(20),
+  head_repository: { full_name: repo }, status: "completed", event: "push",
+  conclusion: "failure", run_number: 18, run_attempt: 1
+};
+const base = (overrides = {}) => ({
+  run: { ...run, ...overrides },
+  repository: repo, currentSha: run.head_sha, recent: [{ ...run, ...overrides }], openPulls: []
+});
+test("Only current main failures generate incidents", () => {
+  assert.equal(classify(base()), "open");
+  assert.equal(classify(base({ conclusion: "success" })), "close");
+  assert.equal(classify({ ...base(), currentSha: "cd".repeat(20) }), "ignore");
+  assert.equal(classify(base({ status: "in_progress" })), "ignore");
+  assert.equal(classify(base({ head_repository: { full_name: "attacker/fork" } })), "ignore");
+  assert.equal(classify(base({ head_branch: "feature" })), "ignore");
+  assert.equal(classify(base({ conclusion: "cancelled" })), "ignore");
+});
+test("Superseded CI errors are discarded without opening a stale incident", () => {
+  const f = base();
+  f.recent = [ { ...run, id: 124, run_number: 19, conclusion: "success" }, run ];
+  assert.equal(classify(f), "ignore");
+  f.recent = [ { ...run, id: 123, run_number: 18, run_attempt: 2, conclusion: "success" } ];
+  assert.equal(classify(f), "ignore");
+});
+test("PR incidents require current SHA and open same-repository PR; fork excluded", () => {
+  const feature = { ...run, event: "pull_request", head_branch: "fix/foo", run_number: 20 };
+  const pr = { state: "open", head: { sha: run.head_sha, ref: "fix/foo", repo: { full_name: repo } } };
+  const opts = { run: feature, currentSha: run.head_sha, repository: repo, recent: [feature], openPulls: [pr] };
+  assert.equal(classify(opts), "open");
+  assert.equal(classify({ ...opts, openPulls: [] }), "ignore");
+  assert.equal(classify({ ...opts, openPulls: [{ ...pr, state: "closed" }] }), "ignore");
+  assert.equal(classify({ ...opts, openPulls: [{ ...pr, head: { ...pr.head, sha: "00" } }] }), "ignore");
+  assert.equal(classify({ ...opts, run: { ...feature, conclusion: "success" } }), "close");
+});
+test("Incident identity deduplicates by workflow and branch, not by commit or run", () => {
+  const a = incidentKey(8, "main");
+  assert.equal(a, incidentKey(8, "main"));
+  assert.notEqual(a, incidentKey(9, "main"));
+  assert.notEqual(a, incidentKey(8, "another"));
+  assert.match(a, /^[a-f0-9]{20}$/);
+});
