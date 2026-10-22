@@ -42,7 +42,7 @@ export async function dispatchRelease({repo,event,token,
   method:"POST",redirect:"error",signal:AbortSignal.timeout(16000),
   headers:{authorization:"Bearer "+token,accept:"application/vnd.github+json",
    "x-github-api-version":"2022-11-28","content-type":"application/json"},
-  body:JSON.stringify({ref:"main",inputs:{expected_sha:sha,approval_phrase:phrase}})
+  body:JSON.stringify({ref:"main",inputs:{expected_sha:sha,approval_phrase:phrase,approval_comment_id:String(comment_id)}})
  });
  if(response?.status!==204)fail("GitHub controlled workflow dispatch rejected HTTP "+response?.status);
  return {kind:"t0_owner_explicit_release_dispatch",component,sha,comment_id,
