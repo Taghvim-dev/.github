@@ -13,10 +13,10 @@ export const incidentKey = (workflow, branch) =>
   createHash("sha256").update(String(workflow) + "\0" + branch).digest("hex").slice(0, 20);
 
 export function classify({ run, currentSha, recent = [], openPulls = [], repository }) {
-  if (!run || run.status !== "completed" || !["push", "pull_request"].includes(run.event)) return "ignore";
+  if (!run || run.status !== "completed" || !["push", "pull_request", "workflow_dispatch", "issue_comment"].includes(run.event)) return "ignore";
   if (!Number.isInteger(run.workflow_id) || !run.head_branch || !run.head_sha ||
       run.head_repository?.full_name !== repository || run.head_sha !== currentSha) return "ignore";
-  if (run.event === "push" && run.head_branch !== "main") return "ignore";
+  if (["push", "workflow_dispatch", "issue_comment"].includes(run.event) && run.head_branch !== "main") return "ignore";
   if (run.event === "pull_request" && !openPulls.some(pr =>
       pr.state === "open" && pr.head?.repo?.full_name === repository &&
       pr.head?.ref === run.head_branch && pr.head?.sha === currentSha)) return "ignore";
@@ -88,7 +88,7 @@ export async function reconcile(payload) {
   const repo = process.env.GITHUB_REPOSITORY;
   if (!/^Taghvim-dev\/(engine|landing)$/.test(repo || "")) throw Error("CI_INCIDENT_REPO_SCOPE");
   const run = payload.workflow_run;
-  if (!run || run.status !== "completed" || !["push", "pull_request"].includes(run.event) ||
+  if (!run || run.status !== "completed" || !["push", "pull_request", "workflow_dispatch", "issue_comment"].includes(run.event) ||
       run.head_repository?.full_name !== repo) return "ignored";
   // Read CURRENT GitHub source, not a cached event payload or stale CI email.
   const branch = encodeURIComponent(run.head_branch || "");
