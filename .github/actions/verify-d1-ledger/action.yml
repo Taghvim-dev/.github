@@ -24,3 +24,27 @@ runs:
         set -euo pipefail
         node "$VERIFIER" "$D1_DATABASE" migrations release-d1-applied-raw.json release-d1-applied-evidence.json
         rm -f release-d1-applied-raw.json
+
+    - name: Query D1 consistency, foreign keys and canonical schema without customer data
+      shell: bash
+      env:
+        D1_DATABASE: ${{ inputs.database }}
+      run: |
+        set -euo pipefail
+        npx wrangler d1 execute "$D1_DATABASE" --remote --json --command "PRAGMA quick_check" > d1-quick-raw.json
+        npx wrangler d1 execute "$D1_DATABASE" --remote --json --command "PRAGMA foreign_key_check" > d1-foreign-raw.json
+        npx wrangler d1 execute "$D1_DATABASE" --remote --json --command "SELECT name,type FROM sqlite_master WHERE type IN ('table','view') ORDER BY name" > d1-objects-raw.json
+        if [ "$D1_DATABASE" = "taghvim-engine" ]; then
+          npx wrangler d1 execute "$D1_DATABASE" --remote --json --command "PRAGMA table_info(subscriptions)" > d1-columns-raw.json
+        else
+          npx wrangler d1 execute "$D1_DATABASE" --remote --json --command "PRAGMA table_info(leads)" > d1-columns-raw.json
+        fi
+    - name: Fail closed on corruption, orphaned references and missing migrated schema
+      shell: bash
+      env:
+        D1_DATABASE: ${{ inputs.database }}
+        CHECKER: ${{ github.action_path }}/d1-postcheck.mjs
+      run: |
+        set -euo pipefail
+        trap 'rm -f d1-quick-raw.json d1-foreign-raw.json d1-objects-raw.json d1-columns-raw.json' EXIT
+        node "$CHECKER" "$D1_DATABASE" d1-quick-raw.json d1-foreign-raw.json d1-objects-raw.json d1-columns-raw.json release-d1-integrity-evidence.json
