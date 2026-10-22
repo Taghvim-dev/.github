@@ -4,7 +4,7 @@
   "product": "Taghvim.dev",
   "contract_version": "2.1.0",
   "current_source": {
-    "engine_main_sha": "dfe87cfe1ad4095a4f12a33914eeb9dd8786daaf",
+    "engine_main_sha": "a6c69b4a08aa6b64d069f586487a251617fa8280",
     "landing_main_sha": "797b46192def3d33f3f7b15bd8f9532db8992ced",
     "shared_policy_sha": "c195c8bfde573b6195bd1b3bd00e3535accc9040",
     "prewrite_source_policy_sha": "f3bc8d18c5c31fd1125dd4da4887c86b9e3f8447"
@@ -57,7 +57,7 @@
         "engine/test/promotion-first.test.mjs",
         "landing/test/promotion-first.test.mjs"
       ],
-      "source_ci_run": "39774633349",
+      "source_ci_run": "39783298582",
       "live_evidence": null
     },
     {
@@ -90,7 +90,10 @@
         ".github/test/d1-recovery-bookmark.test.mjs"
       ],
       "source_ci_run": "39774282472",
-      "live_evidence": null
+      "live_evidence": null,
+      "observed_readonly_source": "Taghvim-dev/engine action 39781069681; production D1 exists, source UUID matches, applied ledger count 7; source files 9; sandbox D1 absent",
+      "sandbox_bootstrap_source_main_sha": "a6c69b4a08aa6b64d069f586487a251617fa8280",
+      "sandbox_bootstrap_live_receipt": null
     },
     {
       "id": "T0-EXEC-006",
@@ -137,7 +140,7 @@
         "engine/test/sandbox-onboarding.test.mjs",
         "landing/test/promotion-first.test.mjs"
       ],
-      "source_ci_run": "39774633349",
+      "source_ci_run": "39783298582",
       "live_evidence": null
     },
     {
@@ -185,7 +188,7 @@
       "test": [
         "engine/test/release-identity.test.mjs"
       ],
-      "source_ci_run": "39774633349",
+      "source_ci_run": "39783298582",
       "live_evidence": null
     },
     {
@@ -205,7 +208,7 @@
       ],
       "source_ci_run": "39691890610",
       "dependent_component_ci": {
-        "engine": "39774633349",
+        "engine": "39783298582",
         "landing": "39774645927"
       },
       "policy_main_sha": "f3bc8d18c5c31fd1125dd4da4887c86b9e3f8447",
@@ -230,7 +233,7 @@
       "source_ci_run": "39691890610",
       "reviewed_action_main_sha": "f3bc8d18c5c31fd1125dd4da4887c86b9e3f8447",
       "component_source_ci": {
-        "engine": "39774633349",
+        "engine": "39783298582",
         "landing": "39774645927"
       },
       "live_evidence": null,
@@ -261,7 +264,7 @@
       ],
       "package_contract_version": "2.1.0",
       "dependent_component_ci": {
-        "engine": "39774633349",
+        "engine": "39783298582",
         "landing": "39774645927",
         "SDK": "39695120246",
         "CLI": "39695189982",
