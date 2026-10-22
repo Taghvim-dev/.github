@@ -44,8 +44,8 @@
   "source_verification": {
     "date": "2026-10-22",
     "phase": "source-integrated-not-deployed",
-    "engine_main_merge_sha": "48014d71fb2f38860c4e25d019f749b7fef7d717",
-    "engine_offline_ci_run": "39790851582",
+    "engine_main_merge_sha": "732d25e2c6ea16f1fd993c322e8463b1b7c07f67",
+    "engine_offline_ci_run": "39792685627",
     "engine_live_gate_ci_run": "39439068311",
     "landing_main_merge_sha": "2b1ef64085b473ef7cbc67a707939c26e10e0384",
     "landing_integration_merge_sha": "e380b5f3553b98faf35adeccd9f6a25440a778a4",
@@ -88,11 +88,11 @@
     "engine_protected_release_gate_ci": "39450667511",
     "landing_protected_release_gate_ci": "39450678605",
     "production_release_checks": {
-      "durable_checkpoint": "SANDBOX_D1_BOTH_VERIFIED; PROD_NO_GO",
+      "durable_checkpoint": "SANDBOX_D1_12_OF_12; PROD_D1_9_OF_12_NO_GO",
       "manual_approval": "NOT_VERIFIED",
       "protected_environment": "SOURCE_GATED_REMOTE_UNVERIFIED",
-      "runtime_cloudflare_bindings": "PRODUCTION_D1_7_OF_9_LANDING_READINESS_404",
-      "remote_migration_receipts": "SANDBOX_ENGINE_9_9_LANDING_3_3_ONLY; PRODUCTION_RECEIPTS_MISSING",
+      "runtime_cloudflare_bindings": "SOURCE_UUID_MATCH_FOR_ENGINE_AND_LANDING; PROD_D1_LEDGER_ENGINE_7_OF_9_WEB_2_OF_3",
+      "remote_migration_receipts": "SANDBOX_12_OF_12_VERIFIED; PROD_9_OF_12_PENDING_3; PRODUCTION_RECEIPTS_MISSING",
       "deployed_2_1_contract": "LIVE_NO_GO_ENGINE_AND_LANDING",
       "live_signup_and_tenant_isolation": "NOT_READY_LANDING_READINESS_404",
       "live_meter_and_billing_recovery": "MISSING",
@@ -148,8 +148,8 @@
     },
     "latest_checked": {
       "date": "2026-10-22",
-      "engine_sha": "48014d71fb2f38860c4e25d019f749b7fef7d717",
-      "engine_ci": "39790851582",
+      "engine_sha": "732d25e2c6ea16f1fd993c322e8463b1b7c07f67",
+      "engine_ci": "39792685627",
       "landing_sha": "2b1ef64085b473ef7cbc67a707939c26e10e0384",
       "landing_ci": "39788223632",
       "shared_release_actions_sha": "c195c8bfde573b6195bd1b3bd00e3535accc9040",
@@ -193,10 +193,10 @@
     },
     "engine_package_contract_identity": {
       "status": "SOURCE_TESTED_NOT_LIVE",
-      "source_main_sha": "48014d71fb2f38860c4e25d019f749b7fef7d717",
+      "source_main_sha": "732d25e2c6ea16f1fd993c322e8463b1b7c07f67",
       "reviewed_pr": "Taghvim-dev/engine #73",
       "source_test_sha": "65ef7c434fd2b41568f0b3c69e2fef954f3ce8e1",
-      "ci_run": "39790851582",
+      "ci_run": "39792685627",
       "api_version": "2.1.0",
       "package_version": "2.1.0",
       "lock_root_version": "2.1.0",
@@ -209,9 +209,9 @@
       "policy_main_sha": "f3bc8d18c5c31fd1125dd4da4887c86b9e3f8447",
       "policy_pr": "Taghvim-dev/.github PR #47",
       "policy_test_run": "39691890610",
-      "engine_main_sha": "48014d71fb2f38860c4e25d019f749b7fef7d717",
-      "engine_reviewed_head": "14cc3a091f54105bbb8067589849325cf8b258d1",
-      "engine_ci_run": "39790851582",
+      "engine_main_sha": "732d25e2c6ea16f1fd993c322e8463b1b7c07f67",
+      "engine_reviewed_head": "3c7233b362948b8f6dd5c0ba7b10acd8fac7dbfa",
+      "engine_ci_run": "39792685627",
       "landing_main_sha": "2b1ef64085b473ef7cbc67a707939c26e10e0384",
       "landing_reviewed_head": "2b1ef64085b473ef7cbc67a707939c26e10e0384",
       "landing_ci_run": "39788223632",
@@ -471,8 +471,69 @@
       "evidence_scope": "D1_SANDBOX_SCHEMA_AND_SQLITE_INTEGRITY_ONLY",
       "sandbox_workers_deployed_and_smoked": false,
       "production_d1_engine_last_observed": "7/9",
-      "production_d1_landing": "UNVERIFIED",
+      "production_d1_landing": "2/3",
       "production_migrations_or_deployment_authorized": false,
+      "ga_approved": false,
+      "latest_readonly_probe": "39792685695"
+    },
+    "remote_d1_four_database_readonly_attestation": {
+      "observed_at": "2026-10-22T14:05:38Z",
+      "source_engine_main_sha": "732d25e2c6ea16f1fd993c322e8463b1b7c07f67",
+      "source_engine_main_ci": "39792685627",
+      "cloudflare_readonly_workflow_run": "39792685695",
+      "production_mutation": false,
+      "live_database_count": 4,
+      "databases": [
+        {
+          "name": "taghvim-engine",
+          "environment": "production",
+          "exists": true,
+          "source_uuid_match": true,
+          "migration_count": 7,
+          "expected_count": 9,
+          "pending": [
+            "0008_meter_reservations.sql",
+            "0009_scrub_issued_key_responses.sql"
+          ],
+          "ledger_present": true
+        },
+        {
+          "name": "taghvim-engine-sandbox",
+          "environment": "sandbox",
+          "exists": true,
+          "migration_count": 9,
+          "expected_count": 9,
+          "ledger_present": true
+        },
+        {
+          "name": "taghvim-web",
+          "environment": "production",
+          "exists": true,
+          "source_uuid_match": true,
+          "migration_count": 2,
+          "expected_count": 3,
+          "pending": [
+            "0003_updates_opt_in.sql"
+          ],
+          "ledger_present": true
+        },
+        {
+          "name": "taghvim-web-sandbox",
+          "environment": "sandbox",
+          "exists": true,
+          "migration_count": 3,
+          "expected_count": 3,
+          "ledger_present": true
+        }
+      ],
+      "sandbox_total_migrations_verified": 12,
+      "sandbox_total_migrations_expected": 12,
+      "production_total_migrations_applied": 9,
+      "production_total_migrations_expected": 12,
+      "production_migrations_pending": 3,
+      "production_workflow_runs": 0,
+      "code_contract_version": "2.1.0",
+      "production_live_contract_smoke": "NO_GO",
       "ga_approved": false
     }
   },
@@ -481,10 +542,10 @@
     "source_only": true,
     "remote_runtime_attested": false,
     "engine": {
-      "commit": "48014d71fb2f38860c4e25d019f749b7fef7d717",
+      "commit": "732d25e2c6ea16f1fd993c322e8463b1b7c07f67",
       "package": "2.1.0",
       "lock": "2.1.0",
-      "ci": "39790851582"
+      "ci": "39792685627"
     },
     "landing": {
       "commit": "2b1ef64085b473ef7cbc67a707939c26e10e0384",
