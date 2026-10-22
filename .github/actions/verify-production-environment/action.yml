@@ -1,9 +1,9 @@
-name: Require independently reviewed production environment
-description: Read-only fail-closed GitHub configuration attestation before remote Cloudflare writes
+name: T0 owner authorized GitHub Free production environment
+description: Real GitHub owner authenticated SHA approval, optional native required reviewers, current source, no Cloudflare writes
 runs:
   using: composite
   steps:
-    - name: Attest independent production reviewers and immutable source main (branch protection deferred)
+    - name: Attest owner approved immutable SHA for GitHub Free and enforce configured native protection
       shell: bash
       env:
         GITHUB_TOKEN: ${{ github.token }}
