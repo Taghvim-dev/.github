@@ -45,7 +45,7 @@
     "date": "2026-10-22",
     "phase": "source-integrated-not-deployed",
     "engine_main_merge_sha": "65900205525ec2249f5a2f4ab8ce2a94bbc6c5e0",
-    "engine_offline_ci_run": "39801800558",
+    "engine_offline_ci_run": "39802078794",
     "engine_live_gate_ci_run": "39439068311",
     "landing_main_merge_sha": "ce594db0612430c335375219575bf34794a2e31e",
     "landing_integration_merge_sha": "e380b5f3553b98faf35adeccd9f6a25440a778a4",
@@ -149,9 +149,9 @@
     "latest_checked": {
       "date": "2026-10-22",
       "engine_sha": "65900205525ec2249f5a2f4ab8ce2a94bbc6c5e0",
-      "engine_ci": "39801800558",
+      "engine_ci": "39802078794",
       "landing_sha": "ce594db0612430c335375219575bf34794a2e31e",
-      "landing_ci": "39801813965",
+      "landing_ci": "39802012899",
       "shared_release_actions_sha": "c195c8bfde573b6195bd1b3bd00e3535accc9040",
       "vendored_engine_files_matched": 11,
       "sandbox_to_production_status": "NO_GO",
@@ -196,7 +196,7 @@
       "source_main_sha": "65900205525ec2249f5a2f4ab8ce2a94bbc6c5e0",
       "reviewed_pr": "Taghvim-dev/engine #73",
       "source_test_sha": "65ef7c434fd2b41568f0b3c69e2fef954f3ce8e1",
-      "ci_run": "39801800558",
+      "ci_run": "39802078794",
       "api_version": "2.1.0",
       "package_version": "2.1.0",
       "lock_root_version": "2.1.0",
@@ -211,10 +211,10 @@
       "policy_test_run": "39691890610",
       "engine_main_sha": "65900205525ec2249f5a2f4ab8ce2a94bbc6c5e0",
       "engine_reviewed_head": "beefcb7ec431e87f3529600700568dcc33ffe8a5",
-      "engine_ci_run": "39801800558",
+      "engine_ci_run": "39802078794",
       "landing_main_sha": "ce594db0612430c335375219575bf34794a2e31e",
       "landing_reviewed_head": "c68da5a1ed05edba74f30c769ddd94eb5959f12d",
-      "landing_ci_run": "39801813965",
+      "landing_ci_run": "39802012899",
       "admission_scope": "MUTATION_BLOCKING_SOURCE_ONLY",
       "runtime_cloudflare_gate": "NOT_DISPATCHED",
       "cross_repo_immutable_ref": true,
@@ -646,9 +646,9 @@
       "live_landing_readiness": "NO_GO",
       "promotion_status": "NO_GO"
     },
-    "landing_offline_ci_run": "39801813965",
+    "landing_offline_ci_run": "39802012899",
     "owner_release_request_gate": {
-      "status": "CODE_MERGED_NO_DISPATCH_RECEIPT",
+      "status": "RELEASE_REQUEST_BLOCKED_ON_SUPERSEDED_PR_CI_RECEIPT",
       "shared_action_source_sha": "4afd3cfff1ba8f65929808fb29a9cc1524cc06eb",
       "action": ".github/actions/owner-release-dispatch/action.yml",
       "tests": "test/owner-release-dispatch.test.mjs",
@@ -657,14 +657,14 @@
       "components": {
         "engine": {
           "main_sha": "65900205525ec2249f5a2f4ab8ce2a94bbc6c5e0",
-          "ci_run": "39801800558",
+          "ci_run": "39802078794",
           "pr_tested_sha": "beefcb7ec431e87f3529600700568dcc33ffe8a5",
           "exact_git_tree": "1bca9f0ad8307adea0e0854b1d8c370d84658a1c",
           "workflow": ".github/workflows/t0-owner-protected-release-request.yml"
         },
         "landing": {
           "main_sha": "ce594db0612430c335375219575bf34794a2e31e",
-          "ci_run": "39801813965",
+          "ci_run": "39802012899",
           "pr_tested_sha": "c68da5a1ed05edba74f30c769ddd94eb5959f12d",
           "exact_git_tree": "27526ae97530c67c41f09b0d765d175e22202dbd",
           "workflow": ".github/workflows/t0-owner-protected-release-request.yml"
@@ -673,7 +673,10 @@
       "runtime": "NOT_DISPATCHED",
       "production_permission": "INDEPENDENT_REVIEW_REQUIRED",
       "remote_cloudflare_write": false,
-      "general_availability": "NO_GO"
+      "general_availability": "NO_GO",
+      "release_trigger_run": "39802597400",
+      "release_trigger_error": "CI receipt must be completed successful exact source workflow; independent prewrite gate correctly rejected superseded PR run",
+      "remediation": "Both exact main-SHA workflows completed_success: engine 39802078794, landing 39802012899; no remote mutation"
     }
   },
   "package_identity": {
@@ -684,13 +687,13 @@
       "commit": "65900205525ec2249f5a2f4ab8ce2a94bbc6c5e0",
       "package": "2.1.0",
       "lock": "2.1.0",
-      "ci": "39801800558"
+      "ci": "39802078794"
     },
     "landing": {
       "commit": "ce594db0612430c335375219575bf34794a2e31e",
       "package": "2.1.0",
       "lock": "2.1.0",
-      "ci": "39801813965"
+      "ci": "39802012899"
     },
     "SDK": {
       "commit": "cc68bffeb1d7be5360d87d0afee356a914d2d709",
