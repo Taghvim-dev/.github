@@ -1,0 +1,24 @@
+name: T0 same-run artifact inventory without false missing-file errors
+description: Read-only GitHub Actions artifact enumeration. Never download absent artifacts; fail closed on authentication.
+inputs:
+  component:
+    required: true
+    description: Exactly engine or landing
+outputs:
+  release_found:
+    description: true only when the exact same-run release artifact exists
+    value: ${{ steps.inventory.outputs.release_found }}
+  sandbox_found:
+    description: true only when the exact same-run sandbox artifact exists
+    value: ${{ steps.inventory.outputs.sandbox_found }}
+runs:
+  using: composite
+  steps:
+    - name: Independently list exact-run artifact names before download
+      id: inventory
+      shell: bash
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+        TAGHVIM_COMPONENT: ${{ inputs.component }}
+        INVENTORY_SCRIPT: ${{ github.action_path }}/inventory.mjs
+      run: node "$INVENTORY_SCRIPT"
