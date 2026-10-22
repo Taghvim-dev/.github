@@ -37,6 +37,20 @@ export async function dispatchRelease({repo,event,token,
    admission?.commit_tree_identity_verified!==true||
    admission?.tested_ci_status!=="completed_success")
    fail("current source and approved CI are not independently attested");
+ // Idempotent at T0: serial per-repo issue-comment workflow guarantees one
+ // read/dispatch critical section across concurrent owner commands.
+ const runsUrl="https://api.github.com/repos/"+repo+"/actions/workflows/production-release.yml/runs?branch=main&per_page=50";
+ const previous=await request(runsUrl,{method:"GET",redirect:"error",signal:AbortSignal.timeout(16000),
+  headers:{authorization:"Bearer "+token,accept:"application/vnd.github+json",
+   "x-github-api-version":"2022-11-28"}});
+ if(previous?.status!==200)fail("cannot inspect active release inventory HTTP "+previous?.status);
+ const inventory=await previous.json().catch(()=>null);
+ if(!Array.isArray(inventory?.workflow_runs))fail("invalid active release inventory");
+ const active=inventory.workflow_runs.find(r=>r.head_sha===sha&&r.event==="workflow_dispatch"&&
+  r.head_branch==="main"&&["requested","queued","pending","waiting","in_progress"].includes(r.status));
+ if(active)return {kind:"t0_owner_release_deduplicated",component,sha,comment_id,
+  existing_run_id:active.id,owner_request:true,production_approved:false,
+  production_mutation:false,status:"ALREADY_ACTIVE_GITHUB_NOT_DEPLOYED"};
  const endpoint="https://api.github.com/repos/"+repo+"/actions/workflows/production-release.yml/dispatches";
  const response=await request(endpoint,{
   method:"POST",redirect:"error",signal:AbortSignal.timeout(16000),
