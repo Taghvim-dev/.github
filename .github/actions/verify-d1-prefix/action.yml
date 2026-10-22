@@ -1,0 +1,26 @@
+name: Verify D1 pre-migration prefix
+description: Refuse migration if the authoritative remote D1 ledger is not a prefix of the reviewed SQL files
+inputs:
+  database:
+    description: Exact allowed production D1 database name
+    required: true
+runs:
+  using: composite
+  steps:
+    - name: Read authoritative applied ledger from remote D1 before writes
+      shell: bash
+      env:
+        D1_DATABASE: ${{ inputs.database }}
+      run: |
+        set -euo pipefail
+        case "$D1_DATABASE" in taghvim-engine|taghvim-web) ;; *) echo "::error::Invalid D1 target"; exit 1;; esac
+        npx wrangler d1 execute "$D1_DATABASE" --remote --json --command "SELECT name FROM d1_migrations ORDER BY id" > release-d1-preflight-raw.json
+    - name: Refuse unknown historic migrations and out-of-order ledgers
+      shell: bash
+      env:
+        D1_DATABASE: ${{ inputs.database }}
+        CHECKER: ${{ github.action_path }}/verify-d1-prefix.mjs
+      run: |
+        set -euo pipefail
+        trap 'rm -f release-d1-preflight-raw.json' EXIT
+        node "$CHECKER" "$D1_DATABASE" release-d1-preflight-raw.json release-d1-preflight-evidence.json
