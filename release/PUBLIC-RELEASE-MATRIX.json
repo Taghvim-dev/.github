@@ -216,7 +216,7 @@
       "landing_reviewed_head": "54d580ebfe49154619a053d51a694b20e7544495",
       "landing_ci_run": "39805117839",
       "admission_scope": "MUTATION_BLOCKING_SOURCE_ONLY",
-      "runtime_cloudflare_gate": "SANDBOX_BLOCKED_REMOTE_WRITES_ZERO",
+      "runtime_cloudflare_gate": "NOT_DISPATCHED",
       "cross_repo_immutable_ref": true,
       "post_facto_ga_authorization": false,
       "source_run_verification": "REQUIRED_AT_SANDBOX_AND_PRODUCTION",
