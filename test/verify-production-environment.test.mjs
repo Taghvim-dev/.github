@@ -42,3 +42,19 @@ test("private-repository independent human SHA attestation can replace unavailab
  assert.throws(()=>verifyEnvironment(noNative,[{name:"main"}],"main",{...independent,production_mutation:true}));
  assert.throws(()=>verifyEnvironment({...noNative,protection_rules:[{type:"required_reviewers",reviewers:[],prevent_self_review:false}]},[{name:"main"}],"main",independent),/misconfigured/);
 });
+
+test("GitHub Free private owner delegation requires authenticated SHA-bound comment, not a fictional independent reviewer",()=>{
+ const noNative={...base,protection_rules:[],deployment_branch_policy:{custom_branch_policies:false,protected_branches:false}};
+ const owner={kind:"taghvim_t0_owner_comment_approval",source_sha:"a".repeat(40),
+  owner_verified:true,remote_mutation:false,production_approved:false};
+ const result=verifyEnvironment(noNative,null,"main",null,owner);
+ assert.equal(result.approval_mode,"owner_sha_bound_free_delegation");
+ assert.equal(result.review_required,false);
+ assert.equal(result.prevent_self_review,false);
+ assert.equal(result.owner_explicit_release,true);
+ assert.throws(()=>verifyEnvironment(noNative,null,"main",null,{...owner,owner_verified:false}));
+ assert.throws(()=>verifyEnvironment(noNative,null,"main",null,{...owner,remote_mutation:true}));
+ assert.throws(()=>verifyEnvironment(noNative,null,"main",null,{...owner,source_sha:"wrong"}));
+ assert.throws(()=>verifyEnvironment({...noNative,protection_rules:[{type:"required_reviewers",reviewers:[],prevent_self_review:false}]},null,"main",null,owner),/misconfigured/);
+ assert.throws(()=>verifyEnvironment(noNative,null,"untrusted",null,owner),/Only current main/);
+});
