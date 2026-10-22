@@ -4,12 +4,14 @@ on:
     paths:
       - '.github/actions/verify-d1-ledger/**'
       - 'test/verify-d1-ledger.test.mjs'
+      - 'test/d1-postcheck.test.mjs'
       - '.github/workflows/d1-applied-ledger-contract.yml'
   push:
     branches: [main]
     paths:
       - '.github/actions/verify-d1-ledger/**'
       - 'test/verify-d1-ledger.test.mjs'
+      - 'test/d1-postcheck.test.mjs'
       - '.github/workflows/d1-applied-ledger-contract.yml'
 permissions:
   contents: read
@@ -28,7 +30,7 @@ jobs:
         with:
           node-version: '22'
       - name: Negative-case D1 migration ledger tests
-        run: node --test test/verify-d1-ledger.test.mjs
+        run: node --test test/verify-d1-ledger.test.mjs test/d1-postcheck.test.mjs
       - name: Assert read-only verification and no deploy
         run: |
           grep -F 'SELECT name FROM d1_migrations ORDER BY id' .github/actions/verify-d1-ledger/action.yml

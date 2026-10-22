@@ -1,0 +1,35 @@
+name: d1-prefix-contract
+on:
+  pull_request:
+    paths:
+      - '.github/actions/verify-d1-prefix/**'
+      - 'test/verify-d1-prefix.test.mjs'
+      - '.github/workflows/d1-prefix-contract.yml'
+  push:
+    branches: [main]
+    paths:
+      - '.github/actions/verify-d1-prefix/**'
+      - 'test/verify-d1-prefix.test.mjs'
+      - '.github/workflows/d1-prefix-contract.yml'
+permissions:
+  contents: read
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: '22'
+      - name: Verify prefix idempotency and reject drift
+        run: node --test test/verify-d1-prefix.test.mjs
+      - name: Preflight is read-only and can never deploy or mutate D1
+        run: |
+          grep -F "SELECT name FROM d1_migrations ORDER BY id" .github/actions/verify-d1-prefix/action.yml
+          ! grep -E 'wrangler deploy|migrations apply|DROP TABLE|ALTER TABLE|UPDATE |INSERT INTO' .github/actions/verify-d1-prefix/action.yml
