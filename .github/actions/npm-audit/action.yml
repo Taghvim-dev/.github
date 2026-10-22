@@ -1,0 +1,8 @@
+name: "Verify npm security advisories with transient outage retry"
+description: "Fail-closed audit; retry npm registry 5xx/timeouts only, never ignore a high or critical vulnerability"
+runs:
+  using: composite
+  steps:
+    - name: Bound npm registry retries without bypassing security
+      shell: bash
+      run: node "${{ github.action_path }}/verified-audit.mjs"
