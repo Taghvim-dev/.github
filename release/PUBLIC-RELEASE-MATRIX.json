@@ -44,15 +44,15 @@
   "source_verification": {
     "date": "2026-10-22",
     "phase": "source-integrated-not-deployed",
-    "engine_main_merge_sha": "5ea434df8e7a9e7e6c404932a76dceee111ff626",
-    "engine_offline_ci_run": "39700744749",
+    "engine_main_merge_sha": "cf1dcb7816cad967b0361f9517d0c939601e9dd4",
+    "engine_offline_ci_run": "39704449577",
     "engine_live_gate_ci_run": "39439068311",
-    "landing_main_merge_sha": "46b2897170c709ea6ce95f41c574c58b5ae7015f",
-    "landing_integration_merge_sha": "ef95976de35a597f4335ebc9d0b8b3ef1c2abe50",
-    "landing_integration_ci_run": "39700752015",
-    "landing_rtl_ci_run": "39695693924",
+    "landing_main_merge_sha": "3deecbe57b6d4d2b6e2ad5c788ceeb2089d5c90c",
+    "landing_integration_merge_sha": "08273c9f66167877e83d07851c4812bdd0dadfcb",
+    "landing_integration_ci_run": "39705208640",
+    "landing_rtl_ci_run": "39705208783",
     "landing_two_phase_release_ci_run": "39440013499",
-    "note": "Canonical 2.1.0 Engine SHA 5ea434df8e7a9e7e6c404932a76dceee111ff626 (Git tree PR SHA 3e3fda5084b20406931a5c6a5d9662b50a789e22 equal, passed CI 39700744749); Landing SHA 46b2897170c709ea6ce95f41c574c58b5ae7015f (Git tree PR SHA ef95976de35a597f4335ebc9d0b8b3ef1c2abe50 equal, passed CI 39700752015). Source PRs enforce Cloudflare Version→Route/Cron reconciliation before deploy checkpoint with offline tests. SDK/CLI/Cookbooks 2.1.0 unchanged; protected GitHub branch/environment, real remote D1, live Cloudflare deployment, onboarding and 2.1.0 on public website remain UNVERIFIED. Status PREVIEW/NO_GO, GA false.",
+    "note": "Current 2.1.0 source: Engine cf1dcb7816cad967b0361f9517d0c939601e9dd4 (PR tree==main, CI 39704449577 and green main 39705334469), Landing 3deecbe57b6d4d2b6e2ad5c788ceeb2089d5c90c (PR tree==main, CI 39705208640, visual RTL 39705208783, green main 39705365062). Read-only post-promotion customer acceptance gates added. Commercial pricebook still illustrative so paid checkout MUST NOT be certified. Real Cloudflare sandbox, D1, environment approval, production versions, billing, delivered email and user onboarding are unverified; GA=false and promotion=NO_GO.",
     "engine_node24_action_test": "39441189301",
     "landing_node24_action_test": "39441203096",
     "landing_node24_rtl_test": "39441203134",
@@ -77,8 +77,8 @@
       "contract_version": "2.1.0",
       "contract_git_blob": "c0d163f8e2d883125fc3778b17842bd19fe3f6bf",
       "engine_commit": "b11654a8110bfeb5c525f1052434d90a7e332e9f",
-      "landing_main_sha": "46b2897170c709ea6ce95f41c574c58b5ae7015f",
-      "source_ci_run": "39700752015"
+      "landing_main_sha": "3deecbe57b6d4d2b6e2ad5c788ceeb2089d5c90c",
+      "source_ci_run": "39705208640"
     },
     "browser_freshness_main_sha": "33cc1f86995812780b72ac70d5852a6bd4c3ed25",
     "browser_freshness_pr_ci": "39449793285",
@@ -148,16 +148,16 @@
     },
     "latest_checked": {
       "date": "2026-10-22",
-      "engine_sha": "5ea434df8e7a9e7e6c404932a76dceee111ff626",
-      "engine_ci": "39700744749",
-      "landing_sha": "46b2897170c709ea6ce95f41c574c58b5ae7015f",
-      "landing_ci": "39700752015",
+      "engine_sha": "cf1dcb7816cad967b0361f9517d0c939601e9dd4",
+      "engine_ci": "39704449577",
+      "landing_sha": "3deecbe57b6d4d2b6e2ad5c788ceeb2089d5c90c",
+      "landing_ci": "39705208640",
       "shared_release_actions_sha": "c195c8bfde573b6195bd1b3bd00e3535accc9040",
       "vendored_engine_files_matched": 11,
       "sandbox_to_production_status": "NO_GO",
       "production_workflow_runs": 0,
-      "landing_integration_sha": "ef95976de35a597f4335ebc9d0b8b3ef1c2abe50",
-      "landing_integration_ci": "39700752015"
+      "landing_integration_sha": "08273c9f66167877e83d07851c4812bdd0dadfcb",
+      "landing_integration_ci": "39705208640"
     },
     "independent_engine_source_gate": {
       "status": "SOURCE_TESTED; REMOTE CHECKOUT NOT DISPATCHED",
@@ -171,17 +171,17 @@
       "live_upstream_attestation_receipt": "MISSING",
       "note": "Historical PR #53 source proof remains at old commit for provenance; the new 11-blob source manifest at Engine b11654a8110bfeb5c525f1052434d90a7e332e9f is tested in Landing PR #58. Independent protected release checkout is still NOT DISPATCHED.",
       "current_required_engine_commit": "b11654a8110bfeb5c525f1052434d90a7e332e9f",
-      "current_landing_main_sha": "46b2897170c709ea6ce95f41c574c58b5ae7015f",
-      "current_landing_source_ci": "39700752015"
+      "current_landing_main_sha": "3deecbe57b6d4d2b6e2ad5c788ceeb2089d5c90c",
+      "current_landing_source_ci": "39705208640"
     },
     "t0_infrastructure_source": {
       "date": "2026-10-22",
       "shared_action_sha": "c195c8bfde573b6195bd1b3bd00e3535accc9040",
       "action_test_run": "39681975240",
-      "engine_main_sha": "5ea434df8e7a9e7e6c404932a76dceee111ff626",
-      "engine_ci_run": "39700744749",
-      "landing_main_sha": "46b2897170c709ea6ce95f41c574c58b5ae7015f",
-      "landing_ci_run": "39700752015",
+      "engine_main_sha": "cf1dcb7816cad967b0361f9517d0c939601e9dd4",
+      "engine_ci_run": "39704449577",
+      "landing_main_sha": "3deecbe57b6d4d2b6e2ad5c788ceeb2089d5c90c",
+      "landing_ci_run": "39705208640",
       "control_matrix": "release/T0-CONTROL-MATRIX.json",
       "enforced_origin": "Exact authorized account *.workers.dev Worker, not arbitrary workers.dev host",
       "credential_scope": "Cloudflare keys only on origin verification and remote write/read steps; ephemeral sandbox operator credential only in deploy/attest step",
@@ -193,10 +193,10 @@
     },
     "engine_package_contract_identity": {
       "status": "SOURCE_TESTED_NOT_LIVE",
-      "source_main_sha": "5ea434df8e7a9e7e6c404932a76dceee111ff626",
-      "reviewed_pr": "Taghvim-dev/engine #57",
-      "source_test_sha": "3e3fda5084b20406931a5c6a5d9662b50a789e22",
-      "ci_run": "39700744749",
+      "source_main_sha": "cf1dcb7816cad967b0361f9517d0c939601e9dd4",
+      "reviewed_pr": "Taghvim-dev/engine #58",
+      "source_test_sha": "3851aa04ecff40e0dff5d97f0891e9bf8d5dc88d",
+      "ci_run": "39704449577",
       "api_version": "2.1.0",
       "package_version": "2.1.0",
       "lock_root_version": "2.1.0",
@@ -209,12 +209,12 @@
       "policy_main_sha": "f3bc8d18c5c31fd1125dd4da4887c86b9e3f8447",
       "policy_pr": "Taghvim-dev/.github PR #47",
       "policy_test_run": "39691890610",
-      "engine_main_sha": "5ea434df8e7a9e7e6c404932a76dceee111ff626",
-      "engine_reviewed_head": "3e3fda5084b20406931a5c6a5d9662b50a789e22",
-      "engine_ci_run": "39700744749",
-      "landing_main_sha": "46b2897170c709ea6ce95f41c574c58b5ae7015f",
-      "landing_reviewed_head": "ef95976de35a597f4335ebc9d0b8b3ef1c2abe50",
-      "landing_ci_run": "39700752015",
+      "engine_main_sha": "cf1dcb7816cad967b0361f9517d0c939601e9dd4",
+      "engine_reviewed_head": "3851aa04ecff40e0dff5d97f0891e9bf8d5dc88d",
+      "engine_ci_run": "39704449577",
+      "landing_main_sha": "3deecbe57b6d4d2b6e2ad5c788ceeb2089d5c90c",
+      "landing_reviewed_head": "08273c9f66167877e83d07851c4812bdd0dadfcb",
+      "landing_ci_run": "39705208640",
       "admission_scope": "MUTATION_BLOCKING_SOURCE_ONLY",
       "runtime_cloudflare_gate": "NOT_DISPATCHED",
       "cross_repo_immutable_ref": true,
@@ -223,6 +223,32 @@
       "source_pr_main_git_tree_parity": "REQUIRED_AT_SANDBOX_AND_PRODUCTION",
       "tested_engine_workflow_id": 372423484,
       "tested_landing_workflow_id": 390048334
+    },
+    "customer_live_readiness": {
+      "contract_version": "2.1.0",
+      "engine": {
+        "main_sha": "cf1dcb7816cad967b0361f9517d0c939601e9dd4",
+        "reviewed_head": "3851aa04ecff40e0dff5d97f0891e9bf8d5dc88d",
+        "source_ci_run": "39704449577",
+        "main_ci_run": "39705334469",
+        "checks": "live D1 + signing + pricebook approval + Vandar live key + OpenAPI + anonymous tenant refusal",
+        "live_receipt": "MISSING"
+      },
+      "landing": {
+        "main_sha": "3deecbe57b6d4d2b6e2ad5c788ceeb2089d5c90c",
+        "reviewed_head": "08273c9f66167877e83d07851c4812bdd0dadfcb",
+        "source_ci_run": "39705208640",
+        "main_ci_run": "39705365062",
+        "rtl_ci_run": "39705208783",
+        "checks": "apex HTML + WWW redirect + forms D1 + Comms D1 + Mail Sender binding + API billing + OpenAPI",
+        "live_receipt": "MISSING"
+      },
+      "commercial_pricebook_status": "illustrative",
+      "paid_checkout_authorized": false,
+      "mail_binding_probe": "READ_ONLY_BINDING_TEST_NOT_DELIVERABILITY",
+      "allow_ga_without_cloudflare_release_evidence": false,
+      "production_workflow_runs": 0,
+      "status": "SOURCE_CI_VERIFIED_LIVE_NO_GO"
     }
   },
   "package_identity": {
@@ -230,16 +256,16 @@
     "source_only": true,
     "remote_runtime_attested": false,
     "engine": {
-      "commit": "5ea434df8e7a9e7e6c404932a76dceee111ff626",
+      "commit": "cf1dcb7816cad967b0361f9517d0c939601e9dd4",
       "package": "2.1.0",
       "lock": "2.1.0",
-      "ci": "39700744749"
+      "ci": "39704449577"
     },
     "landing": {
-      "commit": "46b2897170c709ea6ce95f41c574c58b5ae7015f",
+      "commit": "3deecbe57b6d4d2b6e2ad5c788ceeb2089d5c90c",
       "package": "2.1.0",
       "lock": "2.1.0",
-      "ci": "39700752015"
+      "ci": "39705208640"
     },
     "SDK": {
       "commit": "cc68bffeb1d7be5360d87d0afee356a914d2d709",
