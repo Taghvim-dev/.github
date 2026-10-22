@@ -1,9 +1,9 @@
-name: Require independently protected production environment
+name: Require independently reviewed production environment
 description: Read-only fail-closed GitHub configuration attestation before remote Cloudflare writes
 runs:
   using: composite
   steps:
-    - name: Attest required reviewer, no self-review and main branch protection
+    - name: Attest independent production reviewers and immutable source main (branch protection deferred)
       shell: bash
       env:
         GITHUB_TOKEN: ${{ github.token }}
