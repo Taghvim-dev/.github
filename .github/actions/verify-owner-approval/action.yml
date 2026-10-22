@@ -1,0 +1,13 @@
+name: Verify owner SHA-bound promotion approval
+description: Independently attest authenticated owner issue comment; no static approval secret or Cloudflare credentials
+runs:
+  using: composite
+  steps:
+    - name: T0 re-read authenticated GitHub owner approval for exact current main SHA
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+        OWNER_APPROVAL_SCRIPT: ${{ github.action_path }}/verify-owner-approval.mjs
+      shell: bash
+      run: |
+        set -euo pipefail
+        node "$OWNER_APPROVAL_SCRIPT"
