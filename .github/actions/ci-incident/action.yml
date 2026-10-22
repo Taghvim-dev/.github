@@ -1,0 +1,10 @@
+name: "T0 CI incident reconciler"
+description: "Track only latest actionable GitHub CI failures as deduplicated private repository Issues; auto-close on green."
+runs:
+  using: composite
+  steps:
+    - name: Reconcile current GitHub Actions source and incident state
+      shell: bash
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+      run: node "${{ github.action_path }}/reconcile.mjs"
