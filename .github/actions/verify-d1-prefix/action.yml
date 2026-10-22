@@ -27,7 +27,7 @@ runs:
         case "$MODE" in
           PRISTINE_EMPTY)
             # The only safe first-migration exception: no user tables, views or triggers.
-            printf '[{"success":true,"results":[]}]\\n' > release-d1-preflight-raw.json
+            printf '%s\n' '[{"success":true,"results":[]}]' > release-d1-preflight-raw.json
             ;;
           EXISTING_LEDGER)
             npx wrangler d1 execute "$D1_DATABASE" --remote --json --command "SELECT name FROM d1_migrations ORDER BY id" > release-d1-preflight-raw.json
