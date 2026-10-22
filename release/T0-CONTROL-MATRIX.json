@@ -5,7 +5,7 @@
   "contract_version": "2.1.0",
   "current_source": {
     "engine_main_sha": "b5c0bb9381434a1c5e53cace36ff0f764bdef0b4",
-    "landing_main_sha": "b1c58740247e67c0bee756b063565a77473c0c55",
+    "landing_main_sha": "355fc7231ac2eb96eaeef9e727185ce84f2e0a1c",
     "shared_policy_sha": "c195c8bfde573b6195bd1b3bd00e3535accc9040",
     "prewrite_source_policy_sha": "f3bc8d18c5c31fd1125dd4da4887c86b9e3f8447"
   },
@@ -217,7 +217,7 @@
       "source_ci_run": "39691890610",
       "dependent_component_ci": {
         "engine": "39808035473",
-        "landing": "39805117839"
+        "landing": "39810082034"
       },
       "policy_main_sha": "f3bc8d18c5c31fd1125dd4da4887c86b9e3f8447",
       "production_remote_receipt": null,
@@ -242,7 +242,7 @@
       "reviewed_action_main_sha": "f3bc8d18c5c31fd1125dd4da4887c86b9e3f8447",
       "component_source_ci": {
         "engine": "39808035473",
-        "landing": "39805117839"
+        "landing": "39810082034"
       },
       "live_evidence": null,
       "expected_workflow_ids": {
@@ -273,7 +273,7 @@
       "package_contract_version": "2.1.0",
       "dependent_component_ci": {
         "engine": "39808035473",
-        "landing": "39805117839",
+        "landing": "39810082034",
         "SDK": "39695120246",
         "CLI": "39695189982",
         "cookbooks": "39696439898"
