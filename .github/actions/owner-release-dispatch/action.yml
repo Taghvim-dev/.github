@@ -1,0 +1,13 @@
+name: T0 SHA-bound owner release request to protected Sandbox -> Production workflow
+description: Dispatch the existing approved release workflow only for an exact main SHA, independently verified CI and canonical ledger
+runs:
+  using: composite
+  steps:
+    - name: T0 owner/issue/CI/source-bound release dispatcher; no Cloudflare credentials
+      shell: bash
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+        RELEASE_DISPATCH_SCRIPT: ${{ github.action_path }}/dispatch.mjs
+      run: |
+        set -euo pipefail
+        node "$RELEASE_DISPATCH_SCRIPT"
