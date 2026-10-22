@@ -590,6 +590,19 @@
       ],
       "production_promotion": "NO_GO",
       "evidence_note": "Read-only Cloudflare API, no release approval or parity claim."
+    },
+    "worker_deployment_reconnaissance": {
+      "source_sha": "488865a8e6c9fe3b57746b749e0c705531190a91",
+      "pr": "Taghvim-dev/engine PR #83",
+      "reviewed_head": "22b733d706d4e00d23d73bed107408383b25d41a",
+      "reviewed_ci_run": "39797200151",
+      "matching_git_tree_sha": "9532a7b8003e2ee1319712d0c30bf7b182e1a9b6",
+      "runtime_observation_run": "39797717527",
+      "runtime_observation_status": "AWAITING_REMOTE_RESULT",
+      "production_write": false,
+      "live_api_contract": "NO_GO",
+      "live_landing_readiness": "NO_GO",
+      "promotion_status": "NO_GO"
     }
   },
   "package_identity": {
