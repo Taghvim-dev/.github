@@ -45,3 +45,21 @@ test("Incident identity deduplicates by workflow and branch, not by commit or ru
   assert.notEqual(a, incidentKey(8, "another"));
   assert.match(a, /^[a-f0-9]{20}$/);
 });
+
+test("T0 observes protected release workflow_dispatch failures and closes on actual recovered run", () => {
+ const release={...run,event:"workflow_dispatch",head_branch:"main",name:"controlled-engine-release",workflow_id:918,id:402};
+ const opts={run:release,currentSha:run.head_sha,recent:[release],repository:repo,openPulls:[]};
+ assert.equal(classify(opts),"open");
+ assert.equal(classify({...opts,run:{...release,conclusion:"success"}}),"close");
+ assert.equal(classify({...opts,currentSha:"aa".repeat(20)}),"ignore");
+ assert.equal(classify({...opts,run:{...release,head_branch:"unsafe-feature"}}),"ignore");
+ const newer={...release,id:403,run_number:19,conclusion:"success"};
+ assert.equal(classify({...opts,recent:[release,newer]}),"ignore");
+});
+test("T0 detects owner issue_comment release-dispatch failure without user reporting emails", () => {
+ const issue={...run,event:"issue_comment",head_branch:"main",name:"t0-owner-protected-release-request",workflow_id:919,id:404};
+ const opts={run:issue,currentSha:run.head_sha,recent:[issue],repository:repo,openPulls:[]};
+ assert.equal(classify(opts),"open");
+ assert.equal(classify({...opts,run:{...issue,conclusion:"success"}}),"close");
+ assert.equal(classify({...opts,run:{...issue,head_repository:{full_name:"outside/evil"}}}),"ignore");
+});
