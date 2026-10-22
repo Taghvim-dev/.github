@@ -56,7 +56,10 @@ if(ad.runtime_cloudflare_gate==="ENGINE_PRODUCTION_VERIFIED_LANDING_NO_GO"){
     sourceSha:ad.engine_main_sha,sourceCi:ad.engine_ci_run,
     gaApproved:candidate.general_availability_approved,
     sourceOnly:candidate.package_identity.remote_runtime_attested===false,
-    releaseStatus:candidate.source_verification.latest_checked.sandbox_to_production_status
+    releaseStatus:candidate.source_verification.latest_checked.sandbox_to_production_status,
+    deployedSourceSha:candidate.source_verification.customer_live_readiness?.engine?.main_sha,
+    deployedCiRun:candidate.source_verification.customer_live_readiness?.engine?.main_ci_run,
+    deployedReleaseRun:candidate.deployment_observation?.source_run
   });
   assert.equal(engineRuntime.controlled_release_conclusion,"success");
   assert.equal(engineRuntime.production_smoke,"ENGINE_2_1_PRODUCTION_SMOKE_PASS");
