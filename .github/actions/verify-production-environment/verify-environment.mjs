@@ -3,17 +3,24 @@
  * No Cloudflare writes and no secret values in logs.
  */
 import {fileURLToPath} from "node:url";
+import {verifyIndependentReview} from "./independent-review.mjs";
 
-export function verifyEnvironment(env, policies, branch) {
+export function verifyEnvironment(env, policies, branch, independentReview=null) {
   // Branch Protection is temporarily optional at the owner's explicit request.
   // The checkout/ref must still be the *current* main Git tree: independent
   // verify-current-source admission runs before this action and prior to writes.
   if(branch!=="main")throw Error("Only current main may enter production");
   if(env?.name!=="production" || !Number.isInteger(env?.id)) throw Error("Production environment missing");
   const approval=(env.protection_rules||[]).find(p=>p?.type==="required_reviewers");
-  if(!approval || approval.prevent_self_review!==true ||
-      !Array.isArray(approval.reviewers) || approval.reviewers.length===0)
-    throw Error("Production must require independent reviewer(s) and prevent self-review");
+  // Native required reviewers are unavailable on non-Enterprise PRIVATE repos.
+  // Never silently weaken a partially configured native rule.
+  if(approval && (approval.prevent_self_review!==true ||
+      !Array.isArray(approval.reviewers) || approval.reviewers.length===0))
+    throw Error("Native production reviewer rule is misconfigured");
+  if(!approval && !(independentReview?.independent_from_owner===true &&
+     independentReview?.production_mutation===false &&
+     independentReview?.kind==="taghvim_t0_independent_issue_review"))
+    throw Error("Production must have native independent reviewer(s) OR authenticated second-person SHA approval");
   const p=env.deployment_branch_policy||{};
   if(p.custom_branch_policies===true){
     if(!Array.isArray(policies) || !policies.some(x=>x?.name===branch))
@@ -25,6 +32,7 @@ export function verifyEnvironment(env, policies, branch) {
   // immutable reviewed SHA and latest main HEAD on *every* release attempt.
   // Independent production reviewers and no self-review remain mandatory.
   return {environment:"production",review_required:true,prevent_self_review:true,
+    approval_mode:approval?"native_required_reviewers":"two_person_sha_bound_git_review",
     branch_policy:p.custom_branch_policies?"only_main":(p.protected_branches?"protected_main":"sha_pinned_main"),approved_candidate_branch:branch,
     ready_to_check_deploy:true,general_availability_approved:false};
 }
@@ -47,7 +55,13 @@ async function main(){
   const env=await read("environments/production");
   const policies=env?.deployment_branch_policy?.custom_branch_policies?
     (await read("environments/production/deployment-branch-policies?per_page=100")).branch_policies:null;
-  const state=verifyEnvironment(env,policies,"main");
+  // Explicit owner approval runs in the immediately preceding release step.
+  // Where native environment review is unavailable, demand an independently
+  // authenticated second HUMAN with write access to this exact private repo.
+  const native=(env.protection_rules||[]).find(p=>p?.type==="required_reviewers");
+  const independent=native?null:await verifyIndependentReview({
+    repo,sha:process.env.GITHUB_SHA,token});
+  const state=verifyEnvironment(env,policies,"main",independent);
   // The immutable source gate (upstream) verifies current main and full tested
   // Git tree. Do not demand GitHub branch protection during this phase.
   console.log("PROTECTED_ENVIRONMENT_ADMISSION_PASSED",JSON.stringify(state));
