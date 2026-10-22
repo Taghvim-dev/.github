@@ -66,3 +66,12 @@ test("T0 first D1 bootstrap executes metadata inspection before ledger and migra
  assert.match(action,/EXISTING_LEDGER/);
  assert.doesNotMatch(action,/d1 migrations apply|wrangler deploy|DROP TABLE|ALTER TABLE/);
 });
+
+test("Cloudflare reserved storage table is not user data during pristine migration gate",()=>{
+ for(const database of ["taghvim-engine","taghvim-web"]){
+  assert.equal(classifyRemoteSchema({database,response:schema([["_cf_KV","table"]])}),"PRISTINE_EMPTY");
+  assert.equal(classifyRemoteSchema({database,response:schema([["_cf_KV","table"],["d1_migrations","table"]])}),"EXISTING_LEDGER");
+ }
+ for(const invalid of [schema([["_cf_KV","table"],["customers","table"]]),schema([["_cf_UNKNOWN","table"]])])
+  assert.throws(()=>classifyRemoteSchema({database:"taghvim-engine",response:invalid}),/UNTRACKED/);
+});

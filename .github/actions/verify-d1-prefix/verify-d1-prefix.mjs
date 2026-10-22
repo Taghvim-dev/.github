@@ -24,7 +24,8 @@ export function classifyRemoteSchema({database,response}){
  const rows=rowsOf(response);
  if(rows.some(x=>typeof x?.name!=="string"||typeof x?.type!=="string"))
   throw Error("D1_PREFLIGHT_MALFORMED_SQLITE_SCHEMA");
- const objects=rows.filter(x=>!x.name.startsWith("sqlite_"));
+ // D1 creates its reserved _cf_KV storage table even before a user migration.
+ const objects=rows.filter(x=>!x.name.startsWith("sqlite_")&&x.name!=="_cf_KV");
  if(new Set(objects.map(x=>x.name)).size!==objects.length)
   throw Error("D1_PREFLIGHT_DUPLICATE_SCHEMA_OBJECT");
  const ledger=objects.filter(x=>x.name==="d1_migrations");
