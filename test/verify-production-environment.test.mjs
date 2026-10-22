@@ -30,3 +30,15 @@ test("deferred branch protection keeps mandatory production reviewers and curren
   assert.throws(()=>verifyEnvironment(noBranchProtection,null,"feature-untrusted"),/Only current main/);
   assert.throws(()=>verifyEnvironment({...noBranchProtection,protection_rules:[]},null,"main"),/reviewer/);
 });
+
+test("private-repository independent human SHA attestation can replace unavailable native GitHub reviewers",()=>{
+ const noNative={...base,protection_rules:[]};
+ const independent={kind:"taghvim_t0_independent_issue_review",
+  independent_from_owner:true,production_mutation:false};
+ const r=verifyEnvironment(noNative,[{name:"main"}],"main",independent);
+ assert.equal(r.approval_mode,"two_person_sha_bound_git_review");
+ assert.equal(r.review_required,true);
+ assert.throws(()=>verifyEnvironment(noNative,[{name:"main"}],"main",{}),/independent reviewer|second-person/);
+ assert.throws(()=>verifyEnvironment(noNative,[{name:"main"}],"main",{...independent,production_mutation:true}));
+ assert.throws(()=>verifyEnvironment({...noNative,protection_rules:[{type:"required_reviewers",reviewers:[],prevent_self_review:false}]},[{name:"main"}],"main",independent),/misconfigured/);
+});
