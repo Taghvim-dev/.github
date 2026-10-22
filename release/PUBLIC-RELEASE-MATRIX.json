@@ -47,7 +47,7 @@
     "engine_main_merge_sha": "31da503a7bd15be82fad39ee913333e9a4c90e6f",
     "engine_offline_ci_run": "39783802330",
     "engine_live_gate_ci_run": "39439068311",
-    "landing_main_merge_sha": "797b46192def3d33f3f7b15bd8f9532db8992ced",
+    "landing_main_merge_sha": "f63999d00f4181653e517c5aaed8669b527ad49b",
     "landing_integration_merge_sha": "e380b5f3553b98faf35adeccd9f6a25440a778a4",
     "landing_integration_ci_run": "39774645927",
     "landing_rtl_ci_run": "39705208783",
@@ -150,8 +150,8 @@
       "date": "2026-10-22",
       "engine_sha": "31da503a7bd15be82fad39ee913333e9a4c90e6f",
       "engine_ci": "39783802330",
-      "landing_sha": "797b46192def3d33f3f7b15bd8f9532db8992ced",
-      "landing_ci": "39774645927",
+      "landing_sha": "f63999d00f4181653e517c5aaed8669b527ad49b",
+      "landing_ci": "39784440742",
       "shared_release_actions_sha": "c195c8bfde573b6195bd1b3bd00e3535accc9040",
       "vendored_engine_files_matched": 11,
       "sandbox_to_production_status": "NO_GO",
@@ -212,9 +212,9 @@
       "engine_main_sha": "31da503a7bd15be82fad39ee913333e9a4c90e6f",
       "engine_reviewed_head": "65ef7c434fd2b41568f0b3c69e2fef954f3ce8e1",
       "engine_ci_run": "39783802330",
-      "landing_main_sha": "797b46192def3d33f3f7b15bd8f9532db8992ced",
-      "landing_reviewed_head": "e380b5f3553b98faf35adeccd9f6a25440a778a4",
-      "landing_ci_run": "39774645927",
+      "landing_main_sha": "f63999d00f4181653e517c5aaed8669b527ad49b",
+      "landing_reviewed_head": "f63999d00f4181653e517c5aaed8669b527ad49b",
+      "landing_ci_run": "39784440742",
       "admission_scope": "MUTATION_BLOCKING_SOURCE_ONLY",
       "runtime_cloudflare_gate": "NOT_DISPATCHED",
       "cross_repo_immutable_ref": true,
@@ -344,6 +344,24 @@
       "sandbox_d1_exists": true,
       "sandbox_d1_migrations_verified": 9,
       "sandbox_d1_integrity": "QUICK_CHECK_AND_FOREIGN_KEY_CHECK_PASS"
+    },
+    "landing_d1_sandbox": {
+      "state": "CONFIG_BLOCKED_SECRET_SCOPE",
+      "observed_utc_date": "2026-10-22",
+      "landing_main_sha": "f63999d00f4181653e517c5aaed8669b527ad49b",
+      "source_ci_run": "39784440742",
+      "source_ci_result": "SUCCESS",
+      "sandbox_workflow_run": "39784440776",
+      "source": "GitHub Actions actual sandbox environment; step Idempotently provision D1",
+      "error_code": "SANDBOX_D1_BOOTSTRAP_CLOUDFLARE_TOKEN_MISSING",
+      "cloudflare_token_in_landing_sandbox": false,
+      "remote_migration_performed": false,
+      "remote_migration_receipt": "MISSING",
+      "production_d1_mutated": false,
+      "owner_setup": "GitHub Organization Actions secret CLOUDFLARE_API_TOKEN with access to Engine and Landing, or distinct environment secrets in both repositories",
+      "durable_issue": "Taghvim-dev/landing#70",
+      "recovery": "After scoped secret availability, re-run existing t0-web-sandbox-d1-bootstrap and require 3/3 remote D1 ledger, PRAGMA quick_check, PRAGMA foreign_key_check",
+      "ga_approved": false
     }
   },
   "package_identity": {
@@ -357,10 +375,10 @@
       "ci": "39783802330"
     },
     "landing": {
-      "commit": "797b46192def3d33f3f7b15bd8f9532db8992ced",
+      "commit": "f63999d00f4181653e517c5aaed8669b527ad49b",
       "package": "2.1.0",
       "lock": "2.1.0",
-      "ci": "39774645927"
+      "ci": "39784440742"
     },
     "SDK": {
       "commit": "cc68bffeb1d7be5360d87d0afee356a914d2d709",
