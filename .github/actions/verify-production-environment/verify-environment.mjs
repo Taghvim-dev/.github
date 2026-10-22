@@ -5,6 +5,10 @@
 import {fileURLToPath} from "node:url";
 
 export function verifyEnvironment(env, policies, branch) {
+  // Branch Protection is temporarily optional at the owner's explicit request.
+  // The checkout/ref must still be the *current* main Git tree: independent
+  // verify-current-source admission runs before this action and prior to writes.
+  if(branch!=="main")throw Error("Only current main may enter production");
   if(env?.name!=="production" || !Number.isInteger(env?.id)) throw Error("Production environment missing");
   const approval=(env.protection_rules||[]).find(p=>p?.type==="required_reviewers");
   if(!approval || approval.prevent_self_review!==true ||
@@ -16,11 +20,12 @@ export function verifyEnvironment(env, policies, branch) {
       throw Error("Production branch restriction must explicitly allow only the release branch");
     if(policies.some(x=>x?.name!==branch))
       throw Error("Production branch restriction includes an unexpected branch");
-  } else if(p.protected_branches!==true) {
-    throw Error("No protected branch deployment policy");
   }
+  // GitHub protection of main is deferred; the source gate verifies the exact
+  // immutable reviewed SHA and latest main HEAD on *every* release attempt.
+  // Independent production reviewers and no self-review remain mandatory.
   return {environment:"production",review_required:true,prevent_self_review:true,
-    branch_policy:p.custom_branch_policies?"only_main":"protected_main",approved_candidate_branch:branch,
+    branch_policy:p.custom_branch_policies?"only_main":(p.protected_branches?"protected_main":"sha_pinned_main"),approved_candidate_branch:branch,
     ready_to_check_deploy:true,general_availability_approved:false};
 }
 async function main(){
@@ -43,10 +48,8 @@ async function main(){
   const policies=env?.deployment_branch_policy?.custom_branch_policies?
     (await read("environments/production/deployment-branch-policies?per_page=100")).branch_policies:null;
   const state=verifyEnvironment(env,policies,"main");
-  if(env.deployment_branch_policy?.protected_branches===true){
-    const mainBranch=await read("branches/main");
-    if(mainBranch?.protected!==true)throw Error("Main branch is not protected");
-  }
+  // The immutable source gate (upstream) verifies current main and full tested
+  // Git tree. Do not demand GitHub branch protection during this phase.
   console.log("PROTECTED_ENVIRONMENT_ADMISSION_PASSED",JSON.stringify(state));
 }
 if(process.argv[1]&&fileURLToPath(import.meta.url)===process.argv[1]){
