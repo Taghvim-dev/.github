@@ -44,8 +44,8 @@
   "source_verification": {
     "date": "2026-10-22",
     "phase": "source-integrated-not-deployed",
-    "engine_main_merge_sha": "732d25e2c6ea16f1fd993c322e8463b1b7c07f67",
-    "engine_offline_ci_run": "39792685627",
+    "engine_main_merge_sha": "c210e6e72426d536b5188d93cb5fd5f62c8213a5",
+    "engine_offline_ci_run": "39793842313",
     "engine_live_gate_ci_run": "39439068311",
     "landing_main_merge_sha": "2b1ef64085b473ef7cbc67a707939c26e10e0384",
     "landing_integration_merge_sha": "e380b5f3553b98faf35adeccd9f6a25440a778a4",
@@ -148,8 +148,8 @@
     },
     "latest_checked": {
       "date": "2026-10-22",
-      "engine_sha": "732d25e2c6ea16f1fd993c322e8463b1b7c07f67",
-      "engine_ci": "39792685627",
+      "engine_sha": "c210e6e72426d536b5188d93cb5fd5f62c8213a5",
+      "engine_ci": "39793842313",
       "landing_sha": "2b1ef64085b473ef7cbc67a707939c26e10e0384",
       "landing_ci": "39788223632",
       "shared_release_actions_sha": "c195c8bfde573b6195bd1b3bd00e3535accc9040",
@@ -193,10 +193,10 @@
     },
     "engine_package_contract_identity": {
       "status": "SOURCE_TESTED_NOT_LIVE",
-      "source_main_sha": "732d25e2c6ea16f1fd993c322e8463b1b7c07f67",
+      "source_main_sha": "c210e6e72426d536b5188d93cb5fd5f62c8213a5",
       "reviewed_pr": "Taghvim-dev/engine #73",
       "source_test_sha": "65ef7c434fd2b41568f0b3c69e2fef954f3ce8e1",
-      "ci_run": "39792685627",
+      "ci_run": "39793842313",
       "api_version": "2.1.0",
       "package_version": "2.1.0",
       "lock_root_version": "2.1.0",
@@ -209,9 +209,9 @@
       "policy_main_sha": "f3bc8d18c5c31fd1125dd4da4887c86b9e3f8447",
       "policy_pr": "Taghvim-dev/.github PR #47",
       "policy_test_run": "39691890610",
-      "engine_main_sha": "732d25e2c6ea16f1fd993c322e8463b1b7c07f67",
-      "engine_reviewed_head": "3c7233b362948b8f6dd5c0ba7b10acd8fac7dbfa",
-      "engine_ci_run": "39792685627",
+      "engine_main_sha": "c210e6e72426d536b5188d93cb5fd5f62c8213a5",
+      "engine_reviewed_head": "548a91d20c60d361cadb6353cdf5f3e7d5f45bf1",
+      "engine_ci_run": "39793842313",
       "landing_main_sha": "2b1ef64085b473ef7cbc67a707939c26e10e0384",
       "landing_reviewed_head": "2b1ef64085b473ef7cbc67a707939c26e10e0384",
       "landing_ci_run": "39788223632",
@@ -535,6 +535,37 @@
       "code_contract_version": "2.1.0",
       "production_live_contract_smoke": "NO_GO",
       "ga_approved": false
+    },
+    "production_d1_current_readonly_probe": {
+      "status": "PENDING_NOT_MIGRATED",
+      "at_utc": "2026-10-22T14:13:48Z",
+      "run_id": "39793842350",
+      "source_sha": "c210e6e72426d536b5188d93cb5fd5f62c8213a5",
+      "engine": {
+        "database": "taghvim-engine",
+        "config_identity_matches": true,
+        "source_prefix_valid": true,
+        "applied": 7,
+        "expected": 9,
+        "pending": [
+          "0008_meter_reservations.sql",
+          "0009_scrub_issued_key_responses.sql"
+        ]
+      },
+      "landing": {
+        "database": "taghvim-web",
+        "config_identity_matches": true,
+        "source_prefix_valid": true,
+        "applied": 2,
+        "expected": 3,
+        "pending": [
+          "0003_updates_opt_in.sql"
+        ]
+      },
+      "source": "actual protected Engine sandbox environment Cloudflare API read-only query",
+      "production_mutation": false,
+      "promotion": "NO_GO",
+      "live_customer_smoke": "NO_GO"
     }
   },
   "package_identity": {
@@ -542,10 +573,10 @@
     "source_only": true,
     "remote_runtime_attested": false,
     "engine": {
-      "commit": "732d25e2c6ea16f1fd993c322e8463b1b7c07f67",
+      "commit": "c210e6e72426d536b5188d93cb5fd5f62c8213a5",
       "package": "2.1.0",
       "lock": "2.1.0",
-      "ci": "39792685627"
+      "ci": "39793842313"
     },
     "landing": {
       "commit": "2b1ef64085b473ef7cbc67a707939c26e10e0384",
