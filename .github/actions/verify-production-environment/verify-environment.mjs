@@ -4,8 +4,9 @@
  */
 import {fileURLToPath} from "node:url";
 import {verifyIndependentReview} from "./independent-review.mjs";
+import {verifyOwnerApproval} from "../verify-owner-approval/verify-owner-approval.mjs";
 
-export function verifyEnvironment(env, policies, branch, independentReview=null) {
+export function verifyEnvironment(env, policies, branch, independentReview=null, ownerApproval=null) {
   // Branch Protection is temporarily optional at the owner's explicit request.
   // The checkout/ref must still be the *current* main Git tree: independent
   // verify-current-source admission runs before this action and prior to writes.
@@ -17,10 +18,19 @@ export function verifyEnvironment(env, policies, branch, independentReview=null)
   if(approval && (approval.prevent_self_review!==true ||
       !Array.isArray(approval.reviewers) || approval.reviewers.length===0))
     throw Error("Native production reviewer rule is misconfigured");
-  if(!approval && !(independentReview?.independent_from_owner===true &&
-     independentReview?.production_mutation===false &&
-     independentReview?.kind==="taghvim_t0_independent_issue_review"))
-    throw Error("Production must have native independent reviewer(s) OR authenticated second-person SHA approval");
+  const humanReview=independentReview?.independent_from_owner===true &&
+    independentReview?.production_mutation===false &&
+    independentReview?.kind==="taghvim_t0_independent_issue_review";
+  // Explicit GitHub Free owner delegation. Not an independent second reviewer.
+  // It is valid ONLY when a real GitHub issue comment for this exact SHA and
+  // exact component has just been independently re-read from the GitHub API.
+  const ownerAuthorized=ownerApproval?.kind==="taghvim_t0_owner_comment_approval" &&
+    ownerApproval?.owner_verified===true &&
+    ownerApproval?.remote_mutation===false &&
+    ownerApproval?.production_approved===false &&
+    /^[a-f0-9]{40}$/.test(ownerApproval?.source_sha||"");
+  if(!approval && !humanReview && !ownerAuthorized)
+    throw Error("Production requires native independent reviewers, a separate human, OR explicit owner SHA-bound release on GitHub Free");
   const p=env.deployment_branch_policy||{};
   if(p.custom_branch_policies===true){
     if(!Array.isArray(policies) || !policies.some(x=>x?.name===branch))
@@ -30,9 +40,12 @@ export function verifyEnvironment(env, policies, branch, independentReview=null)
   }
   // GitHub protection of main is deferred; the source gate verifies the exact
   // immutable reviewed SHA and latest main HEAD on *every* release attempt.
-  // Independent production reviewers and no self-review remain mandatory.
-  return {environment:"production",review_required:true,prevent_self_review:true,
-    approval_mode:approval?"native_required_reviewers":"two_person_sha_bound_git_review",
+  // Do not misrepresent delegated owner approval as independent review.
+  const mode=approval?"native_required_reviewers":humanReview?
+    "two_person_sha_bound_git_review":"owner_sha_bound_free_delegation";
+  return {environment:"production",review_required:mode!=="owner_sha_bound_free_delegation",
+    prevent_self_review:mode!=="owner_sha_bound_free_delegation",
+    owner_explicit_release:true,approval_mode:mode,
     branch_policy:p.custom_branch_policies?"only_main":(p.protected_branches?"protected_main":"sha_pinned_main"),approved_candidate_branch:branch,
     ready_to_check_deploy:true,general_availability_approved:false};
 }
@@ -55,13 +68,22 @@ async function main(){
   const env=await read("environments/production");
   const policies=env?.deployment_branch_policy?.custom_branch_policies?
     (await read("environments/production/deployment-branch-policies?per_page=100")).branch_policies:null;
-  // Explicit owner approval runs in the immediately preceding release step.
-  // Where native environment review is unavailable, demand an independently
-  // authenticated second HUMAN with write access to this exact private repo.
+  // The owner authorizes SHA-pinned Production through the original comment
+  // dispatch; verify it AGAIN here, independent of the preceding action.
+  // A GitHub Free repo does not require Enterprise-native reviewers or a fake
+  // delegated reviewer identity. A real second reviewer remains optional.
   const native=(env.protection_rules||[]).find(p=>p?.type==="required_reviewers");
-  const independent=native?null:await verifyIndependentReview({
-    repo,sha:process.env.GITHUB_SHA,token});
-  const state=verifyEnvironment(env,policies,"main",independent);
+  const ownerProof=await verifyOwnerApproval({
+    repo,sha:process.env.GITHUB_SHA,token,
+    phrase:process.env.APPROVAL_PHRASE,
+    commentId:process.env.APPROVAL_COMMENT_ID
+  });
+  const independent=null; // Never invent human sign-off or read absent comments.
+  const state=verifyEnvironment(env,policies,"main",independent,ownerProof);
+  if(state.approval_mode==="owner_sha_bound_free_delegation") {
+    if(ownerProof.repository!==repo || ownerProof.source_sha!==process.env.GITHUB_SHA)
+      throw Error("Owner delegation is not bound to the exact current main SHA");
+  }
   // The immutable source gate (upstream) verifies current main and full tested
   // Git tree. Do not demand GitHub branch protection during this phase.
   console.log("PROTECTED_ENVIRONMENT_ADMISSION_PASSED",JSON.stringify(state));
