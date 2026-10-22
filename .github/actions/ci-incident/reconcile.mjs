@@ -92,11 +92,14 @@ export async function reconcile(payload) {
       run.head_repository?.full_name !== repo) return "ignored";
   // Read CURRENT GitHub source, not a cached event payload or stale CI email.
   const branch = encodeURIComponent(run.head_branch || "");
-  const current = await api("/repos/" + repo + "/branches/" + branch);
-  const currentSha = current.commit?.sha;
+  // A merged/deleted PR branch is not an incident; resolve identity first.
   const pulls = run.event === "pull_request"
     ? await api("/repos/" + repo + "/pulls?state=open&head=" +
         encodeURIComponent("Taghvim-dev:" + run.head_branch) + "&per_page=100") : [];
+  if (run.event === "pull_request" && !pulls.some(pr =>
+      pr.head?.repo?.full_name === repo && pr.head?.ref === run.head_branch)) return "ignored";
+  const current = await api("/repos/" + repo + "/branches/" + branch);
+  const currentSha = current.commit?.sha;
   const results = await api("/repos/" + repo + "/actions/workflows/" + run.workflow_id +
     "/runs?branch=" + branch + "&per_page=30");
   const verdict = classify({
