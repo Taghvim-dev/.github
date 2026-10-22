@@ -43,6 +43,8 @@ jobs:
           node --test examples/javascript/client.test.mjs
       - name: Trusted workflow incident reconciliation contracts
         run: node --test test/ci-incident.test.mjs
+      - name: Verify fail-closed npm audit retry contracts
+        run: node --test test/npm-audit.test.mjs
       - name: Local canonical public registry
         run: node scripts/check-public-registry.mjs
       - name: Python reference clients
