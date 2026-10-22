@@ -25,11 +25,11 @@
     }
   ],
   "deployment_observation": {
-    "date": "2026-10-20",
-    "public_api_version": "2.0.0",
+    "date": "2026-10-22",
+    "public_api_version": "2.1.0",
     "public_landing_api_version": "2.0.0",
-    "contract_parity": "BLOCKED",
-    "source_run": "39426745433"
+    "contract_parity": "BLOCKED_LANDING_NOT_LIVE_2_1",
+    "source_run": "39840864366"
   },
   "prerequisites": {
     "published_contract_sync": false,
@@ -155,7 +155,7 @@
       "shared_release_actions_sha": "c195c8bfde573b6195bd1b3bd00e3535accc9040",
       "vendored_engine_files_matched": 11,
       "sandbox_to_production_status": "NO_GO",
-      "production_workflow_runs": 0,
+      "production_workflow_runs": 1,
       "landing_integration_sha": "e380b5f3553b98faf35adeccd9f6a25440a778a4",
       "landing_integration_ci": "39774645927"
     },
@@ -192,7 +192,7 @@
       "credential_cleanup_ci_run": "39684217261"
     },
     "engine_package_contract_identity": {
-      "status": "SOURCE_TESTED_NOT_LIVE",
+      "status": "SOURCE_TESTED_ENGINE_LIVE_VERIFIED",
       "source_main_sha": "0bbf6f440dc691979440f83b9658c1809eb8e8c2",
       "reviewed_pr": "Taghvim-dev/engine #105",
       "source_test_sha": "0bbf6f440dc691979440f83b9658c1809eb8e8c2",
@@ -201,8 +201,8 @@
       "package_version": "2.1.0",
       "lock_root_version": "2.1.0",
       "license": "Apache-2.0",
-      "live_engine_release": "NOT_DISPATCHED",
-      "live_cloudflare_evidence": "MISSING",
+      "live_engine_release": "VERIFIED",
+      "live_cloudflare_evidence": "316652b0ea19f0350f6ce496c14de7042a24379be9d5ced938b320b84090a714",
       "lock_metadata_version": "2.1.0"
     },
     "t0_cross_repo_source_admission": {
@@ -216,7 +216,7 @@
       "landing_reviewed_head": "f56514c9e80f02446b6e1a29a2781db15e61b90a",
       "landing_ci_run": "39839107489",
       "admission_scope": "MUTATION_BLOCKING_SOURCE_ONLY",
-      "runtime_cloudflare_gate": "NOT_DISPATCHED",
+      "runtime_cloudflare_gate": "ENGINE_PRODUCTION_VERIFIED_LANDING_NO_GO",
       "cross_repo_immutable_ref": true,
       "post_facto_ga_authorization": false,
       "source_run_verification": "REQUIRED_AT_SANDBOX_AND_PRODUCTION",
@@ -227,28 +227,28 @@
     "customer_live_readiness": {
       "contract_version": "2.1.0",
       "engine": {
-        "main_sha": "dfe87cfe1ad4095a4f12a33914eeb9dd8786daaf",
-        "reviewed_head": "cff49f2740ebe803c1b55c9d847ee350bf94dbe1",
-        "source_ci_run": "39774633349",
-        "main_ci_run": "39708603743",
-        "checks": "Free D1+signing+exact 2.1.0 OpenAPI only; remote migration+real onboarding evidence MISSING",
-        "live_receipt": "MISSING"
+        "main_sha": "0bbf6f440dc691979440f83b9658c1809eb8e8c2",
+        "reviewed_head": "0bbf6f440dc691979440f83b9658c1809eb8e8c2",
+        "source_ci_run": "39840345125",
+        "main_ci_run": "39840345125",
+        "checks": "Engine Free D1 9/9, signing, exact OpenAPI 2.1.0, isolated Sandbox tenant E2E and live read-only smoke PASS; self-service customer onboarding and paid checkout NOT CERTIFIED",
+        "live_receipt": "https://github.com/Taghvim-dev/engine/actions/runs/39840864366"
       },
       "landing": {
-        "main_sha": "797b46192def3d33f3f7b15bd8f9532db8992ced",
-        "reviewed_head": "e380b5f3553b98faf35adeccd9f6a25440a778a4",
-        "source_ci_run": "39774645927",
-        "main_ci_run": "39708610189",
+        "main_sha": "f56514c9e80f02446b6e1a29a2781db15e61b90a",
+        "reviewed_head": "f56514c9e80f02446b6e1a29a2781db15e61b90a",
+        "source_ci_run": "39839107489",
+        "main_ci_run": "39839107489",
         "rtl_ci_run": "39705208783",
-        "checks": "Form-readiness+Free core read-only; remote D1 applied-ledger/integrity, email and live onboarding MISSING",
+        "checks": "SOURCE CI passed; live /api/readiness HTTP 404, Sandbox Cloudflare token unavailable; Production D1 2/3",
         "live_receipt": "MISSING"
       },
       "commercial_pricebook_status": "illustrative",
       "paid_checkout_authorized": false,
       "mail_binding_probe": "READ_ONLY_BINDING_TEST_NOT_DELIVERABILITY",
       "allow_ga_without_cloudflare_release_evidence": false,
-      "production_workflow_runs": 0,
-      "status": "SOURCE_CI_VERIFIED_LIVE_NO_GO"
+      "production_workflow_runs": 1,
+      "status": "ENGINE_FREE_CORE_LIVE_VERIFIED_LANDING_NO_GO"
     },
     "free_first_onboarding": {
       "state": "SOURCE_CI_ONLY_NOT_DEPLOYED",
@@ -397,29 +397,30 @@
       "product_version_required": "2.1.0",
       "production_mutation": false,
       "engine": {
-        "source_main_sha": "86ff04c638732c1c2e6c1f2574a52993493b61f3",
-        "source_main_ci_run": "39785958758",
-        "observation_run": "39785958949",
+        "source_main_sha": "0bbf6f440dc691979440f83b9658c1809eb8e8c2",
+        "source_main_ci_run": "39840345125",
+        "observation_run": "39840864366",
         "observation_artifact_id": "12429121628",
-        "status": "NO_GO",
-        "reason": "PRODUCTION_SMOKE_BLOCKED: live Engine health/version/calendar dataset mismatch",
-        "production_d1_applied_count_at_last_direct_remote_probe": 7,
-        "production_d1_expected_migration_count": 9
+        "status": "PASS_FREE_API_CORE",
+        "reason": "ENGINE_2_1_PRODUCTION_SMOKE_PASS; exact 2.1.0 contract and live D1",
+        "production_d1_applied_count_at_last_direct_remote_probe": 9,
+        "production_d1_expected_migration_count": 9,
+        "postdeploy_checkpoint_sha256": "316652b0ea19f0350f6ce496c14de7042a24379be9d5ced938b320b84090a714"
       },
       "landing": {
-        "source_main_sha": "9f07df0b1903e458109e26d16fe8d3461b7a70fb",
-        "source_main_ci_run": "39786024322",
+        "source_main_sha": "f56514c9e80f02446b6e1a29a2781db15e61b90a",
+        "source_main_ci_run": "39839107489",
         "observation_run": "39786024281",
-        "observation_artifact_id": "12427924887",
+        "observation_artifact_id": "12452958563",
         "status": "NO_GO",
         "reason": "PRODUCTION_SMOKE_BLOCKED: https://taghvim.dev/api/readiness returned HTTP 404, expected 200",
         "source_readiness_handler_exists": true
       },
-      "production_workflow_deployed": false,
-      "authentication_customer_tenant_smoke": "NOT_RUN",
+      "production_workflow_deployed": "ENGINE_ONLY",
+      "authentication_customer_tenant_smoke": "SANDBOX_ENGINE_ONLY",
       "evidence_interpretation": "GitHub Actions workflow run success means observer ran; internal smoke result NO_GO is definitive. Sandbox database 9/9 does not authorize production.",
-      "blocker": "Landing sandbox Cloudflare token secret absent in GitHub environment, landing#70",
-      "corrective_path": "Configure scoped Cloudflare Actions Secret for Landing; require three remote sandbox migrations, real isolated Worker E2E; independently approve Engine/Landing promotion; re-run complete live smoke",
+      "blocker": "Landing GitHub Free repo CLOUDFLARE_API_TOKEN not visible in Sandbox; Landing Production D1 2/3 and public forms 404",
+      "corrective_path": "Configure Landing repository Actions Cloudflare secret and Engine-read access, promote source-verified Landing with D1 Recovery, apply pending 0003, then live form and public contract smoke; keep GA false",
       "ga_approved": false
     },
     "d1_actions_incident_auto_reconciliation": {
@@ -477,7 +478,7 @@
       "latest_readonly_probe": "39792685695"
     },
     "remote_d1_four_database_readonly_attestation": {
-      "observed_at": "2026-10-22T14:05:38Z",
+      "observed_at": "2026-10-22T19:36:05Z",
       "source_engine_main_sha": "732d25e2c6ea16f1fd993c322e8463b1b7c07f67",
       "source_engine_main_ci": "39792685627",
       "cloudflare_readonly_workflow_run": "39792685695",
@@ -489,12 +490,9 @@
           "environment": "production",
           "exists": true,
           "source_uuid_match": true,
-          "migration_count": 7,
+          "migration_count": 9,
           "expected_count": 9,
-          "pending": [
-            "0008_meter_reservations.sql",
-            "0009_scrub_issued_key_responses.sql"
-          ],
+          "pending": [],
           "ledger_present": true
         },
         {
@@ -528,29 +526,27 @@
       ],
       "sandbox_total_migrations_verified": 12,
       "sandbox_total_migrations_expected": 12,
-      "production_total_migrations_applied": 9,
+      "production_total_migrations_applied": 11,
       "production_total_migrations_expected": 12,
-      "production_migrations_pending": 3,
-      "production_workflow_runs": 0,
+      "production_migrations_pending": 1,
+      "production_workflow_runs": 1,
       "code_contract_version": "2.1.0",
-      "production_live_contract_smoke": "NO_GO",
-      "ga_approved": false
+      "production_live_contract_smoke": "ENGINE_FREE_API_PASS_LANDING_NO_GO",
+      "ga_approved": false,
+      "cloudflare_readonly_workflow_attempt": 4
     },
     "production_d1_current_readonly_probe": {
-      "status": "PENDING_NOT_MIGRATED",
-      "at_utc": "2026-10-22T14:13:48Z",
-      "run_id": "39793842350",
-      "source_sha": "c210e6e72426d536b5188d93cb5fd5f62c8213a5",
+      "status": "ENGINE_MIGRATED_LANDING_PENDING",
+      "at_utc": "2026-10-22T19:36:05Z",
+      "run_id": "39792685695",
+      "source_sha": "732d25e2c6ea16f1fd993c322e8463b1b7c07f67",
       "engine": {
         "database": "taghvim-engine",
         "config_identity_matches": true,
         "source_prefix_valid": true,
-        "applied": 7,
+        "applied": 9,
         "expected": 9,
-        "pending": [
-          "0008_meter_reservations.sql",
-          "0009_scrub_issued_key_responses.sql"
-        ]
+        "pending": []
       },
       "landing": {
         "database": "taghvim-web",
@@ -564,8 +560,9 @@
       },
       "source": "actual protected Engine sandbox environment Cloudflare API read-only query",
       "production_mutation": false,
-      "promotion": "NO_GO",
-      "live_customer_smoke": "NO_GO"
+      "promotion": "ENGINE_CORE_PASS_LANDING_NO_GO",
+      "live_customer_smoke": "ENGINE_FREE_CORE_PASS_LANDING_FORMS_NO_GO",
+      "run_attempt": 4
     },
     "cloudflare_workers_deployments_probe": {
       "schema_version": 1,
@@ -732,6 +729,54 @@
       "customer_synthetic_onboarding_proven": false,
       "production_worker_deployed": false,
       "production_promotion": "NO_GO"
+    },
+    "engine_production_attestation_20261022": {
+      "kind": "taghvim_engine_readonly_live_production_evidence",
+      "component": "engine",
+      "source_main_sha": "0bbf6f440dc691979440f83b9658c1809eb8e8c2",
+      "verified_main_ci": "39840345125",
+      "controlled_release_run": "39840864366",
+      "controlled_release_conclusion": "success",
+      "production_smoke": "ENGINE_2_1_PRODUCTION_SMOKE_PASS",
+      "deployed_worker": "taghvim-api",
+      "worker_version": "5d2ef777-00e5-4b23-aced-6c86f943ac6a",
+      "traffic_percentage": 100,
+      "postdeploy_checkpoint_sha256": "316652b0ea19f0350f6ce496c14de7042a24379be9d5ced938b320b84090a714",
+      "api_origin": "https://api.taghvim.dev",
+      "verified_api_version": "2.1.0",
+      "production_d1": "taghvim-engine",
+      "migrations_applied": 9,
+      "migrations_expected": 9,
+      "recoverability_checkpoint_verified": true,
+      "applied_ledger_verified": true,
+      "live_checks": {
+        "health": true,
+        "readiness": true,
+        "d1_connection": true,
+        "signing_secret": true,
+        "exact_contract": true,
+        "unauthorized_tenant_rejected": true
+      },
+      "limits": {
+        "payments_certified": false,
+        "self_service_onboarding_certified": false,
+        "landing_forms_certified": false,
+        "general_availability_approved": false
+      }
+    },
+    "landing_production_blocker_20261022": {
+      "kind": "taghvim_landing_source_ci_verified_live_nogo",
+      "main_sha": "f56514c9e80f02446b6e1a29a2781db15e61b90a",
+      "main_ci": "39839107489",
+      "controlled_release_run": "39841432644",
+      "sandbox_error": "T0_SANDBOX_RESOURCES_BLOCKED: TOKEN_UNAVAILABLE_IN_THIS_REPO_SANDBOX",
+      "live_observation_run": "39786024281",
+      "live_observation_attempt": 5,
+      "artifact_id": "12452958563",
+      "live_http_failure": "https://taghvim.dev/api/readiness returned HTTP 404, expected 200",
+      "production_d1_applied": 2,
+      "production_d1_expected": 3,
+      "ga_approved": false
     }
   },
   "package_identity": {

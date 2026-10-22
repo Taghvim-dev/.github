@@ -44,7 +44,30 @@ assert.equal(ap?.dependent_component_ci?.landing,ad.landing_ci_run,"T0 Landing g
 assert.equal(ad.admission_scope,"MUTATION_BLOCKING_SOURCE_ONLY","T0 source-only gate must not claim runtime evidence");
 assert.equal(ad.cross_repo_immutable_ref,true,"T0 ledger reads must use one immutable Git commit");
 assert.equal(ad.post_facto_ga_authorization,false,"T0 forbids retrospective GA authorization");
-assert.equal(ad.runtime_cloudflare_gate,"NOT_DISPATCHED","T0 remote Cloudflare admission has not been observed");
+const engineRuntime=candidate.source_verification?.engine_production_attestation_20261022;
+if(ad.runtime_cloudflare_gate==="ENGINE_PRODUCTION_VERIFIED_LANDING_NO_GO"){
+  assert.equal(engineRuntime?.kind,"taghvim_engine_readonly_live_production_evidence","Missing real Engine proof");
+  assert.equal(engineRuntime.source_main_sha,ad.engine_main_sha,"Engine runtime source SHA mismatch");
+  assert.equal(engineRuntime.verified_main_ci,ad.engine_ci_run,"Engine runtime CI mismatch");
+  assert.equal(engineRuntime.controlled_release_conclusion,"success");
+  assert.equal(engineRuntime.production_smoke,"ENGINE_2_1_PRODUCTION_SMOKE_PASS");
+  assert.equal(engineRuntime.verified_api_version,candidate.contract_version);
+  assert.equal(engineRuntime.migrations_applied,engineRuntime.migrations_expected);
+  assert.equal(engineRuntime.migrations_applied,9);
+  assert.equal(engineRuntime.traffic_percentage,100);
+  assert.equal(engineRuntime.recoverability_checkpoint_verified,true);
+  assert.equal(engineRuntime.applied_ledger_verified,true);
+  for(const name of ["health","readiness","d1_connection","signing_secret","exact_contract","unauthorized_tenant_rejected"])
+    assert.equal(engineRuntime.live_checks?.[name],true,"Missing Engine production live smoke "+name);
+  assert.match(engineRuntime.postdeploy_checkpoint_sha256||"",/^[a-f0-9]{64}$/);
+  assert.equal(engineRuntime.limits?.self_service_onboarding_certified,false);
+  assert.equal(engineRuntime.limits?.payments_certified,false);
+  assert.equal(engineRuntime.limits?.landing_forms_certified,false);
+  assert.equal(engineRuntime.limits?.general_availability_approved,false);
+  assert.equal(candidate.general_availability_approved,false,"Landing remains NO_GO");
+} else {
+  assert.equal(ad.runtime_cloudflare_gate,"NOT_DISPATCHED","Unrecognized live Cloudflare gate state");
+}
 assert.equal(ad.source_run_verification,"REQUIRED_AT_SANDBOX_AND_PRODUCTION",
  "T0 release must independently query actual CI metadata before both writes");
 assert.equal(ad.source_pr_main_git_tree_parity,"REQUIRED_AT_SANDBOX_AND_PRODUCTION",
@@ -129,17 +152,21 @@ const identity=candidate.source_verification?.engine_package_contract_identity;
 const current=candidate.source_verification?.latest_checked;
 const identityControl=t0.controls.find(c=>c.id==="T0-IDENTITY-011");
 assert.ok(identityControl&&identityControl.state==="SOURCE_VERIFIED","Missing Engine release identity gate");
-assert.equal(identity?.status,"SOURCE_TESTED_NOT_LIVE","Engine release identity may not falsely claim Cloudflare production");
+if(ad.runtime_cloudflare_gate==="ENGINE_PRODUCTION_VERIFIED_LANDING_NO_GO"){
+  assert.equal(identity?.status,"SOURCE_TESTED_ENGINE_LIVE_VERIFIED");
+  assert.equal(identity?.live_engine_release,"VERIFIED");
+  assert.equal(identity?.live_cloudflare_evidence,engineRuntime.postdeploy_checkpoint_sha256);
+} else assert.equal(identity?.status,"SOURCE_TESTED_NOT_LIVE","Engine source identity cannot fabricate Cloudflare production");
 assert.equal(identity?.source_main_sha,current?.engine_sha,"Engine package identity references stale commit");
 assert.equal(identity?.ci_run,current?.engine_ci,"Engine package identity references stale CI run");
 assert.equal(identity?.api_version,candidate.contract_version,"Engine identity API contract drift");
 assert.equal(identity?.package_version,candidate.contract_version,"Engine npm version drift");
 assert.equal(identity?.lock_root_version,candidate.contract_version,"Engine npm lock root version drift");
 assert.equal(identity?.license,"Apache-2.0","Engine package license drift");
-if(!candidate.general_availability_approved){
+if(!candidate.general_availability_approved && ad.runtime_cloudflare_gate==="NOT_DISPATCHED"){
  assert.equal(identity?.live_engine_release,"NOT_DISPATCHED","Do not fabricate a completed Engine deployment");
  assert.equal(identity?.live_cloudflare_evidence,"MISSING","Do not fabricate Cloudflare proof");
-}else{
+}else if(candidate.general_availability_approved){
  assert.equal(identity?.live_engine_release,"VERIFIED","GA requires independently reviewed Engine production evidence");
  assert.match(identity?.live_cloudflare_evidence||"",/^[a-f0-9]{64}$/,"GA needs immutable Cloudflare evidence digest");
 }
