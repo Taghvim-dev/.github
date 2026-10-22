@@ -4,6 +4,7 @@ import assert from "node:assert/strict";
 import {readFileSync} from "node:fs";
 import {execFileSync} from "node:child_process";
 import {resolvePins} from "./release-pins.mjs";
+import {verifyRuntimeSourceBoundary} from "./release-runtime-provenance.mjs";
 const candidate=JSON.parse(readFileSync(new URL("../release/PUBLIC-RELEASE-MATRIX.json",import.meta.url)));
 const pinnedCheckouts=resolvePins(candidate);
 const isLive=process.argv.includes("--live");
@@ -47,8 +48,16 @@ assert.equal(ad.post_facto_ga_authorization,false,"T0 forbids retrospective GA a
 const engineRuntime=candidate.source_verification?.engine_production_attestation_20261022;
 if(ad.runtime_cloudflare_gate==="ENGINE_PRODUCTION_VERIFIED_LANDING_NO_GO"){
   assert.equal(engineRuntime?.kind,"taghvim_engine_readonly_live_production_evidence","Missing real Engine proof");
-  assert.equal(engineRuntime.source_main_sha,ad.engine_main_sha,"Engine runtime source SHA mismatch");
-  assert.equal(engineRuntime.verified_main_ci,ad.engine_ci_run,"Engine runtime CI mismatch");
+  // A previously certified Cloudflare deployment remains real after a newer
+  // commit is merged. Current source/CI are NOT automatically live. Never force
+  // historical immutable release proof to equal the latest GitHub commit.
+  verifyRuntimeSourceBoundary({
+    runtime:engineRuntime,
+    sourceSha:ad.engine_main_sha,sourceCi:ad.engine_ci_run,
+    gaApproved:candidate.general_availability_approved,
+    sourceOnly:candidate.package_identity.remote_runtime_attested===false,
+    releaseStatus:candidate.source_verification.latest_checked.sandbox_to_production_status
+  });
   assert.equal(engineRuntime.controlled_release_conclusion,"success");
   assert.equal(engineRuntime.production_smoke,"ENGINE_2_1_PRODUCTION_SMOKE_PASS");
   assert.equal(engineRuntime.verified_api_version,candidate.contract_version);
