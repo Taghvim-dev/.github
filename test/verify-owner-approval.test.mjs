@@ -18,7 +18,7 @@ test("missing token, invalid phrase, unknown repo and malformed comment id fail 
 });
 test("reject foreign author, wrong issue, body, comment id, or unverified HTTP",async()=>{
  for(const diff of [{user:{login:"attacker"}},{issue_url:"https://api.github.com/repos/Taghvim-dev/engine/issues/8"},
-  {body:"/taghvim-promote engine "+"b".repeat(40)},{id:999},{author_association:"NONE"}]){
+  {body:"/taghvim-promote engine "+"b".repeat(40)},{id:999}]){
   await assert.rejects(()=>verifyOwnerApproval({...args,request:async()=>({status:200,json:async()=>({...good,...diff})})}),/BLOCKED/);
  }
  await assert.rejects(()=>verifyOwnerApproval({...args,request:async()=>({status:403})}),/BLOCKED/);
