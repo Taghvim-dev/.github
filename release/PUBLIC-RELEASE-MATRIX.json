@@ -44,10 +44,10 @@
   "source_verification": {
     "date": "2026-10-22",
     "phase": "source-integrated-not-deployed",
-    "engine_main_merge_sha": "31da503a7bd15be82fad39ee913333e9a4c90e6f",
-    "engine_offline_ci_run": "39783802330",
+    "engine_main_merge_sha": "86ff04c638732c1c2e6c1f2574a52993493b61f3",
+    "engine_offline_ci_run": "39785958758",
     "engine_live_gate_ci_run": "39439068311",
-    "landing_main_merge_sha": "f63999d00f4181653e517c5aaed8669b527ad49b",
+    "landing_main_merge_sha": "9f07df0b1903e458109e26d16fe8d3461b7a70fb",
     "landing_integration_merge_sha": "e380b5f3553b98faf35adeccd9f6a25440a778a4",
     "landing_integration_ci_run": "39774645927",
     "landing_rtl_ci_run": "39705208783",
@@ -91,10 +91,10 @@
       "durable_checkpoint": "SOURCE-VERIFIED",
       "manual_approval": "NOT_VERIFIED",
       "protected_environment": "SOURCE_GATED_REMOTE_UNVERIFIED",
-      "runtime_cloudflare_bindings": "UNVERIFIED",
+      "runtime_cloudflare_bindings": "PRODUCTION_D1_7_OF_9_LANDING_READINESS_404",
       "remote_migration_receipts": "MISSING",
-      "deployed_2_1_contract": "UNVERIFIED",
-      "live_signup_and_tenant_isolation": "MISSING",
+      "deployed_2_1_contract": "LIVE_NO_GO_ENGINE_AND_LANDING",
+      "live_signup_and_tenant_isolation": "NOT_READY_LANDING_READINESS_404",
       "live_meter_and_billing_recovery": "MISSING",
       "legal_and_accessibility_signoff": "MISSING"
     },
@@ -148,10 +148,10 @@
     },
     "latest_checked": {
       "date": "2026-10-22",
-      "engine_sha": "31da503a7bd15be82fad39ee913333e9a4c90e6f",
-      "engine_ci": "39783802330",
-      "landing_sha": "f63999d00f4181653e517c5aaed8669b527ad49b",
-      "landing_ci": "39784440742",
+      "engine_sha": "86ff04c638732c1c2e6c1f2574a52993493b61f3",
+      "engine_ci": "39785958758",
+      "landing_sha": "9f07df0b1903e458109e26d16fe8d3461b7a70fb",
+      "landing_ci": "39786024322",
       "shared_release_actions_sha": "c195c8bfde573b6195bd1b3bd00e3535accc9040",
       "vendored_engine_files_matched": 11,
       "sandbox_to_production_status": "NO_GO",
@@ -193,10 +193,10 @@
     },
     "engine_package_contract_identity": {
       "status": "SOURCE_TESTED_NOT_LIVE",
-      "source_main_sha": "31da503a7bd15be82fad39ee913333e9a4c90e6f",
+      "source_main_sha": "86ff04c638732c1c2e6c1f2574a52993493b61f3",
       "reviewed_pr": "Taghvim-dev/engine #73",
       "source_test_sha": "65ef7c434fd2b41568f0b3c69e2fef954f3ce8e1",
-      "ci_run": "39783802330",
+      "ci_run": "39785958758",
       "api_version": "2.1.0",
       "package_version": "2.1.0",
       "lock_root_version": "2.1.0",
@@ -209,12 +209,12 @@
       "policy_main_sha": "f3bc8d18c5c31fd1125dd4da4887c86b9e3f8447",
       "policy_pr": "Taghvim-dev/.github PR #47",
       "policy_test_run": "39691890610",
-      "engine_main_sha": "31da503a7bd15be82fad39ee913333e9a4c90e6f",
-      "engine_reviewed_head": "65ef7c434fd2b41568f0b3c69e2fef954f3ce8e1",
-      "engine_ci_run": "39783802330",
-      "landing_main_sha": "f63999d00f4181653e517c5aaed8669b527ad49b",
-      "landing_reviewed_head": "f63999d00f4181653e517c5aaed8669b527ad49b",
-      "landing_ci_run": "39784440742",
+      "engine_main_sha": "86ff04c638732c1c2e6c1f2574a52993493b61f3",
+      "engine_reviewed_head": "86ff04c638732c1c2e6c1f2574a52993493b61f3",
+      "engine_ci_run": "39785958758",
+      "landing_main_sha": "9f07df0b1903e458109e26d16fe8d3461b7a70fb",
+      "landing_reviewed_head": "9f07df0b1903e458109e26d16fe8d3461b7a70fb",
+      "landing_ci_run": "39786024322",
       "admission_scope": "MUTATION_BLOCKING_SOURCE_ONLY",
       "runtime_cloudflare_gate": "NOT_DISPATCHED",
       "cross_repo_immutable_ref": true,
@@ -348,8 +348,8 @@
     "landing_d1_sandbox": {
       "state": "CONFIG_BLOCKED_SECRET_SCOPE",
       "observed_utc_date": "2026-10-22",
-      "landing_main_sha": "f63999d00f4181653e517c5aaed8669b527ad49b",
-      "source_ci_run": "39784440742",
+      "landing_main_sha": "9f07df0b1903e458109e26d16fe8d3461b7a70fb",
+      "source_ci_run": "39786024322",
       "source_ci_result": "SUCCESS",
       "sandbox_workflow_run": "39784440776",
       "source": "GitHub Actions actual sandbox environment; step Idempotently provision D1",
@@ -362,6 +362,37 @@
       "durable_issue": "Taghvim-dev/landing#70",
       "recovery": "After scoped secret availability, re-run existing t0-web-sandbox-d1-bootstrap and require 3/3 remote D1 ledger, PRAGMA quick_check, PRAGMA foreign_key_check",
       "ga_approved": false
+    },
+    "live_readonly_smoke_20261022": {
+      "observed_utc_date": "2026-10-22",
+      "status": "LIVE_NO_GO",
+      "product_version_required": "2.1.0",
+      "production_mutation": false,
+      "engine": {
+        "source_main_sha": "86ff04c638732c1c2e6c1f2574a52993493b61f3",
+        "source_main_ci_run": "39785958758",
+        "observation_run": "39785958949",
+        "observation_artifact_id": "12429121628",
+        "status": "NO_GO",
+        "reason": "PRODUCTION_SMOKE_BLOCKED: live Engine health/version/calendar dataset mismatch",
+        "production_d1_applied_count_at_last_direct_remote_probe": 7,
+        "production_d1_expected_migration_count": 9
+      },
+      "landing": {
+        "source_main_sha": "9f07df0b1903e458109e26d16fe8d3461b7a70fb",
+        "source_main_ci_run": "39786024322",
+        "observation_run": "39786024281",
+        "observation_artifact_id": "12427924887",
+        "status": "NO_GO",
+        "reason": "PRODUCTION_SMOKE_BLOCKED: https://taghvim.dev/api/readiness returned HTTP 404, expected 200",
+        "source_readiness_handler_exists": true
+      },
+      "production_workflow_deployed": false,
+      "authentication_customer_tenant_smoke": "NOT_RUN",
+      "evidence_interpretation": "GitHub Actions workflow run success means observer ran; internal smoke result NO_GO is definitive. Sandbox database 9/9 does not authorize production.",
+      "blocker": "Landing sandbox Cloudflare token secret absent in GitHub environment, landing#70",
+      "corrective_path": "Configure scoped Cloudflare Actions Secret for Landing; require three remote sandbox migrations, real isolated Worker E2E; independently approve Engine/Landing promotion; re-run complete live smoke",
+      "ga_approved": false
     }
   },
   "package_identity": {
@@ -369,16 +400,16 @@
     "source_only": true,
     "remote_runtime_attested": false,
     "engine": {
-      "commit": "31da503a7bd15be82fad39ee913333e9a4c90e6f",
+      "commit": "86ff04c638732c1c2e6c1f2574a52993493b61f3",
       "package": "2.1.0",
       "lock": "2.1.0",
-      "ci": "39783802330"
+      "ci": "39785958758"
     },
     "landing": {
-      "commit": "f63999d00f4181653e517c5aaed8669b527ad49b",
+      "commit": "9f07df0b1903e458109e26d16fe8d3461b7a70fb",
       "package": "2.1.0",
       "lock": "2.1.0",
-      "ci": "39784440742"
+      "ci": "39786024322"
     },
     "SDK": {
       "commit": "cc68bffeb1d7be5360d87d0afee356a914d2d709",
