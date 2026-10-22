@@ -47,7 +47,7 @@
     "engine_main_merge_sha": "b5c0bb9381434a1c5e53cace36ff0f764bdef0b4",
     "engine_offline_ci_run": "39808035473",
     "engine_live_gate_ci_run": "39439068311",
-    "landing_main_merge_sha": "b1c58740247e67c0bee756b063565a77473c0c55",
+    "landing_main_merge_sha": "355fc7231ac2eb96eaeef9e727185ce84f2e0a1c",
     "landing_integration_merge_sha": "e380b5f3553b98faf35adeccd9f6a25440a778a4",
     "landing_integration_ci_run": "39774645927",
     "landing_rtl_ci_run": "39705208783",
@@ -150,8 +150,8 @@
       "date": "2026-10-22",
       "engine_sha": "b5c0bb9381434a1c5e53cace36ff0f764bdef0b4",
       "engine_ci": "39808035473",
-      "landing_sha": "b1c58740247e67c0bee756b063565a77473c0c55",
-      "landing_ci": "39805117839",
+      "landing_sha": "355fc7231ac2eb96eaeef9e727185ce84f2e0a1c",
+      "landing_ci": "39810082034",
       "shared_release_actions_sha": "c195c8bfde573b6195bd1b3bd00e3535accc9040",
       "vendored_engine_files_matched": 11,
       "sandbox_to_production_status": "NO_GO",
@@ -212,9 +212,9 @@
       "engine_main_sha": "b5c0bb9381434a1c5e53cace36ff0f764bdef0b4",
       "engine_reviewed_head": "b5c0bb9381434a1c5e53cace36ff0f764bdef0b4",
       "engine_ci_run": "39808035473",
-      "landing_main_sha": "b1c58740247e67c0bee756b063565a77473c0c55",
-      "landing_reviewed_head": "54d580ebfe49154619a053d51a694b20e7544495",
-      "landing_ci_run": "39805117839",
+      "landing_main_sha": "355fc7231ac2eb96eaeef9e727185ce84f2e0a1c",
+      "landing_reviewed_head": "05300e4c467ab691eb1a0cc60d19e0e414784890",
+      "landing_ci_run": "39810082034",
       "admission_scope": "MUTATION_BLOCKING_SOURCE_ONLY",
       "runtime_cloudflare_gate": "NOT_DISPATCHED",
       "cross_repo_immutable_ref": true,
@@ -745,10 +745,10 @@
       "ci": "39808035473"
     },
     "landing": {
-      "commit": "b1c58740247e67c0bee756b063565a77473c0c55",
+      "commit": "355fc7231ac2eb96eaeef9e727185ce84f2e0a1c",
       "package": "2.1.0",
       "lock": "2.1.0",
-      "ci": "39805117839"
+      "ci": "39810082034"
     },
     "SDK": {
       "commit": "cc68bffeb1d7be5360d87d0afee356a914d2d709",
