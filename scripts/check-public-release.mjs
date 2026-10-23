@@ -251,7 +251,14 @@ for(const {name,commit} of candidate.repositories){
     assert.equal(pinned.sdk_package_version,candidate.contract_version,"Cookbooks SDK package version drift");
     assert.equal(pinned.approved_for_production,false,"Source-only SDK receipt cannot authorize GA");
     const workflow=readFileSync(new URL("../cookbooks/.github/workflows/verify.yml",import.meta.url),"utf8");
-    assert.ok(workflow.includes("ref: "+sdkCommit),"Cookbooks CI checkout does not match approved SDK main");
+    // Single governed source pin: CI resolves the manifest at T=0 instead of
+    // maintaining a duplicated literal checkout SHA, preventing future drift.
+    assert.ok(workflow.includes("id: sdkref"),"Cookbooks CI must resolve reviewed SDK manifest first");
+    assert.ok(workflow.includes("release/SDK-SOURCE.json"),"Cookbooks CI must read canonical SDK source manifest");
+    assert.ok(workflow.includes("ref: ${{ steps.sdkref.outputs.sha }}"),
+      "Cookbooks CI checkout must be bound to reviewed manifest SHA, not a stale literal");
+    assert.ok(workflow.includes('assert.match(r.commit,/^[a-f0-9]{40}$/)'),
+      "Cookbooks CI must validate immutable SDK ref before checkout");
   }
   const id=candidate.package_identity?.[name];
   assert.equal(id?.commit,commit,name+" current package source SHA drift");
