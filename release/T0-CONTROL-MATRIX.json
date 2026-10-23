@@ -610,6 +610,41 @@
       "real_email_sends_test_only": true,
       "cloudflare_production_attested": false,
       "ga_approved": false
+    },
+    "waitlist_recovery_production_receipt": {
+      "kind": "taghvim_onboarding_final_attempt_recovery_production",
+      "engine_source_sha": "c8acfc63b408c83404013f0b63ee154ad62faf9f",
+      "merged_pr": "Taghvim-dev/engine#153",
+      "source_main_ci": "40033867300",
+      "source_main_ci_status": "success_both_ubuntu_24_04_and_26_04",
+      "approved_owner_comment_id": "6376043211",
+      "controlled_release_run_id": "40034264340",
+      "sandbox": "success",
+      "production": "success",
+      "postdeploy_checkpoint": "postdeploy_verified",
+      "d1_uuid": "08e29424-2c68-4aef-bde3-3d5cad47ccc8",
+      "d1_authoritative_ledger_sha256": "e9eccf54902a6b72eb38bba833de73aeeca050758f81a013d41d14d76b44c082",
+      "recovery_artifact_sha256": "fc7d8a655ef9ee50e2544844b5e20abd9d592591f429fd156981ec3642b07ef6",
+      "postdeploy_checkpoint_sha256": "5ecf55ca8271250ea05772d469d52a8d62e8b54cb0d4c4d5bdf9137075b3294b",
+      "release_bot_comment_id": "6376098381",
+      "artifact_id": "12535444512",
+      "artifact_digest_sha256": "c1266401e905ddf4780aadd246cb6530b618b8aa851c4d5965ac5f24db31853c",
+      "outcomes": [
+        "name_length_1_sitekit_aligned",
+        "invalid_source_needs_review_before_cursor",
+        "expired_attempt_8_lease_needs_review_no_automatic_resend",
+        "tenant_D1_comms_synthetic_e2e",
+        "live_api_D1_free_core_smoke"
+      ],
+      "issues_closed": [
+        "Taghvim-dev/engine#137",
+        "Taghvim-dev/engine#138"
+      ],
+      "real_recipient_deliverability_certified": false,
+      "unavailable_booking_availability_workflow_agent_backends_certified": false,
+      "billing_certified": false,
+      "general_availability_approved": false,
+      "scope": "Source and remote Cloudflare Sandbox/Production release evidence; no real-user invitation delivery or General Availability claim"
     }
   },
   "production_d1_identity": {
