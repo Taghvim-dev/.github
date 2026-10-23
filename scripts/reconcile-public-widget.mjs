@@ -1,7 +1,7 @@
 /** Trusted main-only T0 SDK + Cookbook release reconciler. No Cloudflare credentials. */
 import {Buffer} from "node:buffer";
 import {fileURLToPath} from "node:url";
-const ROOT="Taghvim-dev/.github",BRANCH="bot/t0-public-widget-reconcile",API="https://api.github.com";
+const ROOT="Taghvim-dev/.github",BRANCH_PREFIX="bot/t0-public-widget-reconcile-",API="https://api.github.com";
 const SHA=/^[a-f0-9]{40}$/;
 const fail=s=>{throw Error("T0_PUBLIC_WIDGET_RECONCILE_BLOCKED: "+s);};
 export function buildCandidate(matrix,{sdk,sdkCi,cookbooks,cookbooksCi,cookbooksSdkPin}){
@@ -52,9 +52,23 @@ async function successfulMainCI(repo,sha,name){
  r.sort((a,b)=>b.run_number-a.run_number);
  return r[0]?.id||null;
 }
+/** Only bot-authored, matrix-only abandoned source branches may be rebased. */
+export function canResetOrFastForwardBotBranch(compare){
+ if(!compare||!["ahead","behind","diverged","identical"].includes(compare.status)||
+   !Number.isInteger(compare.ahead_by)||compare.ahead_by<0||compare.ahead_by>3||
+   !Array.isArray(compare.files)||!Array.isArray(compare.commits))return null;
+ if(compare.files.some(f=>f.filename!=="release/PUBLIC-RELEASE-MATRIX.json"))return null;
+ if(compare.ahead_by===0)return "fast_forward";
+ if(compare.commits.length!==compare.ahead_by||!compare.commits.every(c=>
+    c.commit?.message?.startsWith("reconcile(t0): public SDK and Cookbook reviewed source candidate") &&
+    ["github-actions[bot]","github-actions"].includes(c.author?.login)))return null;
+ return "bot_branch_reset";
+}
 export async function reconcilePublicWidget(){
  if(process.env.GITHUB_REPOSITORY!==ROOT||process.env.GITHUB_REF!=="refs/heads/main")fail("not trusted main controller");
  const [sdk,cookbooks,root]=await Promise.all([head("Taghvim-dev/SDK"),head("Taghvim-dev/cookbooks"),head(ROOT)]);
+ // Root-scoped branch avoids drift from an orphan created against older main.
+ const branch=BRANCH_PREFIX+root.slice(0,12);
  const [sdkCi,cookbooksCi,cookbookSource,canonical]=await Promise.all([
   successfulMainCI("Taghvim-dev/SDK",sdk,"public-sdk-verify"),
   successfulMainCI("Taghvim-dev/cookbooks",cookbooks,"public-cookbooks-verify"),
@@ -66,26 +80,47 @@ export async function reconcilePublicWidget(){
  if(plan.status!=="PR_REQUIRED")return {status:plan.status,writes:0};
  const [sdkNow,cookbookNow,rootNow]=await Promise.all([head("Taghvim-dev/SDK"),head("Taghvim-dev/cookbooks"),head(ROOT)]);
  if(sdkNow!==sdk||cookbookNow!==cookbooks||rootNow!==root)return {status:"RACED_WITH_NEW_SOURCE",writes:0};
- const pulls=await gh("/repos/"+ROOT+"/pulls?state=open&head="+encodeURIComponent("Taghvim-dev:"+BRANCH));
+ const pulls=await gh("/repos/"+ROOT+"/pulls?state=open&head="+encodeURIComponent("Taghvim-dev:"+branch));
  if(!Array.isArray(pulls))fail("PR inventory unavailable");
  if(pulls.length)return {status:"REVIEW_PENDING_EXISTING_PR",pr:pulls[0].number,writes:0};
- const refs=await gh("/repos/"+ROOT+"/git/matching-refs/heads/"+BRANCH);
+ const refs=await gh("/repos/"+ROOT+"/git/matching-refs/heads/"+branch);
  if(!Array.isArray(refs))fail("branch inventory unavailable");
- if(refs.length)return {status:"STALE_RECONCILE_BRANCH_REQUIRES_REVIEW",writes:0};
- await gh("/repos/"+ROOT+"/git/refs","POST",{ref:"refs/heads/"+BRANCH,sha:root});
- await gh("/repos/"+ROOT+"/contents/release/PUBLIC-RELEASE-MATRIX.json","PUT",{
-  message:"reconcile(t0): public SDK and Cookbook reviewed source candidate",
-  content:Buffer.from(JSON.stringify(plan.candidate,null,2)+"\n").toString("base64"),
-  sha:canonical.sha,branch:BRANCH
- });
+ const exact=refs.filter(ref=>ref.ref==="refs/heads/"+branch);
+ if(exact.length!==refs.length||exact.length>1)fail("unexpected source reconciliation branch inventory");
+ let botFile=canonical;
+ if(!exact.length) {
+  // Crash after branch creation is recoverable: the next invocation uses the branch.
+  await gh("/repos/"+ROOT+"/git/refs","POST",{ref:"refs/heads/"+branch,sha:root});
+ } else {
+  const refSha=exact[0]?.object?.sha;
+  if(!SHA.test(refSha||""))fail("invalid bot branch SHA");
+  if(refSha!==root){
+    const compared=await gh("/repos/"+ROOT+"/compare/"+root+"..."+refSha);
+    const recovery=canResetOrFastForwardBotBranch(compared);
+    if(!recovery)fail("abandoned branch contains unapproved source changes");
+    // Only the single fixed bot-owned branch, and only with NO open PR.
+    // Resetting another person's work or an active review is forbidden.
+    await gh("/repos/"+ROOT+"/git/refs/heads/"+branch,"PATCH",{
+      sha:root,force:recovery==="bot_branch_reset"
+    });
+  }
+  botFile=canonical;
+ }
+ const wanted=JSON.stringify(plan.candidate,null,2)+"\n";
+ if(JSON.stringify(botFile.data)!==JSON.stringify(plan.candidate))
+   await gh("/repos/"+ROOT+"/contents/release/PUBLIC-RELEASE-MATRIX.json","PUT",{
+     message:"reconcile(t0): public SDK and Cookbook reviewed source candidate",
+     content:Buffer.from(wanted).toString("base64"),
+     sha:botFile.sha,branch:branch
+   });
  const pr=await gh("/repos/"+ROOT+"/pulls","POST",{
   title:"reconcile(T0): public SDK and Cookbook SHA-pinned source",
-  head:BRANCH,base:"main",draft:false,
+  head:branch,base:"main",draft:false,
   body:"Source-only coordinated release candidate. SDK "+sdk+" (successful main CI "+sdkCi+
    "), Cookbooks "+cookbooks+" (successful main CI "+cookbooksCi+
    "), exact pinned SDK source. NO_GA, no Cloudflare writes. Independent PR review, central CI and protected Sandbox→Production remain mandatory."
  });
- return {status:"CREATED_REVIEWABLE_SOURCE_PR",pr:pr.number,writes:2,sdk,cookbooks};
+ return {status:"CREATED_REVIEWABLE_SOURCE_PR",pr:pr.number,branch_reused:!!exact.length,writes:2,sdk,cookbooks};
 }
 if(process.argv[1]===fileURLToPath(import.meta.url))
  reconcilePublicWidget().then(x=>console.log("T0_PUBLIC_WIDGET_RECONCILE",JSON.stringify(x)))
