@@ -1,0 +1,31 @@
+# No Cloudflare credential, PR checkout, or automatic Production mutation.
+name: t0-public-widget-sdk-reconciler
+on:
+  schedule:
+    - cron: '23 */6 * * *'
+  workflow_dispatch:
+permissions:
+  contents: write
+  pull-requests: write
+  actions: read
+concurrency:
+  group: taghvim-t0-public-widget-source
+  cancel-in-progress: false
+jobs:
+  reconcile:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: '22'
+      - name: Source and CI contract tests (offline)
+        run: node --test test/reconcile-public-widget.test.mjs
+      - name: Reconcile exact current public main SHAs only after successful release CI
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: node scripts/reconcile-public-widget.mjs

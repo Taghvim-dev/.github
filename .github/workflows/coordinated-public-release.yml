@@ -16,6 +16,8 @@ on:
       - "test/source-runtime-separation-20261023.test.mjs"
       - "scripts/release-pins.mjs"
       - "test/release-pins.test.mjs"
+      - "scripts/reconcile-public-widget.mjs"
+      - "test/reconcile-public-widget.test.mjs"
       - ".github/workflows/coordinated-public-release.yml"
   push:
     branches: [main]
@@ -61,7 +63,7 @@ jobs:
       - name: Resolve exact immutable sibling SHAs from this candidate release matrix
         id: release-pins
         run: |
-          node --test test/release-pins.test.mjs
+          node --test test/release-pins.test.mjs test/reconcile-public-widget.test.mjs
           node scripts/release-pins.mjs >> "$GITHUB_OUTPUT"
       - uses: actions/checkout@v5
         with:

@@ -5,7 +5,7 @@
   "contract_version": "2.1.0",
   "current_source": {
     "engine_main_sha": "6e51940de359d257da1d557b794c216e2150d243",
-    "landing_main_sha": "e5667be268afdf7420992b24a6471cc3a1361adc",
+    "landing_main_sha": "30cc7cfa8ecbfccaf0cbb8125945dda74892613d",
     "shared_policy_sha": "c195c8bfde573b6195bd1b3bd00e3535accc9040",
     "prewrite_source_policy_sha": "f3bc8d18c5c31fd1125dd4da4887c86b9e3f8447"
   },
@@ -217,7 +217,7 @@
       "source_ci_run": "39691890610",
       "dependent_component_ci": {
         "engine": "40009091830",
-        "landing": "40007605255"
+        "landing": "40015615331"
       },
       "policy_main_sha": "f3bc8d18c5c31fd1125dd4da4887c86b9e3f8447",
       "production_remote_receipt": null,
@@ -242,7 +242,7 @@
       "reviewed_action_main_sha": "f3bc8d18c5c31fd1125dd4da4887c86b9e3f8447",
       "component_source_ci": {
         "engine": "40009091830",
-        "landing": "40007605255"
+        "landing": "40015615331"
       },
       "live_evidence": null,
       "expected_workflow_ids": {
@@ -273,10 +273,10 @@
       "package_contract_version": "2.1.0",
       "dependent_component_ci": {
         "engine": "40009091830",
-        "landing": "40007605255",
-        "SDK": "40001600875",
-        "CLI": "39695189982",
-        "cookbooks": "40002313088"
+        "landing": "40015615331",
+        "SDK": "40014892972",
+        "CLI": "40008793826",
+        "cookbooks": "40015679763"
       },
       "source_ci_run": "40002313088",
       "live_evidence": null
@@ -474,11 +474,13 @@
     "release_ledger_source_pins_still_require_independent_re_review": true,
     "both_product_components_live": true,
     "current_source_not_yet_deployed_scope": "LATEST_ENGINE_MAIN_CONTROLLER_CHANGE_NOT_API_WORKER; production Engine API remains deployed SHA 2642f537, Landing source 41657131",
-    "sdk_current_source_commit": "5016f74c8a9997a5c095255cd378a51b7986b518",
-    "cookbooks_current_source_commit": "4ac7d2cbc03985d9b89da1be6b0ec8211e1f46d1",
-    "cookbooks_current_main_ci_run": "40002313088",
+    "sdk_current_source_commit": "501fbac4a5ffbef15c2126af3c0bab8959361b96",
+    "cookbooks_current_source_commit": "12a7c2ab6ecf91504d1dc474eabbdca27e9a8a88",
+    "cookbooks_current_main_ci_run": "40015679763",
     "sdk_publication_status": "source_preview; npm_PyPI_not_published; real_python_sdk_cloudflare_sandbox_retest_required",
-    "sdk_current_main_ci_run": "40001600875"
+    "sdk_current_main_ci_run": "40014892972",
+    "cli_current_source_commit": "d723958869b82d9b92907fed6689b32790f0491c",
+    "cli_current_main_ci_run": "40008793826"
   },
   "production_d1_identity": {
     "database_name": "taghvim-engine",

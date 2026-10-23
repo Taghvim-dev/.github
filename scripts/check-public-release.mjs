@@ -131,6 +131,20 @@ assert.equal(candidate.package_identity?.SDK?.javascript,candidate.contract_vers
 assert.equal(candidate.package_identity?.SDK?.python,candidate.contract_version,"T0 SDK Python version drift");
 assert.equal(candidate.package_identity?.CLI?.package,candidate.contract_version,"T0 CLI version drift");
 assert.equal(candidate.package_identity?.cookbooks?.package,candidate.contract_version,"T0 Cookbook version drift");
+// The post-release observation contains a current-source snapshot, not an
+// authorization to deploy. Keep its SDK, CLI and cookbook SHA/CI pairs tied
+// to the canonical tested package identities across both T0 matrices.
+for(const [name,sourceKey,ciKey] of [
+  ["SDK","sdk_current_source_commit","sdk_current_main_ci_run"],
+  ["CLI","cli_current_source_commit","cli_current_main_ci_run"],
+  ["cookbooks","cookbooks_current_source_commit","cookbooks_current_main_ci_run"]
+]){
+  assert.equal(observed?.[sourceKey],candidate.package_identity?.[name]?.commit,
+    "T0 observed current source pin drift: "+name);
+  assert.equal(observed?.[ciKey],candidate.package_identity?.[name]?.ci,
+    "T0 observed current CI proof drift: "+name);
+}
+
 for(const [name,id] of [["engine",372423484],["landing",390048334]]){
  assert.equal(ad["tested_"+name+"_workflow_id"],id,"T0 false success possible: noncanonical "+name+" test workflow identity");
  assert.equal(ciControl?.expected_workflow_ids?.[name],id,"T0 CI control references another "+name+" workflow");
