@@ -365,8 +365,8 @@
         "ga_approved": false
       },
       "live_schema_verified": true,
-      "latest_controller_source_sha": "61f33bc448ba4676189d3f389f01af6b934fa04e",
-      "latest_controller_ci_run": "40017525006",
+      "latest_controller_source_sha": "61fdc1ef21a3542442f70d7b24e77bf596995263",
+      "latest_controller_ci_run": "40018471346",
       "controller_only_change_not_api_worker": true,
       "current_source_only_ci_scope": "current Engine main + immutable SDK and Cookbooks exact SHA/CI source success; Cloudflare API Worker still historical 2642f537",
       "current_source_tests": [
