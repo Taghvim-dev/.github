@@ -52,6 +52,18 @@ async function successfulMainCI(repo,sha,name){
  r.sort((a,b)=>b.run_number-a.run_number);
  return r[0]?.id||null;
 }
+/** Only bot-authored, matrix-only abandoned source branches may be rebased. */
+export function canResetOrFastForwardBotBranch(compare){
+ if(!compare||!["ahead","behind","diverged","identical"].includes(compare.status)||
+   !Number.isInteger(compare.ahead_by)||compare.ahead_by<0||compare.ahead_by>3||
+   !Array.isArray(compare.files)||!Array.isArray(compare.commits))return null;
+ if(compare.files.some(f=>f.filename!=="release/PUBLIC-RELEASE-MATRIX.json"))return null;
+ if(compare.ahead_by===0)return "fast_forward";
+ if(compare.commits.length!==compare.ahead_by||!compare.commits.every(c=>
+    c.commit?.message?.startsWith("reconcile(t0): public SDK and Cookbook reviewed source candidate") &&
+    ["github-actions[bot]","github-actions"].includes(c.author?.login)))return null;
+ return "bot_branch_reset";
+}
 export async function reconcilePublicWidget(){
  if(process.env.GITHUB_REPOSITORY!==ROOT||process.env.GITHUB_REF!=="refs/heads/main")fail("not trusted main controller");
  const [sdk,cookbooks,root]=await Promise.all([head("Taghvim-dev/SDK"),head("Taghvim-dev/cookbooks"),head(ROOT)]);
@@ -80,9 +92,17 @@ export async function reconcilePublicWidget(){
  } else {
   const refSha=exact[0]?.object?.sha;
   if(!SHA.test(refSha||""))fail("invalid bot branch SHA");
-  botFile=await content(ROOT,"release/PUBLIC-RELEASE-MATRIX.json",refSha);
-  if(botFile.data?.state!=="PREVIEW"||botFile.data?.general_availability_approved!==false)
-   fail("bot branch changed release approval lifecycle");
+  if(refSha!==root){
+    const compared=await gh("/repos/"+ROOT+"/compare/"+root+"..."+refSha);
+    const recovery=canResetOrFastForwardBotBranch(compared);
+    if(!recovery)fail("abandoned branch contains unapproved source changes");
+    // Only the single fixed bot-owned branch, and only with NO open PR.
+    // Resetting another person's work or an active review is forbidden.
+    await gh("/repos/"+ROOT+"/git/refs/heads/"+BRANCH,"PATCH",{
+      sha:root,force:recovery==="bot_branch_reset"
+    });
+  }
+  botFile=canonical;
  }
  const wanted=JSON.stringify(plan.candidate,null,2)+"\n";
  if(JSON.stringify(botFile.data)!==JSON.stringify(plan.candidate))
