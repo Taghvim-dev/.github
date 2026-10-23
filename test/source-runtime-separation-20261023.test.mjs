@@ -34,3 +34,22 @@ test("release gate requires newly added 0010 and 0004 D1 schemas; older live mig
   assert.match(a.promotion_requires, /owner-authenticated/);
   assert.equal(a.general_availability_approved, false);
 });
+
+test("current main controller embeds the exact released-candidate Landing Git tree; push cannot promote", () => {
+  const o = pub.post_release_observation_20261023;
+  const e = o.engine_new_source;
+  const l = o.landing_new_source;
+  assert.equal(e.sha, e.controller_release_pin_sha);
+  assert.equal(e.controller_landing_source_sha, l.sha);
+  assert.equal(e.controller_landing_git_tree, l.exact_git_tree);
+  assert.match(l.exact_git_tree, /^[a-f0-9]{40}$/);
+  assert.deepEqual(l.required_migrations, [
+    "0001_leads.sql", "0002_comms.sql",
+    "0003_updates_opt_in.sql", "0004_unsubscribe_tokens.sql"
+  ]);
+  assert.equal(e.push_sandbox_job, "skipped");
+  assert.equal(e.push_production_job, "skipped");
+  assert.equal(o.remote_new_migrations_status, "NOT_VERIFIED_FOR_CURRENT_SOURCE");
+  assert.equal(o.production_promotion_authorized, false);
+  assert.equal(o.current_source_not_yet_deployed, true);
+});
