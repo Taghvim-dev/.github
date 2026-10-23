@@ -44,7 +44,6 @@ export function buildCoupledCandidate(matrix,controls,args){
  for(const [k,v] of Object.entries(replacements)){
    if(!(k in post)||!(k in ctrlPost))fail("missing dual source mirror "+k);
    post[k]=v;
-   ctrlPost[k]=v;
  }
  widget.sdk_main_sha=sdk;widget.sdk_main_ci_run=String(sdkCi);
  widget.cookbook_main_sha=cookbooks;widget.cookbook_main_ci_run=String(cookbooksCi);
