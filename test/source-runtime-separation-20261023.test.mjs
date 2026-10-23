@@ -14,7 +14,11 @@ test("T0 release matrices distinguish current source from historically deployed 
   assert.equal(t0.general_availability_approved, false);
   assert.equal(a.current_source_not_yet_deployed, true);
   assert.equal(a.live_schema_for_new_source_verified, false);
-  assert.equal(a.engine_new_source.production_deployed, false);
+  assert.equal(a.engine_new_source.production_deployed, true);
+  assert.equal(a.engine_new_source.current_production_release.controller_commit, a.engine_new_source.sha);
+  assert.equal(a.engine_new_source.current_production_release.production_run_id, 39981975548);
+  assert.equal(a.engine_new_source.current_production_release.d1_migrations, "10/10");
+  assert.equal(a.engine_new_source.current_production_release.ga_approved, false);
   assert.equal(a.landing_new_source.production_deployed, false);
   assert.notEqual(a.engine_new_source.sha, a.engine_production.source_sha);
   assert.notEqual(a.landing_new_source.sha, a.landing_production.source_sha);
@@ -25,7 +29,8 @@ test("T0 release matrices distinguish current source from historically deployed 
 test("release gate requires newly added 0010 and 0004 D1 schemas; older live migration receipts cannot count", () => {
   const a = pub.post_release_observation_20261023;
   const engine = a.engine_new_source, landing = a.landing_new_source;
-  assert.equal(engine.production_schema_last_verified, "9/9");
+  assert.equal(engine.production_schema_last_verified, "10/10");
+  assert.equal(engine.live_schema_verified, true);
   assert.equal(engine.target_schema_for_new_source, "10/10");
   assert.equal(engine.migration, "0010_developer_invitations.sql");
   assert.equal(landing.production_schema_last_verified, "3/3");
@@ -49,7 +54,7 @@ test("current main controller embeds the exact released-candidate Landing Git tr
   ]);
   assert.equal(e.push_sandbox_job, "skipped");
   assert.equal(e.push_production_job, "skipped");
-  assert.equal(o.remote_new_migrations_status, "NOT_VERIFIED_FOR_CURRENT_SOURCE");
+  assert.equal(o.remote_new_migrations_status, "ENGINE_0010_REMOTE_VERIFIED_LANDING_0004_NOT_DEPLOYED");
   assert.equal(o.production_promotion_authorized, false);
   assert.equal(o.current_source_not_yet_deployed, true);
 });
