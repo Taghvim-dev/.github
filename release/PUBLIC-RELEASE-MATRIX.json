@@ -840,8 +840,8 @@
       "source_runtime_match": "historically released artifacts only"
     },
     "engine_new_source": {
-      "sha": "a91e109c8dd25d37e1a4b430133da584bf81a162",
-      "ci_run": "39974430915",
+      "sha": "d078448c39df218a9cd9ada4e87546e790a0f640",
+      "ci_run": "39976898304",
       "ci": "ubuntu-24.04 and ubuntu-26.04 success",
       "sandbox_developer_invitation": true,
       "one_time_test_keys": true,
@@ -851,16 +851,23 @@
       "paid_billing_blocked": true,
       "production_deployed": false,
       "real_invite_deliverability_certified": false,
-      "ci_scope": "merged-main-test-success",
+      "ci_scope": "merged-main-engine-test-ubuntu-24-and-26-success",
       "migration": "0010_developer_invitations.sql",
       "production_schema_last_verified": "9/9",
       "target_schema_for_new_source": "10/10",
       "readiness_schema_gate": "developer_invitations + api_keys.expires_at; HTTP 503 if missing",
-      "source_pr": "Taghvim-dev/engine#112"
+      "source_pr": "Taghvim-dev/engine#112",
+      "controller_release_pin_sha": "d078448c39df218a9cd9ada4e87546e790a0f640",
+      "controller_landing_source_sha": "41657131c23d716892032dc85c3cd9909c79dc0f",
+      "controller_landing_git_tree": "0b6408988b3955386713a2efd87e6dc04a51bf56",
+      "release_controller_pr": "Taghvim-dev/engine#113",
+      "no_push_mutation_run": "39976898221",
+      "push_sandbox_job": "skipped",
+      "push_production_job": "skipped"
     },
     "landing_new_source": {
-      "sha": "a35cfcc094b2b4451a8a36799e963dcfbf65f3cb",
-      "ci_run": "39974420683",
+      "sha": "41657131c23d716892032dc85c3cd9909c79dc0f",
+      "ci_run": "39976195222",
       "consent_unsubscribe_candidate": true,
       "migration": "0004_unsubscribe_tokens.sql",
       "production_deployed": false,
@@ -868,7 +875,15 @@
       "production_schema_last_verified": "3/3",
       "target_schema_for_new_source": "4/4",
       "readiness_schema_gate": "audience_unsubscribe_tokens + audience_opt_out; HTTP 503 if missing",
-      "source_pr": "Taghvim-dev/landing#91"
+      "source_pr": "Taghvim-dev/landing#91",
+      "exact_git_tree": "0b6408988b3955386713a2efd87e6dc04a51bf56",
+      "required_migrations": [
+        "0001_leads.sql",
+        "0002_comms.sql",
+        "0003_updates_opt_in.sql",
+        "0004_unsubscribe_tokens.sql"
+      ],
+      "migration_manifest_pr": "Taghvim-dev/landing#92"
     },
     "owner_release_permission": {
       "controller": "Taghvim-dev/engine",
@@ -883,6 +898,8 @@
     "release_boundary": "current_main_source_candidate_separate_from_last_successfully_observed_production_release",
     "current_source_not_yet_deployed": true,
     "live_schema_for_new_source_verified": false,
-    "promotion_requires": "Engine-only owner-authenticated manual release; Sandbox migrations and smoke first, immutable evidence and independent release approval before Production"
+    "promotion_requires": "Engine-only owner-authenticated manual release; Sandbox migrations and smoke first, immutable evidence and independent release approval before Production",
+    "remote_new_migrations_status": "NOT_VERIFIED_FOR_CURRENT_SOURCE",
+    "production_promotion_authorized": false
   }
 }
