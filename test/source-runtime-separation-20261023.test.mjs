@@ -37,7 +37,7 @@ test("release gate requires newly added 0010 and 0004 D1 schemas; older live mig
   assert.equal(landing.production_schema_last_verified, "4/4");
   assert.equal(landing.target_schema_for_new_source, "4/4");
   assert.equal(landing.migration, "0004_unsubscribe_tokens.sql");
-  assert.match(a.promotion_requires, /owner-authenticated/);
+  assert.match(a.promotion_requires, /owner-authenticated|authenticated owner/);
   assert.equal(a.general_availability_approved, false);
 });
 
