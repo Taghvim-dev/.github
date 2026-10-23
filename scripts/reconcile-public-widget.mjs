@@ -101,7 +101,8 @@ export function canResetOrFastForwardBotBranch(compare){
  if(compare.files.some(f=>!["release/PUBLIC-RELEASE-MATRIX.json","release/T0-CONTROL-MATRIX.json"].includes(f.filename)))return null;
  if(compare.ahead_by===0)return "fast_forward";
  if(compare.commits.length!==compare.ahead_by||!compare.commits.every(c=>
-    c.commit?.message?.startsWith("reconcile(t0): public SDK and Cookbook reviewed source candidate") &&
+    (c.commit?.message?.startsWith("reconcile(t0): public SDK and Cookbook reviewed source candidate") ||
+     c.commit?.message?.startsWith("reconcile(t0): atomic SDK and Cookbook source evidence")) &&
     ["github-actions[bot]","github-actions"].includes(c.author?.login)))return null;
  return "bot_branch_reset";
 }
@@ -154,18 +155,33 @@ export async function reconcilePublicWidget(){
   }
   botFile=canonical;
  }
+ // Produce both constitutional registries in ONE commit. No half-valid intermediate push.
+ const base=await gh("/repos/"+ROOT+"/git/commits/"+root);
+ if(!SHA.test(base?.tree?.sha||""))fail("unattested current main Git tree");
  const files=[
-   ["release/PUBLIC-RELEASE-MATRIX.json",plan.registry,botFile],
-   ["release/T0-CONTROL-MATRIX.json",plan.controls,control]
+   ["release/PUBLIC-RELEASE-MATRIX.json",plan.registry],
+   ["release/T0-CONTROL-MATRIX.json",plan.controls]
  ];
- for(const [path,candidate,base] of files){
-   if(JSON.stringify(base.data)===JSON.stringify(candidate))continue;
-   await gh("/repos/"+ROOT+"/contents/"+path,"PUT",{
-     message:"reconcile(t0): public SDK and Cookbook reviewed source candidate",
-     content:Buffer.from(JSON.stringify(candidate,null,2)+"\n").toString("base64"),
-     sha:base.sha,branch:branch
-   });
- }
+ const tree=await gh("/repos/"+ROOT+"/git/trees","POST",{
+   base_tree:base.tree.sha,
+   tree:files.map(([path,value])=>({
+     path,mode:"100644",type:"blob",content:JSON.stringify(value,null,2)+"\n"
+   }))
+ });
+ if(!SHA.test(tree?.sha||""))fail("invalid coordinated release source tree");
+ const proposed=await gh("/repos/"+ROOT+"/git/commits","POST",{
+   message:"reconcile(t0): atomic SDK and Cookbook source evidence",
+   tree:tree.sha,parents:[root]
+ });
+ if(!SHA.test(proposed?.sha||""))fail("coordinated release commit creation failed");
+ const [sdkStill,cookbookStill,engineStill,landingStill,rootStill]=await Promise.all([
+   head("Taghvim-dev/SDK"),head("Taghvim-dev/cookbooks"),head("Taghvim-dev/engine"),
+   head("Taghvim-dev/landing"),head(ROOT)
+ ]);
+ if(sdkStill!==sdk||cookbookStill!==cookbooks||engineStill!==engine||
+    landingStill!==landing||rootStill!==root)
+   return {status:"RACED_BEFORE_ATOMIC_PR",writes:0};
+ await gh("/repos/"+ROOT+"/git/refs/heads/"+branch,"PATCH",{sha:proposed.sha,force:false});
  // The request is only reviewable source; it never deploys or changes GA.
  const pr=await gh("/repos/"+ROOT+"/pulls","POST",{
   title:"reconcile(T0): public SDK and Cookbook SHA-pinned source",
@@ -174,7 +190,7 @@ export async function reconcilePublicWidget(){
    "), Cookbooks "+cookbooks+" (successful main CI "+cookbooksCi+
    "), exact pinned SDK source. NO_GA, no Cloudflare writes. Independent PR review, central CI and protected Sandbox→Production remain mandatory."
  });
- return {status:"CREATED_REVIEWABLE_SOURCE_PR",pr:pr.number,branch_reused:!!exact.length,writes:3,sdk,cookbooks};
+ return {status:"CREATED_REVIEWABLE_SOURCE_PR",pr:pr.number,branch_reused:!!exact.length,git_commits:1,files:2,sdk,cookbooks};
 }
 if(process.argv[1]===fileURLToPath(import.meta.url))
  reconcilePublicWidget().then(x=>console.log("T0_PUBLIC_WIDGET_RECONCILE",JSON.stringify(x)))
