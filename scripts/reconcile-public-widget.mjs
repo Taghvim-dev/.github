@@ -23,6 +23,34 @@ export function buildCandidate(matrix,{sdk,sdkCi,cookbooks,cookbooksCi,cookbooks
  if(JSON.stringify(candidate)===JSON.stringify(matrix))return {status:"CURRENT",candidate:null};
  return {status:"PR_REQUIRED",candidate};
 }
+// Build the two coupled canonical ledgers together. A source-only release
+// PR that updates just one matrix will fail the T0 gate and waste CI.
+export function buildAtomicCandidate(release,control,inputs){
+ const plan=buildCandidate(release,inputs);
+ if(plan.status!=="PR_REQUIRED")return {...plan,control:null};
+ if(!control||control.contract_version!==release.contract_version||
+    control.general_availability_approved!==false||!Array.isArray(control.controls)||
+    JSON.stringify(control.post_release_observation_20261023)!==JSON.stringify(release.post_release_observation_20261023))
+   fail("canonical matrices split-brain or unauthorized GA");
+ const candidate=plan.candidate, nextControl=structuredClone(control);
+ const packageControl=nextControl.controls.find(x=>x.id==="T0-PACKAGES-014");
+ if(!packageControl?.dependent_component_ci||!candidate.post_release_observation_20261023)
+   fail("missing T0 package evidence control or source observation");
+ for(const [name,sourceKey,ciKey] of [
+  ["SDK","sdk_current_source_commit","sdk_current_main_ci_run"],
+  ["cookbooks","cookbooks_current_source_commit","cookbooks_current_main_ci_run"]
+ ]){
+  const pkg=candidate.package_identity[name];
+  packageControl.dependent_component_ci[name]=pkg.ci;
+  for(const observed of [candidate.post_release_observation_20261023,nextControl.post_release_observation_20261023]){
+   observed[sourceKey]=pkg.commit;
+   observed[ciKey]=pkg.ci;
+  }
+ }
+ if(JSON.stringify(candidate.post_release_observation_20261023)!==JSON.stringify(nextControl.post_release_observation_20261023))
+   fail("source observation parity lost");
+ return {...plan,control:nextControl};
+}
 async function gh(path,method="GET",body){
  const token=process.env.GITHUB_TOKEN;
  if(!token)fail("missing job-scoped token");
@@ -55,14 +83,15 @@ async function successfulMainCI(repo,sha,name){
 export async function reconcilePublicWidget(){
  if(process.env.GITHUB_REPOSITORY!==ROOT||process.env.GITHUB_REF!=="refs/heads/main")fail("not trusted main controller");
  const [sdk,cookbooks,root]=await Promise.all([head("Taghvim-dev/SDK"),head("Taghvim-dev/cookbooks"),head(ROOT)]);
- const [sdkCi,cookbooksCi,cookbookSource,canonical]=await Promise.all([
+ const [sdkCi,cookbooksCi,cookbookSource,canonical,control]=await Promise.all([
   successfulMainCI("Taghvim-dev/SDK",sdk,"public-sdk-verify"),
   successfulMainCI("Taghvim-dev/cookbooks",cookbooks,"public-cookbooks-verify"),
   content("Taghvim-dev/cookbooks","release/SDK-SOURCE.json",cookbooks),
-  content(ROOT,"release/PUBLIC-RELEASE-MATRIX.json",root)
+  content(ROOT,"release/PUBLIC-RELEASE-MATRIX.json",root),
+  content(ROOT,"release/T0-CONTROL-MATRIX.json",root)
  ]);
  if(!sdkCi||!cookbooksCi)return {status:"WAIT_FOR_PUBLIC_MAIN_CI",writes:0};
- const plan=buildCandidate(canonical.data,{sdk,sdkCi,cookbooks,cookbooksCi,cookbooksSdkPin:cookbookSource.data?.commit});
+ const plan=buildAtomicCandidate(canonical.data,control.data,{sdk,sdkCi,cookbooks,cookbooksCi,cookbooksSdkPin:cookbookSource.data?.commit});
  if(plan.status!=="PR_REQUIRED")return {status:plan.status,writes:0};
  const [sdkNow,cookbookNow,rootNow]=await Promise.all([head("Taghvim-dev/SDK"),head("Taghvim-dev/cookbooks"),head(ROOT)]);
  if(sdkNow!==sdk||cookbookNow!==cookbooks||rootNow!==root)return {status:"RACED_WITH_NEW_SOURCE",writes:0};
@@ -72,12 +101,26 @@ export async function reconcilePublicWidget(){
  const refs=await gh("/repos/"+ROOT+"/git/matching-refs/heads/"+BRANCH);
  if(!Array.isArray(refs))fail("branch inventory unavailable");
  if(refs.length)return {status:"STALE_RECONCILE_BRANCH_REQUIRES_REVIEW",writes:0};
- await gh("/repos/"+ROOT+"/git/refs","POST",{ref:"refs/heads/"+BRANCH,sha:root});
- await gh("/repos/"+ROOT+"/contents/release/PUBLIC-RELEASE-MATRIX.json","PUT",{
-  message:"reconcile(t0): public SDK and Cookbook reviewed source candidate",
-  content:Buffer.from(JSON.stringify(plan.candidate,null,2)+"\n").toString("base64"),
-  sha:canonical.sha,branch:BRANCH
+ // Construct one complete commit while the candidate branch does not exist.
+ // Creating the ref only after both blobs and tests are present avoids
+ // intermediate failure-generating PR heads and preserves review parity.
+ const parent=await gh("/repos/"+ROOT+"/git/commits/"+root);
+ if(!SHA.test(parent?.tree?.sha))fail("missing immutable base tree");
+ const [releaseBlob,controlBlob]=await Promise.all([
+  gh("/repos/"+ROOT+"/git/blobs","POST",{content:Buffer.from(JSON.stringify(plan.candidate,null,2)+"\\n").toString("base64"),encoding:"base64"}),
+  gh("/repos/"+ROOT+"/git/blobs","POST",{content:Buffer.from(JSON.stringify(plan.control,null,2)+"\\n").toString("base64"),encoding:"base64"})
+ ]);
+ const tree=await gh("/repos/"+ROOT+"/git/trees","POST",{base_tree:parent.tree.sha,tree:[
+  {path:"release/PUBLIC-RELEASE-MATRIX.json",mode:"100644",type:"blob",sha:releaseBlob.sha},
+  {path:"release/T0-CONTROL-MATRIX.json",mode:"100644",type:"blob",sha:controlBlob.sha}
+ ]});
+ const commit=await gh("/repos/"+ROOT+"/git/commits","POST",{
+  message:"reconcile(t0): atomically pin public SDK/Cookbooks in both canonical ledgers",tree:tree.sha,parents:[root]
  });
+ const [sdkFinal,cookbookFinal,rootFinal]=await Promise.all([head("Taghvim-dev/SDK"),head("Taghvim-dev/cookbooks"),head(ROOT)]);
+ if(sdkFinal!==sdk||cookbookFinal!==cookbooks||rootFinal!==root)
+  return {status:"RACED_WITH_NEW_SOURCE",writes:0};
+ await gh("/repos/"+ROOT+"/git/refs","POST",{ref:"refs/heads/"+BRANCH,sha:commit.sha});
  const pr=await gh("/repos/"+ROOT+"/pulls","POST",{
   title:"reconcile(T0): public SDK and Cookbook SHA-pinned source",
   head:BRANCH,base:"main",draft:false,
