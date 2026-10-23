@@ -98,3 +98,12 @@ test("interrupted bot branch may only contain two expected matrix files",()=>{
  assert.equal(canResetOrFastForwardBotBranch({status:"ahead",ahead_by:1,
    files:[{filename:".github/workflows/unsafe.yml"}],commits:[bot]}),null);
 });
+
+test("one commit contains both release matrices",async()=>{
+ const {readFileSync}=await import("node:fs");
+ const src=readFileSync(new URL("../scripts/reconcile-public-widget.mjs",import.meta.url),"utf8");
+ assert.ok(src.includes('base_tree:base.tree.sha'));
+ assert.ok(src.includes('parents:[root]'));
+ assert.ok(src.includes('plan.registry'));
+ assert.ok(src.includes('plan.controls'));
+});
