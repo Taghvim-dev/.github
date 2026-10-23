@@ -45,8 +45,8 @@
   "source_verification": {
     "date": "2026-10-23",
     "phase": "source-integrated-not-deployed",
-    "engine_main_merge_sha": "16485966aee256b97a8c7859b4879373761dec94",
-    "engine_offline_ci_run": "40019157754",
+    "engine_main_merge_sha": "9bef81578ee0b745f4c88417a709e2c24464e9bc",
+    "engine_offline_ci_run": "40021619685",
     "engine_live_gate_ci_run": "39439068311",
     "landing_main_merge_sha": "30cc7cfa8ecbfccaf0cbb8125945dda74892613d",
     "landing_integration_merge_sha": "e380b5f3553b98faf35adeccd9f6a25440a778a4",
@@ -149,8 +149,8 @@
     },
     "latest_checked": {
       "date": "2026-10-23",
-      "engine_sha": "16485966aee256b97a8c7859b4879373761dec94",
-      "engine_ci": "40019157754",
+      "engine_sha": "9bef81578ee0b745f4c88417a709e2c24464e9bc",
+      "engine_ci": "40021619685",
       "landing_sha": "30cc7cfa8ecbfccaf0cbb8125945dda74892613d",
       "landing_ci": "40015615331",
       "shared_release_actions_sha": "c195c8bfde573b6195bd1b3bd00e3535accc9040",
@@ -194,10 +194,10 @@
     },
     "engine_package_contract_identity": {
       "status": "SOURCE_TESTED_ENGINE_LIVE_VERIFIED",
-      "source_main_sha": "16485966aee256b97a8c7859b4879373761dec94",
-      "reviewed_pr": "Taghvim-dev/engine #143 source only; runtime not re-attested",
-      "source_test_sha": "16485966aee256b97a8c7859b4879373761dec94",
-      "ci_run": "40019157754",
+      "source_main_sha": "9bef81578ee0b745f4c88417a709e2c24464e9bc",
+      "reviewed_pr": "Taghvim-dev/engine #146 source only; new Cloudflare runtime not yet re-attested",
+      "source_test_sha": "9bef81578ee0b745f4c88417a709e2c24464e9bc",
+      "ci_run": "40021619685",
       "api_version": "2.1.0",
       "package_version": "2.1.0",
       "lock_root_version": "2.1.0",
@@ -210,9 +210,9 @@
       "policy_main_sha": "f3bc8d18c5c31fd1125dd4da4887c86b9e3f8447",
       "policy_pr": "Taghvim-dev/.github PR #47",
       "policy_test_run": "39691890610",
-      "engine_main_sha": "16485966aee256b97a8c7859b4879373761dec94",
-      "engine_reviewed_head": "16485966aee256b97a8c7859b4879373761dec94",
-      "engine_ci_run": "40019157754",
+      "engine_main_sha": "9bef81578ee0b745f4c88417a709e2c24464e9bc",
+      "engine_reviewed_head": "9bef81578ee0b745f4c88417a709e2c24464e9bc",
+      "engine_ci_run": "40021619685",
       "landing_main_sha": "30cc7cfa8ecbfccaf0cbb8125945dda74892613d",
       "landing_reviewed_head": "30cc7cfa8ecbfccaf0cbb8125945dda74892613d",
       "landing_ci_run": "40015615331",
@@ -781,15 +781,15 @@
     },
     "widget_sdk_api_integration_20261023": {
       "status": "SOURCE_TESTED_NOT_RUNTIME_ATTESTED",
-      "engine_main_sha": "16485966aee256b97a8c7859b4879373761dec94",
-      "engine_ci": "40019157754",
+      "engine_main_sha": "9bef81578ee0b745f4c88417a709e2c24464e9bc",
+      "engine_ci": "40021619685",
       "sdk_main_sha": "a0fb737f061f39abfc77a432796a62217625fd5e",
       "sdk_ci": "40018523332",
       "cookbooks_main_sha": "30df73398fac533dd85ab36481506672474fccc9",
       "cookbooks_ci": "40018845699",
       "widget_embed_supported_in_sdk": true,
       "public_sdk_widget_route_count": 12,
-      "protected_sandbox_smoke_source": "Taghvim-dev/engine#143",
+      "protected_sandbox_smoke_source": "Taghvim-dev/engine#146",
       "verified_actual_remote_widget_receipt": false,
       "canonical_missing_backend": [
         "booking",
@@ -806,10 +806,10 @@
     "source_only": true,
     "remote_runtime_attested": false,
     "engine": {
-      "commit": "16485966aee256b97a8c7859b4879373761dec94",
+      "commit": "9bef81578ee0b745f4c88417a709e2c24464e9bc",
       "package": "2.1.0",
       "lock": "2.1.0",
-      "ci": "40019157754"
+      "ci": "40021619685"
     },
     "landing": {
       "commit": "30cc7cfa8ecbfccaf0cbb8125945dda74892613d",
@@ -912,8 +912,8 @@
         "ga_approved": false
       },
       "live_schema_verified": true,
-      "latest_controller_source_sha": "16485966aee256b97a8c7859b4879373761dec94",
-      "latest_controller_ci_run": "40019157754",
+      "latest_controller_source_sha": "9bef81578ee0b745f4c88417a709e2c24464e9bc",
+      "latest_controller_ci_run": "40021619685",
       "controller_only_change_not_api_worker": true,
       "current_source_only_ci_scope": "current Engine main + immutable SDK and Cookbooks exact SHA/CI source success; Cloudflare API Worker still historical 2642f537",
       "current_source_tests": [
