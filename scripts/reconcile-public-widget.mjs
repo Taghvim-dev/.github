@@ -28,8 +28,13 @@ export function buildCandidate(matrix,{sdk,sdkCi,cookbooks,cookbooksCi,cookbooks
  */
 export function buildCoupledCandidate(matrix,controls,args){
  const plan=buildCandidate(matrix,args);
- if(plan.status!=="PR_REQUIRED")return {status:plan.status,registry:null,controls:null};
- const result=plan.candidate;
+ if(plan.status==="BLOCKED_CROSS_REPO_SOURCE_DRIFT")
+   return {status:plan.status,registry:null,controls:null};
+ if(plan.status!=="PR_REQUIRED" && plan.status!=="CURRENT")
+   fail("unexpected source candidate status");
+ // Even when primary package pins are CURRENT, a stale Widget or control
+ // evidence mirror still requires a coupled reconciliation PR.
+ const result=plan.candidate??structuredClone(matrix);
  const widget=result.source_verification?.widget_sdk_api_integration_20261023;
  const post=result.post_release_observation_20261023;
  const ci=controls?.controls?.find(x=>x.id==="T0-PACKAGES-014")?.dependent_component_ci;
@@ -54,6 +59,9 @@ export function buildCoupledCandidate(matrix,controls,args){
  // Historical live D1, deployed Source SHAs, and GA must never change here.
  if(result.general_availability_approved!==false||cc.general_availability_approved!==false)
    fail("reconciler cannot grant GA or mutate runtime state");
+ if(JSON.stringify(result)===JSON.stringify(matrix) &&
+    JSON.stringify(cc)===JSON.stringify(controls))
+   return {status:"CURRENT",registry:null,controls:null};
  return {status:"PR_REQUIRED",registry:result,controls:cc};
 }
 export function sourcesAreConsistent(matrix,controls,engine,landing){
