@@ -17,7 +17,17 @@ export function verifyLandingProductionReceipt({observed,candidate}) {
  assert.equal(landing.sha,sha,"Unexpected Landing deployment source SHA");
  assert.equal(landing.exact_git_tree,tree,"Landing original Git tree drift");
  assert.equal(landing.ci_run,"39976195222","Landing deployed CI receipt drift");
- assert.equal(live?.controller_commit,candidate?.source_verification?.latest_checked?.engine_sha,"Controller release commit not independently tracked");
+ // Historical Landing release was approved on its own immutable controller SHA.
+ // New current-main Engine/SDK commits must never rewrite or inherit that Cloudflare proof.
+ const releaseController="378b45edadbb8865c35b0f8e7f8bd9bfb4c4876b";
+ assert.equal(live?.controller_commit,releaseController,"Landing live controller release SHA was overwritten");
+ assert.equal(observed?.owner_release_permission?.last_release_controller_sha,releaseController,
+  "Actual owner-authorized Landing release controller must remain immutable");
+ assert.match(candidate?.source_verification?.latest_checked?.engine_sha||"",/^[a-f0-9]{40}$/,
+  "Current Controller source SHA missing");
+ assert.equal(observed?.engine_new_source?.latest_controller_source_sha,
+  candidate.source_verification.latest_checked.engine_sha,
+  "Current controller CI source must be tracked separately from deployed Landing controller");
  assert.equal(live?.source_sha,sha,"Landing live source SHA mismatch");
  assert.equal(live?.source_tree,tree,"Landing live Git tree mismatch");
  assert.equal(live?.workflow_run_id,39988778625,"Landing actual Cloudflare workflow run mismatch");
