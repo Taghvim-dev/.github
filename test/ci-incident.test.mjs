@@ -63,3 +63,14 @@ test("T0 detects owner issue_comment release-dispatch failure without user repor
  assert.equal(classify({...opts,run:{...issue,conclusion:"success"}}),"close");
  assert.equal(classify({...opts,run:{...issue,head_repository:{full_name:"outside/evil"}}}),"ignore");
 });
+
+test("T0 scheduled live-readiness failures open a durable incident and recovered same-head runs close it", () => {
+ const timed={...run,event:"schedule",head_branch:"main",name:"t0-live-readiness",workflow_id:920,id:405};
+ const opts={run:timed,currentSha:run.head_sha,recent:[timed],repository:repo,openPulls:[]};
+ assert.equal(classify(opts),"open");
+ assert.equal(classify({...opts,run:{...timed,conclusion:"success"}}),"close");
+ assert.equal(classify({...opts,currentSha:"ee".repeat(20)}),"ignore");
+ assert.equal(classify({...opts,run:{...timed,head_branch:"feature"}}),"ignore");
+ const newer={...timed,id:406,run_number:19,conclusion:"success"};
+ assert.equal(classify({...opts,recent:[timed,newer]}),"ignore");
+});
