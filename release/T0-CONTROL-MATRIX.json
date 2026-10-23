@@ -652,7 +652,7 @@
       "engine_source_ci_run": "40034901734",
       "merged_pr": "Taghvim-dev/engine#154",
       "migration": "migrations/0012_resource_slot_ledger.sql",
-      "production_migration_attested": false,
+      "production_migration_attested": true,
       "openapi_endpoint_added": false,
       "sdk_widget_unavailable": [
         "availability",
@@ -660,8 +660,20 @@
         "workflow-run",
         "agent-execution"
       ],
-      "scope": "SOURCE_ONLY. Tenant-isolated D1 resource, time-slot, hold/cancel/confirm ledger with parallel-writer and idempotency tests; no public API or live bookability.",
-      "ga_approved": false
+      "scope": "T0 source, D1 migration 0012, Cloudflare Sandbox and Engine Production attested; private capacity foundation only. All four public widget backends still missing, no booking/availability entitlement or GA claim.",
+      "ga_approved": false,
+      "sandbox_promotion_verified": true,
+      "release_run": "40035183580",
+      "release_source_sha": "9d4f0a0c5afc0085b9566460e88db11ff767c0ab",
+      "release_result": "SANDBOX_AND_PRODUCTION_SUCCESS",
+      "production_checkpoint": "postdeploy_verified",
+      "production_checkpoint_digest": "e4554b67494523a768bbd98b7d1164f7f09c5d0945c6bdbeb38f240fa6949423",
+      "d1_applied_ledger_digest": "09daa89ac07d3aec6cf21ba532456cde1a0249c33abe9e5d28f0c3325d36b434",
+      "d1_recovery_receipt_digest": "6a1e8fa74740e078d009275d0f73ad333b89da105891bfb8c77d6036590f4f91",
+      "protected_run_evidence_artifact_digest": "816e1d0326f22325787380dc5ad9dd251c2859bdff38a86f483ff0f046a15610",
+      "protected_run_sandbox_artifact_digest": "f646eab9bcba178d5c37020ece16434dc016618155e9cf5744282cc1e14e4f19",
+      "owner_release_receipt_comment": "6376216441",
+      "live_api_readonly_smoke": "SUCCESS"
     }
   },
   "production_d1_identity": {
