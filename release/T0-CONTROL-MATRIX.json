@@ -4,7 +4,7 @@
   "product": "Taghvim.dev",
   "contract_version": "2.1.0",
   "current_source": {
-    "engine_main_sha": "2642f537fac2302b7d8db6b10c06320a8b20be66",
+    "engine_main_sha": "378b45edadbb8865c35b0f8e7f8bd9bfb4c4876b",
     "landing_main_sha": "41657131c23d716892032dc85c3cd9909c79dc0f",
     "shared_policy_sha": "c195c8bfde573b6195bd1b3bd00e3535accc9040",
     "prewrite_source_policy_sha": "f3bc8d18c5c31fd1125dd4da4887c86b9e3f8447"
@@ -196,7 +196,7 @@
       "test": [
         "engine/test/release-identity.test.mjs"
       ],
-      "source_ci_run": "39977313854",
+      "source_ci_run": "39988593486",
       "live_evidence": null
     },
     {
@@ -216,7 +216,7 @@
       ],
       "source_ci_run": "39691890610",
       "dependent_component_ci": {
-        "engine": "39977313854",
+        "engine": "39988593486",
         "landing": "39976195222"
       },
       "policy_main_sha": "f3bc8d18c5c31fd1125dd4da4887c86b9e3f8447",
@@ -241,7 +241,7 @@
       "source_ci_run": "39691890610",
       "reviewed_action_main_sha": "f3bc8d18c5c31fd1125dd4da4887c86b9e3f8447",
       "component_source_ci": {
-        "engine": "39977313854",
+        "engine": "39988593486",
         "landing": "39976195222"
       },
       "live_evidence": null,
@@ -272,7 +272,7 @@
       ],
       "package_contract_version": "2.1.0",
       "dependent_component_ci": {
-        "engine": "39977313854",
+        "engine": "39988593486",
         "landing": "39976195222",
         "SDK": "39695120246",
         "CLI": "39695189982",
@@ -293,7 +293,7 @@
   },
   "post_release_observation_20261023": {
     "observed_at": "2026-10-23",
-    "scope": "engine_new_source_live_and_landing_new_source_pending; early_access_only; no_general_availability",
+    "scope": "engine_0010_and_landing_0004_deployed_on_cloudflare; early_access_only; no_GA",
     "engine_production": {
       "source_sha": "ed11999731930ee9674a7cb887a19322bffcf7a8",
       "release_run": "39849513450",
@@ -364,16 +364,19 @@
         "billing_certified": false,
         "ga_approved": false
       },
-      "live_schema_verified": true
+      "live_schema_verified": true,
+      "latest_controller_source_sha": "378b45edadbb8865c35b0f8e7f8bd9bfb4c4876b",
+      "latest_controller_ci_run": "39988593486",
+      "controller_only_change_not_api_worker": true
     },
     "landing_new_source": {
       "sha": "41657131c23d716892032dc85c3cd9909c79dc0f",
       "ci_run": "39976195222",
       "consent_unsubscribe_candidate": true,
       "migration": "0004_unsubscribe_tokens.sql",
-      "production_deployed": false,
+      "production_deployed": true,
       "ci_scope": "merged_main_landing_verify_success",
-      "production_schema_last_verified": "3/3",
+      "production_schema_last_verified": "4/4",
       "target_schema_for_new_source": "4/4",
       "readiness_schema_gate": "audience_unsubscribe_tokens + audience_opt_out; HTTP 503 if missing",
       "source_pr": "Taghvim-dev/landing#92",
@@ -384,26 +387,72 @@
         "0003_updates_opt_in.sql",
         "0004_unsubscribe_tokens.sql"
       ],
-      "migration_manifest_pr": "Taghvim-dev/landing#92"
+      "migration_manifest_pr": "Taghvim-dev/landing#92",
+      "live_schema_verified": true,
+      "current_production_release": {
+        "controller_commit": "378b45edadbb8865c35b0f8e7f8bd9bfb4c4876b",
+        "source_sha": "41657131c23d716892032dc85c3cd9909c79dc0f",
+        "source_tree": "0b6408988b3955386713a2efd87e6dc04a51bf56",
+        "owner_approval_comment_id": 6369899290,
+        "workflow_run_id": 39988778625,
+        "workflow_event": "issue_comment",
+        "admission_job": "success",
+        "sandbox_job": "success",
+        "production_job": "success",
+        "production_smoke": "LANDING_2_1_PRODUCTION_SMOKE_PASS",
+        "d1_database_name": "taghvim-web",
+        "d1_database_id": "13bac632-9138-485f-9f6d-eda7375d0cf2",
+        "applied_migration": "0004_unsubscribe_tokens.sql",
+        "d1_migrations": "4/4",
+        "d1_integrity": "pass",
+        "workers_at_100_percent": {
+          "mail": "ab4e3b94-1481-44d4-ba16-a37a38d7747e",
+          "comms": "6f11734c-27ef-49bc-8dc9-46299fe8c184",
+          "web": "81ead940-47b0-4405-8a02-b67a04e2e697"
+        },
+        "sandbox_artifact_id": 12516412703,
+        "sandbox_artifact_sha256": "58a347fc3aa47cef0671b3fe234aa706188a4ee879f4fff1e6b2627e09d7a99f",
+        "production_artifact_id": 12516961808,
+        "production_artifact_sha256": "13a17263d6ff98efb99bfdda3c03e3a0b35bba04ad70c92a261c1ed5c2df5fc1",
+        "live_smoke_checks": {
+          "website": true,
+          "canonical_www": true,
+          "forms_health": true,
+          "forms_d1_and_comms": true,
+          "engine_live": true,
+          "exact_contract": true,
+          "engine_billing": false
+        },
+        "real_subscriber_email_delivery_certified": false,
+        "real_customer_self_service_onboarding_certified": false,
+        "payments_certified": false,
+        "ga_approved": false
+      },
+      "release_scope": "Production early-access forms and Free API core only; real subscriber deliverability and GA not certified"
     },
     "owner_release_permission": {
       "controller": "Taghvim-dev/engine",
       "cloudflare_credentials_engine_only": true,
       "authenticated_owner_approval_required": true,
       "independent_review_pending": "Taghvim-dev/engine#111",
-      "automatic_push_can_mutate_cloudflare": false
+      "automatic_push_can_mutate_cloudflare": false,
+      "last_release_controller_sha": "378b45edadbb8865c35b0f8e7f8bd9bfb4c4876b",
+      "last_owner_command_comment_id": 6369899290,
+      "last_approved_landing_workflow_run": 39988778625
     },
     "onboarding_scope": "source-tested invitation, not published self-service",
     "checkout_certified": false,
     "general_availability_approved": false,
-    "release_boundary": "current_main_source_candidate_separate_from_last_successfully_observed_production_release",
+    "release_boundary": "latest_engine_controller_source_is_newer_than_deployed_api_worker; both_product_runtime_components_have_attested_production_receipts",
     "current_source_not_yet_deployed": true,
-    "live_schema_for_new_source_verified": false,
-    "promotion_requires": "Engine-only owner-authenticated manual release; Sandbox migrations and smoke first, immutable evidence and independent release approval before Production",
-    "remote_new_migrations_status": "ENGINE_0010_REMOTE_VERIFIED_LANDING_0004_NOT_DEPLOYED",
+    "live_schema_for_new_source_verified": true,
+    "promotion_requires": "Future releases require authenticated owner, same-run Sandbox migration and D1 backup/prefix/ledger, Production smoke and approvals; GA remains prohibited",
+    "remote_new_migrations_status": "ENGINE_0010_AND_LANDING_0004_REMOTE_VERIFIED",
     "production_promotion_authorized": false,
-    "last_source_sync": "2026-10-23T15:19:35Z",
-    "release_ledger_source_pins_still_require_independent_re_review": true
+    "last_source_sync": "2026-10-23T16:44:00Z",
+    "release_ledger_source_pins_still_require_independent_re_review": true,
+    "both_product_components_live": true,
+    "current_source_not_yet_deployed_scope": "LATEST_ENGINE_MAIN_CONTROLLER_CHANGE_NOT_API_WORKER; production Engine API remains deployed SHA 2642f537, Landing source 41657131"
   },
   "production_d1_identity": {
     "database_name": "taghvim-engine",
