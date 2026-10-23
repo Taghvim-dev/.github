@@ -45,8 +45,8 @@
   "source_verification": {
     "date": "2026-10-23",
     "phase": "source-integrated-not-deployed",
-    "engine_main_merge_sha": "9bef81578ee0b745f4c88417a709e2c24464e9bc",
-    "engine_offline_ci_run": "40021619685",
+    "engine_main_merge_sha": "92051bbba2c1cc14bffee4cd88989a187f03b6bc",
+    "engine_offline_ci_run": "40025953883",
     "engine_live_gate_ci_run": "39439068311",
     "landing_main_merge_sha": "30cc7cfa8ecbfccaf0cbb8125945dda74892613d",
     "landing_integration_merge_sha": "e380b5f3553b98faf35adeccd9f6a25440a778a4",
@@ -149,8 +149,8 @@
     },
     "latest_checked": {
       "date": "2026-10-23",
-      "engine_sha": "9bef81578ee0b745f4c88417a709e2c24464e9bc",
-      "engine_ci": "40021619685",
+      "engine_sha": "92051bbba2c1cc14bffee4cd88989a187f03b6bc",
+      "engine_ci": "40025953883",
       "landing_sha": "30cc7cfa8ecbfccaf0cbb8125945dda74892613d",
       "landing_ci": "40015615331",
       "shared_release_actions_sha": "c195c8bfde573b6195bd1b3bd00e3535accc9040",
@@ -194,10 +194,10 @@
     },
     "engine_package_contract_identity": {
       "status": "SOURCE_TESTED_ENGINE_LIVE_VERIFIED",
-      "source_main_sha": "9bef81578ee0b745f4c88417a709e2c24464e9bc",
+      "source_main_sha": "92051bbba2c1cc14bffee4cd88989a187f03b6bc",
       "reviewed_pr": "Taghvim-dev/engine #146 source only; new Cloudflare runtime not yet re-attested",
-      "source_test_sha": "9bef81578ee0b745f4c88417a709e2c24464e9bc",
-      "ci_run": "40021619685",
+      "source_test_sha": "92051bbba2c1cc14bffee4cd88989a187f03b6bc",
+      "ci_run": "40025953883",
       "api_version": "2.1.0",
       "package_version": "2.1.0",
       "lock_root_version": "2.1.0",
@@ -210,9 +210,9 @@
       "policy_main_sha": "f3bc8d18c5c31fd1125dd4da4887c86b9e3f8447",
       "policy_pr": "Taghvim-dev/.github PR #47",
       "policy_test_run": "39691890610",
-      "engine_main_sha": "9bef81578ee0b745f4c88417a709e2c24464e9bc",
-      "engine_reviewed_head": "9bef81578ee0b745f4c88417a709e2c24464e9bc",
-      "engine_ci_run": "40021619685",
+      "engine_main_sha": "92051bbba2c1cc14bffee4cd88989a187f03b6bc",
+      "engine_reviewed_head": "92051bbba2c1cc14bffee4cd88989a187f03b6bc",
+      "engine_ci_run": "40025953883",
       "landing_main_sha": "30cc7cfa8ecbfccaf0cbb8125945dda74892613d",
       "landing_reviewed_head": "30cc7cfa8ecbfccaf0cbb8125945dda74892613d",
       "landing_ci_run": "40015615331",
@@ -781,8 +781,8 @@
     },
     "widget_sdk_api_integration_20261023": {
       "status": "SOURCE_TESTED_NOT_RUNTIME_ATTESTED",
-      "engine_main_sha": "9bef81578ee0b745f4c88417a709e2c24464e9bc",
-      "engine_ci": "40021619685",
+      "engine_main_sha": "92051bbba2c1cc14bffee4cd88989a187f03b6bc",
+      "engine_ci": "40025953883",
       "sdk_main_sha": "a0fb737f061f39abfc77a432796a62217625fd5e",
       "sdk_ci": "40018523332",
       "cookbooks_main_sha": "30df73398fac533dd85ab36481506672474fccc9",
@@ -790,7 +790,7 @@
       "widget_embed_supported_in_sdk": true,
       "public_sdk_widget_route_count": 12,
       "protected_sandbox_smoke_source": "Taghvim-dev/engine#146",
-      "verified_actual_remote_widget_receipt": false,
+      "verified_actual_remote_widget_receipt": true,
       "canonical_missing_backend": [
         "booking",
         "availability",
@@ -798,7 +798,10 @@
         "agent-execution"
       ],
       "transaction_delivery_verified": false,
-      "ga_approved": false
+      "ga_approved": false,
+      "remote_widget_receipt_source_sha": "9bef81578ee0b745f4c88417a709e2c24464e9bc",
+      "remote_widget_receipt_run_id": "40022082871",
+      "current_engine_main_runtime_certified": false
     }
   },
   "package_identity": {
@@ -806,10 +809,10 @@
     "source_only": true,
     "remote_runtime_attested": false,
     "engine": {
-      "commit": "9bef81578ee0b745f4c88417a709e2c24464e9bc",
+      "commit": "92051bbba2c1cc14bffee4cd88989a187f03b6bc",
       "package": "2.1.0",
       "lock": "2.1.0",
-      "ci": "40021619685"
+      "ci": "40025953883"
     },
     "landing": {
       "commit": "30cc7cfa8ecbfccaf0cbb8125945dda74892613d",
@@ -912,8 +915,8 @@
         "ga_approved": false
       },
       "live_schema_verified": true,
-      "latest_controller_source_sha": "9bef81578ee0b745f4c88417a709e2c24464e9bc",
-      "latest_controller_ci_run": "40021619685",
+      "latest_controller_source_sha": "92051bbba2c1cc14bffee4cd88989a187f03b6bc",
+      "latest_controller_ci_run": "40025953883",
       "controller_only_change_not_api_worker": true,
       "current_source_only_ci_scope": "current Engine main + immutable SDK and Cookbooks exact SHA/CI source success; Cloudflare API Worker still historical 2642f537",
       "current_source_tests": [
@@ -1027,6 +1030,28 @@
     "sdk_publication_status": "source_preview; npm_PyPI_not_published; real_python_sdk_cloudflare_sandbox_retest_required",
     "sdk_current_main_ci_run": "40018523332",
     "cli_current_source_commit": "d723958869b82d9b92907fed6689b32790f0491c",
-    "cli_current_main_ci_run": "40008793826"
+    "cli_current_main_ci_run": "40008793826",
+    "workerd_runtime_and_widget_sandbox_evidence": {
+      "scope": "Cloudflare owner-protected synthetic Sandbox Widget SDK/API E2E only",
+      "evidence_class": "CLOUDFLARE_SANDBOX_VERIFIED",
+      "controlled_release_run_id": "40022082871",
+      "controlled_sandbox_job_id": "120648901255",
+      "source_sha": "9bef81578ee0b745f4c88417a709e2c24464e9bc",
+      "public_sdk_sha": "a0fb737f061f39abfc77a432796a62217625fd5e",
+      "cookbook_sha": "30df73398fac533dd85ab36481506672474fccc9",
+      "sdk_javascript_verified": true,
+      "sdk_python_verified": true,
+      "widget_remote_positive": 10,
+      "widget_entitlement_denials": 2,
+      "widget_missing_backend_blocked": 4,
+      "browser_session_gateway_to_tenant_sdk_live_api_verified": true,
+      "synthetic_key_issue_and_revoke_verified": true,
+      "webhook_delivery_verified": false,
+      "expiry_email_delivery_verified": false,
+      "new_workerd_only_main_sha": "92051bbba2c1cc14bffee4cd88989a187f03b6bc",
+      "new_main_source_remote_released": false,
+      "landing_all_widgets_api_backed_verified": false,
+      "general_availability_approved": false
+    }
   }
 }
