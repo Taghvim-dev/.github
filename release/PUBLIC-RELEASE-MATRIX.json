@@ -193,9 +193,9 @@
       "credential_cleanup_ci_run": "39684217261"
     },
     "engine_package_contract_identity": {
-      "status": "SOURCE_TESTED_RUNTIME_NOT_CURRENT_SOURCE_CERTIFIED",
+      "status": "SOURCE_TESTED_ENGINE_LIVE_VERIFIED",
       "source_main_sha": "61fdc1ef21a3542442f70d7b24e77bf596995263",
-      "reviewed_pr": "Taghvim-dev/engine#141 source only",
+      "reviewed_pr": "Taghvim-dev/engine#141 source-only widget-key authorization fix (historic live receipt distinct)",
       "source_test_sha": "3893162633f42ab4e26d911a0f8f9f5b089551f8",
       "ci_run": "40018471346",
       "api_version": "2.1.0",
