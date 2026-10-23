@@ -1,0 +1,36 @@
+import test from "node:test";
+import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
+
+const read = path => JSON.parse(readFileSync(new URL("../release/" + path, import.meta.url)));
+const pub = read("PUBLIC-RELEASE-MATRIX.json");
+const t0 = read("T0-CONTROL-MATRIX.json");
+
+test("T0 release matrices distinguish current source from historically deployed Cloudflare Workers", () => {
+  const a = pub.post_release_observation_20261023;
+  const b = t0.post_release_observation_20261023;
+  assert.deepEqual(a, b, "single canonical evidence record required");
+  assert.equal(pub.general_availability_approved, false);
+  assert.equal(t0.general_availability_approved, false);
+  assert.equal(a.current_source_not_yet_deployed, true);
+  assert.equal(a.live_schema_for_new_source_verified, false);
+  assert.equal(a.engine_new_source.production_deployed, false);
+  assert.equal(a.landing_new_source.production_deployed, false);
+  assert.notEqual(a.engine_new_source.sha, a.engine_production.source_sha);
+  assert.notEqual(a.landing_new_source.sha, a.landing_production.source_sha);
+  assert.equal(a.engine_production.version, "2.1.0");
+  assert.equal(a.landing_production.version, "2.1.0");
+});
+
+test("release gate requires newly added 0010 and 0004 D1 schemas; older live migration receipts cannot count", () => {
+  const a = pub.post_release_observation_20261023;
+  const engine = a.engine_new_source, landing = a.landing_new_source;
+  assert.equal(engine.production_schema_last_verified, "9/9");
+  assert.equal(engine.target_schema_for_new_source, "10/10");
+  assert.equal(engine.migration, "0010_developer_invitations.sql");
+  assert.equal(landing.production_schema_last_verified, "3/3");
+  assert.equal(landing.target_schema_for_new_source, "4/4");
+  assert.equal(landing.migration, "0004_unsubscribe_tokens.sql");
+  assert.match(a.promotion_requires, /owner-authenticated/);
+  assert.equal(a.general_availability_approved, false);
+});
