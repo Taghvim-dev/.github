@@ -4,7 +4,7 @@
   "product": "Taghvim.dev",
   "contract_version": "2.1.0",
   "current_source": {
-    "engine_main_sha": "c8acfc63b408c83404013f0b63ee154ad62faf9f",
+    "engine_main_sha": "9d4f0a0c5afc0085b9566460e88db11ff767c0ab",
     "landing_main_sha": "00f0e3fc75e09c85f7f2bf03d3005c6f6948f540",
     "shared_policy_sha": "c195c8bfde573b6195bd1b3bd00e3535accc9040",
     "prewrite_source_policy_sha": "f3bc8d18c5c31fd1125dd4da4887c86b9e3f8447"
@@ -196,7 +196,7 @@
       "test": [
         "engine/test/release-identity.test.mjs"
       ],
-      "source_ci_run": "40033867300",
+      "source_ci_run": "40034901734",
       "live_evidence": null
     },
     {
@@ -216,7 +216,7 @@
       ],
       "source_ci_run": "39691890610",
       "dependent_component_ci": {
-        "engine": "40033867300",
+        "engine": "40034901734",
         "landing": "40032106855"
       },
       "policy_main_sha": "f3bc8d18c5c31fd1125dd4da4887c86b9e3f8447",
@@ -241,7 +241,7 @@
       "source_ci_run": "39691890610",
       "reviewed_action_main_sha": "f3bc8d18c5c31fd1125dd4da4887c86b9e3f8447",
       "component_source_ci": {
-        "engine": "40033867300",
+        "engine": "40034901734",
         "landing": "40032106855"
       },
       "live_evidence": null,
@@ -272,7 +272,7 @@
       ],
       "package_contract_version": "2.1.0",
       "dependent_component_ci": {
-        "engine": "40033867300",
+        "engine": "40034901734",
         "landing": "40032106855",
         "SDK": "40028869453",
         "CLI": "40008793826",
@@ -365,8 +365,8 @@
         "ga_approved": false
       },
       "live_schema_verified": true,
-      "latest_controller_source_sha": "c8acfc63b408c83404013f0b63ee154ad62faf9f",
-      "latest_controller_ci_run": "40033867300",
+      "latest_controller_source_sha": "9d4f0a0c5afc0085b9566460e88db11ff767c0ab",
+      "latest_controller_ci_run": "40034901734",
       "controller_only_change_not_api_worker": true,
       "current_source_only_ci_scope": "current Engine main + immutable SDK and Cookbooks exact SHA/CI source success; Cloudflare API Worker still historical 2642f537",
       "current_source_tests": [
@@ -504,13 +504,13 @@
       "general_availability_approved": false
     },
     "current_source_reconciliation": {
-      "source_sha_engine": "c8acfc63b408c83404013f0b63ee154ad62faf9f",
-      "source_ci_engine": "40033867300",
+      "source_sha_engine": "9d4f0a0c5afc0085b9566460e88db11ff767c0ab",
+      "source_ci_engine": "40034901734",
       "source_sha_sdk": "d5bda0b72687fc1c5feb2f34e27ba852d27aeaab",
       "source_ci_sdk": "40028869453",
       "source_sha_cookbooks": "803e054e51457049bd26cd7c9003f7ecf8988a2b",
       "source_ci_cookbooks": "40029335220",
-      "scope": "Current source/CI attested only; release owner dispatch requires exact engine SHA; no automatic production attestation",
+      "scope": "Current engine source/CI only; D1 resource migration 0012 NOT YET in Production; no booking API or GA.",
       "production_attested": false,
       "source_sha_landing": "00f0e3fc75e09c85f7f2bf03d3005c6f6948f540",
       "source_ci_landing": "40032106855"
@@ -645,6 +645,23 @@
       "billing_certified": false,
       "general_availability_approved": false,
       "scope": "Source and remote Cloudflare Sandbox/Production release evidence; no real-user invitation delivery or General Availability claim"
+    },
+    "resource_capacity_source": {
+      "kind": "resource_inventory_foundation_not_public_booking",
+      "engine_main_sha": "9d4f0a0c5afc0085b9566460e88db11ff767c0ab",
+      "engine_source_ci_run": "40034901734",
+      "merged_pr": "Taghvim-dev/engine#154",
+      "migration": "migrations/0012_resource_slot_ledger.sql",
+      "production_migration_attested": false,
+      "openapi_endpoint_added": false,
+      "sdk_widget_unavailable": [
+        "availability",
+        "booking",
+        "workflow-run",
+        "agent-execution"
+      ],
+      "scope": "SOURCE_ONLY. Tenant-isolated D1 resource, time-slot, hold/cancel/confirm ledger with parallel-writer and idempotency tests; no public API or live bookability.",
+      "ga_approved": false
     }
   },
   "production_d1_identity": {
