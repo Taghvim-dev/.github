@@ -4,7 +4,7 @@
   "product": "Taghvim.dev",
   "contract_version": "2.1.0",
   "current_source": {
-    "engine_main_sha": "6e51940de359d257da1d557b794c216e2150d243",
+    "engine_main_sha": "61f33bc448ba4676189d3f389f01af6b934fa04e",
     "landing_main_sha": "30cc7cfa8ecbfccaf0cbb8125945dda74892613d",
     "shared_policy_sha": "c195c8bfde573b6195bd1b3bd00e3535accc9040",
     "prewrite_source_policy_sha": "f3bc8d18c5c31fd1125dd4da4887c86b9e3f8447"
@@ -365,8 +365,8 @@
         "ga_approved": false
       },
       "live_schema_verified": true,
-      "latest_controller_source_sha": "6e51940de359d257da1d557b794c216e2150d243",
-      "latest_controller_ci_run": "40009091830",
+      "latest_controller_source_sha": "61f33bc448ba4676189d3f389f01af6b934fa04e",
+      "latest_controller_ci_run": "40017525006",
       "controller_only_change_not_api_worker": true,
       "current_source_only_ci_scope": "current Engine main + immutable SDK and Cookbooks exact SHA/CI source success; Cloudflare API Worker still historical 2642f537",
       "current_source_tests": [
