@@ -1060,23 +1060,8 @@
       "source_ci_sdk": "40028869453",
       "source_sha_cookbooks": "803e054e51457049bd26cd7c9003f7ecf8988a2b",
       "source_ci_cookbooks": "40029335220",
-      "scope": "current source/controller reviewed; Landing Cloudflare promotion not yet executed; GA forbidden",
-      "production_attested": false,
-      "source_sha_landing": "77f5afd18b10deb1e1a22741c7083a377ae5da1b",
-      "source_ci_landing": "40030944473"
-    },
-    "latest_engine_reconciliation_production": {
-      "source_sha": "4b6d824b11941b45c20be32adb7b04739953ae66",
-      "workflow_run": "40030532123",
-      "owner_approval_comment": "6375567207",
-      "durable_bot_receipt_comment": "6375617325",
-      "sandbox_job": "success",
-      "production_job": "success",
-      "postdeploy_checkpoint_sha256": "588d2c096bc5326fbfa27b4e19ebcf82034fef7befe3c089144eaf0c5d11cd50",
-      "d1_applied_ledger_sha256": "1c163a6ffa6c3ef3574774080af4a5f0e9253205f6dbfc692ca5b5c495f612dd",
-      "d1_recovery_sha256": "06cf5b3d88d6adf23255550fe95b50c446d124fa41bd45bdb5013585829d0ddf",
-      "scope": "Engine API production and SDK/Widget real Sandbox verified; later controller source and Landing hero not yet live",
-      "general_availability_approved": false
+      "scope": "source_CI_only; Cloudflare production for this source NOT attested; GA forbidden",
+      "production_attested": false
     }
   }
 }
