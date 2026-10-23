@@ -274,9 +274,9 @@
       "dependent_component_ci": {
         "engine": "40018471346",
         "landing": "40015615331",
-        "SDK": "40014892972",
+        "SDK": "40018523332",
         "CLI": "40008793826",
-        "cookbooks": "40015679763"
+        "cookbooks": "40018845699"
       },
       "source_ci_run": "40002313088",
       "live_evidence": null
