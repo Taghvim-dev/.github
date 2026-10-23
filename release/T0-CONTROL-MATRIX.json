@@ -4,7 +4,7 @@
   "product": "Taghvim.dev",
   "contract_version": "2.1.0",
   "current_source": {
-    "engine_main_sha": "ece80ca1d1fc885bbb01b84efbf88aa69f63d6d1",
+    "engine_main_sha": "3dd2c87bb5c162ff8bed99e5efb1fcbc16c90e4d",
     "landing_main_sha": "41657131c23d716892032dc85c3cd9909c79dc0f",
     "shared_policy_sha": "c195c8bfde573b6195bd1b3bd00e3535accc9040",
     "prewrite_source_policy_sha": "f3bc8d18c5c31fd1125dd4da4887c86b9e3f8447"
@@ -196,7 +196,7 @@
       "test": [
         "engine/test/release-identity.test.mjs"
       ],
-      "source_ci_run": "39998267241",
+      "source_ci_run": "39999549753",
       "live_evidence": null
     },
     {
@@ -216,7 +216,7 @@
       ],
       "source_ci_run": "39691890610",
       "dependent_component_ci": {
-        "engine": "39998267241",
+        "engine": "39999549753",
         "landing": "39976195222"
       },
       "policy_main_sha": "f3bc8d18c5c31fd1125dd4da4887c86b9e3f8447",
@@ -241,7 +241,7 @@
       "source_ci_run": "39691890610",
       "reviewed_action_main_sha": "f3bc8d18c5c31fd1125dd4da4887c86b9e3f8447",
       "component_source_ci": {
-        "engine": "39998267241",
+        "engine": "39999549753",
         "landing": "39976195222"
       },
       "live_evidence": null,
@@ -272,7 +272,7 @@
       ],
       "package_contract_version": "2.1.0",
       "dependent_component_ci": {
-        "engine": "39998267241",
+        "engine": "39999549753",
         "landing": "39976195222",
         "SDK": "39695120246",
         "CLI": "39695189982",
@@ -365,8 +365,8 @@
         "ga_approved": false
       },
       "live_schema_verified": true,
-      "latest_controller_source_sha": "ece80ca1d1fc885bbb01b84efbf88aa69f63d6d1",
-      "latest_controller_ci_run": "39998267241",
+      "latest_controller_source_sha": "3dd2c87bb5c162ff8bed99e5efb1fcbc16c90e4d",
+      "latest_controller_ci_run": "39999549753",
       "controller_only_change_not_api_worker": true,
       "current_source_only_ci_scope": "same-main-ubuntu-24.04-and-ubuntu-26.04-success; Cloudflare API Worker still SHA 2642f537",
       "current_source_tests": [
@@ -375,7 +375,8 @@
       ],
       "public_sdk_sandbox_e2e_approved_for_release_source_only": true,
       "public_sdk_sandbox_e2e_remote_verified": false,
-      "last_engine_source_ci_run": "39998267241"
+      "last_engine_source_ci_run": "39998267241",
+      "safe_sdk_stage_evidence_source": "Taghvim-dev/engine#124"
     },
     "landing_new_source": {
       "sha": "41657131c23d716892032dc85c3cd9909c79dc0f",
@@ -457,7 +458,7 @@
     "promotion_requires": "Future releases require authenticated owner, same-run Sandbox migration and D1 backup/prefix/ledger, Production smoke and approvals; GA remains prohibited",
     "remote_new_migrations_status": "ENGINE_0010_AND_LANDING_0004_REMOTE_VERIFIED",
     "production_promotion_authorized": false,
-    "last_source_sync": "2026-10-23T17:52:00Z",
+    "last_source_sync": "2026-10-23T18:02:00Z",
     "release_ledger_source_pins_still_require_independent_re_review": true,
     "both_product_components_live": true,
     "current_source_not_yet_deployed_scope": "LATEST_ENGINE_MAIN_CONTROLLER_CHANGE_NOT_API_WORKER; production Engine API remains deployed SHA 2642f537, Landing source 41657131",
