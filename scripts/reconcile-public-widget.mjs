@@ -145,9 +145,9 @@ export async function reconcilePublicWidget(){
    base_tree:base.tree.sha,
    tree:[
      {path:"release/PUBLIC-RELEASE-MATRIX.json",mode:"100644",type:"blob",
-      content:JSON.stringify(plan.release,null,2)+"\\n"},
+      content:JSON.stringify(plan.release,null,2)+"\n"},
      {path:"release/T0-CONTROL-MATRIX.json",mode:"100644",type:"blob",
-      content:JSON.stringify(plan.controls,null,2)+"\\n"}
+      content:JSON.stringify(plan.controls,null,2)+"\n"}
    ]
  });
  if(!SHA.test(tree?.sha||""))fail("invalid candidate Git tree");
