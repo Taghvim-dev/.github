@@ -13,11 +13,15 @@ test("T0 release matrices distinguish current source from historically deployed 
   assert.equal(pub.general_availability_approved, false);
   assert.equal(t0.general_availability_approved, false);
   assert.equal(a.current_source_not_yet_deployed, true);
-  assert.equal(a.live_schema_for_new_source_verified, false);
+  assert.equal(a.live_schema_for_new_source_verified, true);
   assert.equal(a.engine_new_source.production_deployed, true);
   assert.equal(a.engine_new_source.current_production_release.controller_commit, a.engine_new_source.sha);
   assert.equal(a.engine_new_source.current_production_release.d1_migrations, "10/10");
-  assert.equal(a.landing_new_source.production_deployed, false);
+  assert.equal(a.landing_new_source.production_deployed, true);
+  assert.equal(a.landing_new_source.current_production_release.workflow_run_id,39988778625);
+  assert.equal(a.landing_new_source.current_production_release.d1_migrations,"4/4");
+  assert.equal(a.landing_new_source.current_production_release.ga_approved,false);
+  assert.equal(a.engine_new_source.sha!==pub.source_verification.latest_checked.engine_sha,true,"Engine release SHA must not inherit controller main");
   assert.notEqual(a.engine_new_source.sha, a.engine_production.source_sha);
   assert.notEqual(a.landing_new_source.sha, a.landing_production.source_sha);
   assert.equal(a.engine_production.version, "2.1.0");
@@ -30,10 +34,10 @@ test("release gate requires newly added 0010 and 0004 D1 schemas; older live mig
   assert.equal(engine.production_schema_last_verified, "10/10");
   assert.equal(engine.target_schema_for_new_source, "10/10");
   assert.equal(engine.migration, "0010_developer_invitations.sql");
-  assert.equal(landing.production_schema_last_verified, "3/3");
+  assert.equal(landing.production_schema_last_verified, "4/4");
   assert.equal(landing.target_schema_for_new_source, "4/4");
   assert.equal(landing.migration, "0004_unsubscribe_tokens.sql");
-  assert.match(a.promotion_requires, /owner-authenticated/);
+  assert.match(a.promotion_requires, /owner-authenticated|authenticated owner/);
   assert.equal(a.general_availability_approved, false);
 });
 
@@ -55,7 +59,10 @@ test("current main controller embeds the exact released-candidate Landing Git tr
   ]);
   assert.equal(e.push_sandbox_job, "skipped");
   assert.equal(e.push_production_job, "skipped");
-  assert.equal(o.remote_new_migrations_status, "ENGINE_0010_REMOTE_VERIFIED_LANDING_0004_NOT_DEPLOYED");
+  assert.equal(o.remote_new_migrations_status, "ENGINE_0010_AND_LANDING_0004_REMOTE_VERIFIED");
+  assert.equal(o.both_product_components_live,true);
+  assert.equal(o.engine_new_source.latest_controller_source_sha,pub.source_verification.latest_checked.engine_sha);
+  assert.equal(o.current_source_not_yet_deployed_scope.startsWith("LATEST_ENGINE_MAIN_CONTROLLER_CHANGE"),true);
   assert.equal(o.production_promotion_authorized, false);
   assert.equal(o.current_source_not_yet_deployed, true);
 });

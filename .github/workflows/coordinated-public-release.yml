@@ -10,7 +10,9 @@ on:
       - "test/release-runtime-provenance.test.mjs"
       - ".github/workflows/validate.yml"
       - "scripts/verify-engine-live-receipt.mjs"
+      - "scripts/verify-landing-live-receipt.mjs"
       - "test/live-engine-receipt.test.mjs"
+      - "test/live-landing-receipt.test.mjs"
       - "test/source-runtime-separation-20261023.test.mjs"
       - "scripts/release-pins.mjs"
       - "test/release-pins.test.mjs"
@@ -27,7 +29,9 @@ on:
       - "test/release-runtime-provenance.test.mjs"
       - ".github/workflows/validate.yml"
       - "scripts/verify-engine-live-receipt.mjs"
+      - "scripts/verify-landing-live-receipt.mjs"
       - "test/live-engine-receipt.test.mjs"
+      - "test/live-landing-receipt.test.mjs"
       - "test/source-runtime-separation-20261023.test.mjs"
       - "scripts/release-pins.mjs"
       - "test/release-pins.test.mjs"
@@ -80,7 +84,7 @@ jobs:
       - name: Verify immutable deployed Cloudflare source is independent of evolving GitHub SHA
         run: node --test test/release-runtime-provenance.test.mjs
       - name: T0 source/runtime and D1 receipt admission regression tests
-        run: node --test test/source-runtime-separation-20261023.test.mjs test/live-engine-receipt.test.mjs
+        run: node --test test/source-runtime-separation-20261023.test.mjs test/live-engine-receipt.test.mjs test/live-landing-receipt.test.mjs
       - name: Validate cohesive public manifest and exact contract index
         run: node scripts/check-public-release.mjs
       - name: Require full live website ↔ API contract parity on manual request

@@ -14,10 +14,16 @@ export function verifyEngineProductionReceipt({observed,t0,candidate}) {
   const checked=candidate?.source_verification?.latest_checked;
   const admission=candidate?.source_verification?.t0_cross_repo_source_admission;
   assert.match(engine.sha||"",/^[0-9a-f]{40}$/,"Engine observed SHA malformed");
-  assert.equal(engine.sha,checked?.engine_sha,"Live Engine source must match independently admitted current-main SHA");
-  assert.equal(engine.sha,t0?.current_source?.engine_main_sha,"Live Engine source must match T0 current-main SHA");
-  assert.equal(engine.sha,admission?.engine_main_sha,"Live Engine source must match prewrite admission SHA");
-  assert.equal(engine.ci_run,checked?.engine_ci,"Live Engine source must have canonical tested CI run");
+  // Durable execution: Engine's controller main can legitimately advance without
+  // redeploying the API Worker. Its new CI receipt cannot be borrowed as live proof.
+  assert.match(checked?.engine_sha||"",/^[0-9a-f]{40}$/,"Current controller SHA is malformed");
+  assert.equal(checked.engine_sha,t0?.current_source?.engine_main_sha,"Current controller/T0 SHA drift");
+  assert.equal(checked.engine_sha,admission?.engine_main_sha,"Current controller/admission SHA drift");
+  assert.equal(checked.engine_ci,admission?.engine_ci_run,"Current controller/CI drift");
+  assert.equal(engine.ci_run,"39977313854","Deployed Engine must retain its tested release-source CI");
+  assert.equal(engine.latest_controller_source_sha,checked.engine_sha,"New controller source not independently tracked");
+  assert.equal(engine.latest_controller_ci_run,checked.engine_ci,"New controller CI not independently tracked");
+  assert.equal(engine.controller_only_change_not_api_worker,true,"Controller changes must not inherit API deployment proof");
   assert.equal(live?.controller_commit,engine.sha,"Live controller SHA must match tested Engine source");
   assert.equal(live?.production_run_id,39981975548,"Recorded authenticated Engine production run mismatch");
   assert.equal(engine.controller_release_pin_sha,live?.controller_commit,"Engine controller pin must match actual deployment receipt");

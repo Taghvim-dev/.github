@@ -6,6 +6,7 @@ import {execFileSync} from "node:child_process";
 import {resolvePins} from "./release-pins.mjs";
 import {verifyRuntimeSourceBoundary} from "./release-runtime-provenance.mjs";
 import {verifyEngineProductionReceipt} from "./verify-engine-live-receipt.mjs";
+import {verifyLandingProductionReceipt} from "./verify-landing-live-receipt.mjs";
 const candidate=JSON.parse(readFileSync(new URL("../release/PUBLIC-RELEASE-MATRIX.json",import.meta.url)));
 const pinnedCheckouts=resolvePins(candidate);
 const isLive=process.argv.includes("--live");
@@ -36,7 +37,7 @@ assert.equal(observed?.live_readonly_observation?.result,"success");
 // D1 / recovery / postdeploy receipts bind that exact source SHA. A newer source
 // must not inherit historical release evidence from an older Engine deployment.
 verifyEngineProductionReceipt({observed,t0,candidate});
-assert.equal(observed?.landing_new_source?.production_deployed,false,"Unreleased consent migration cannot be marked deployed");
+verifyLandingProductionReceipt({observed,candidate});
 assert.equal(observed?.general_availability_approved,false,"Live read-only proof is not GA approval");
 assert.equal(candidate.general_availability_approved,false,"T0 onboarding remains PREVIEW");
 
@@ -62,7 +63,7 @@ assert.equal(ad.admission_scope,"MUTATION_BLOCKING_SOURCE_ONLY","T0 source-only 
 assert.equal(ad.cross_repo_immutable_ref,true,"T0 ledger reads must use one immutable Git commit");
 assert.equal(ad.post_facto_ga_authorization,false,"T0 forbids retrospective GA authorization");
 const engineRuntime=candidate.source_verification?.engine_production_attestation_20261022;
-if(ad.runtime_cloudflare_gate==="ENGINE_PRODUCTION_VERIFIED_LANDING_NO_GO"){
+if(["ENGINE_PRODUCTION_VERIFIED_LANDING_NO_GO","ENGINE_AND_LANDING_PRODUCTION_VERIFIED_EARLY_ACCESS_NO_GA"].includes(ad.runtime_cloudflare_gate)){
   assert.equal(engineRuntime?.kind,"taghvim_engine_readonly_live_production_evidence","Missing real Engine proof");
   // A previously certified Cloudflare deployment remains real after a newer
   // commit is merged. Current source/CI are NOT automatically live. Never force
@@ -92,7 +93,9 @@ if(ad.runtime_cloudflare_gate==="ENGINE_PRODUCTION_VERIFIED_LANDING_NO_GO"){
   assert.equal(engineRuntime.limits?.payments_certified,false);
   assert.equal(engineRuntime.limits?.landing_forms_certified,false);
   assert.equal(engineRuntime.limits?.general_availability_approved,false);
-  assert.equal(candidate.general_availability_approved,false,"Landing remains NO_GO");
+  assert.equal(candidate.general_availability_approved,false,"GA remains NO_GO");
+  if(ad.runtime_cloudflare_gate==="ENGINE_AND_LANDING_PRODUCTION_VERIFIED_EARLY_ACCESS_NO_GA")
+    assert.equal(observed?.landing_new_source?.production_deployed,true,"Claimed live Landing missing actual deployed receipt");
 } else {
   assert.equal(ad.runtime_cloudflare_gate,"NOT_DISPATCHED","Unrecognized live Cloudflare gate state");
 }
@@ -180,7 +183,7 @@ const identity=candidate.source_verification?.engine_package_contract_identity;
 const current=candidate.source_verification?.latest_checked;
 const identityControl=t0.controls.find(c=>c.id==="T0-IDENTITY-011");
 assert.ok(identityControl&&identityControl.state==="SOURCE_VERIFIED","Missing Engine release identity gate");
-if(ad.runtime_cloudflare_gate==="ENGINE_PRODUCTION_VERIFIED_LANDING_NO_GO"){
+if(["ENGINE_PRODUCTION_VERIFIED_LANDING_NO_GO","ENGINE_AND_LANDING_PRODUCTION_VERIFIED_EARLY_ACCESS_NO_GA"].includes(ad.runtime_cloudflare_gate)){
   assert.equal(identity?.status,"SOURCE_TESTED_ENGINE_LIVE_VERIFIED");
   assert.equal(identity?.live_engine_release,"VERIFIED");
   assert.equal(identity?.live_cloudflare_evidence,engineRuntime.postdeploy_checkpoint_sha256);
