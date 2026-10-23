@@ -31,6 +31,18 @@ flowchart TB
     F --> G
 ```
 
+## 🧪 دریافت API Key و دورهٔ آزمایشی ۳۰روزه | 30-day API trial
+
+**[ثبت‌نام برای دریافت API Key آزمایشی](https://taghvim.dev/#access)** · **[Request API access](https://taghvim.dev/#access)**
+
+<p dir="rtl" lang="fa">در فرم رسمی دسترسی زودهنگام ثبت‌نام کنید تا تأییدیهٔ ثبت درخواست را با ایمیل دریافت کنید. از <strong>۷ روز پس از ثبت‌نام</strong> و پس از احراز آمادگی سرویس، دعوت‌نامهٔ اختصاصی به همان نشانی فرستاده می‌شود. پیوند دعوت‌نامه <strong>۷۲ ساعت و یک‌بارمصرف</strong> است. پس از فعال‌سازی آن، یک Tenant مستقل و کلید <code>tgv_test_…</code> دریافت می‌کنید. <strong>دورهٔ آزمایشی دقیقاً ۳۰ روز از زمان فعال‌سازی شروع می‌شود</strong>؛ تعویض کلید باعث تمدید آن نمی‌شود. کلید در صفحهٔ فعال‌سازی فقط یک بار نمایش داده می‌شود. پس از پایان دوره، دسترسی نیازمند تأیید جدید است؛ حساب یا کلید Production به‌طور خودکار صادر نمی‌شود.</p>
+
+**English:** [Join the early-access waitlist](https://taghvim.dev/#access) → registration confirmation email → eligibility for a one-time emailed invitation **after seven days**, once the protected email and API services are ready → activate the invitation **within 72 hours** → receive a test-only API key and a **30-day trial counted from activation, not registration**. Rotating keys does not reset this deadline. Do not commit API keys, publish them in GitHub issues, or place shared secrets in public browser code. Product announcements require a separate optional opt-in.
+
+[Developer activation portal](https://api.taghvim.dev/developer) · [Test-key console](https://api.taghvim.dev/developer/console) · [API contract](https://api.taghvim.dev/openapi.json) · [Privacy](https://taghvim.dev/#privacy) · [Terms](https://taghvim.dev/#terms) · [Contact](https://taghvim.dev/#contact)
+
+> **Current availability:** The public form collects early-access requests. Timed invitation delivery is not guaranteed until the Landing D1 migration, protected Engine Cron deployment and real email-delivery checks have passed. A signup acknowledgement is not an API key.
+
 ## شروع برای توسعه‌دهندگان
 
 <p dir="rtl" lang="fa">
