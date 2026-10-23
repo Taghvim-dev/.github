@@ -4,7 +4,7 @@
   "product": "Taghvim.dev",
   "contract_version": "2.1.0",
   "current_source": {
-    "engine_main_sha": "3dd2c87bb5c162ff8bed99e5efb1fcbc16c90e4d",
+    "engine_main_sha": "9c89dffb81ffe86b78d611afa7b516e8fd59b122",
     "landing_main_sha": "41657131c23d716892032dc85c3cd9909c79dc0f",
     "shared_policy_sha": "c195c8bfde573b6195bd1b3bd00e3535accc9040",
     "prewrite_source_policy_sha": "f3bc8d18c5c31fd1125dd4da4887c86b9e3f8447"
@@ -196,7 +196,7 @@
       "test": [
         "engine/test/release-identity.test.mjs"
       ],
-      "source_ci_run": "39999549753",
+      "source_ci_run": "40000606444",
       "live_evidence": null
     },
     {
@@ -216,7 +216,7 @@
       ],
       "source_ci_run": "39691890610",
       "dependent_component_ci": {
-        "engine": "39999549753",
+        "engine": "40000606444",
         "landing": "39976195222"
       },
       "policy_main_sha": "f3bc8d18c5c31fd1125dd4da4887c86b9e3f8447",
@@ -241,7 +241,7 @@
       "source_ci_run": "39691890610",
       "reviewed_action_main_sha": "f3bc8d18c5c31fd1125dd4da4887c86b9e3f8447",
       "component_source_ci": {
-        "engine": "39999549753",
+        "engine": "40000606444",
         "landing": "39976195222"
       },
       "live_evidence": null,
@@ -272,7 +272,7 @@
       ],
       "package_contract_version": "2.1.0",
       "dependent_component_ci": {
-        "engine": "39999549753",
+        "engine": "40000606444",
         "landing": "39976195222",
         "SDK": "39695120246",
         "CLI": "39695189982",
@@ -365,17 +365,30 @@
         "ga_approved": false
       },
       "live_schema_verified": true,
-      "latest_controller_source_sha": "3dd2c87bb5c162ff8bed99e5efb1fcbc16c90e4d",
-      "latest_controller_ci_run": "39999549753",
+      "latest_controller_source_sha": "9c89dffb81ffe86b78d611afa7b516e8fd59b122",
+      "latest_controller_ci_run": "40000606444",
       "controller_only_change_not_api_worker": true,
-      "current_source_only_ci_scope": "merged-main Ubuntu 24.04 and 26.04 success; Sandbox real public SDK stage-coded admission PENDING; deployed API Worker remains historical 2642f537",
+      "current_source_only_ci_scope": "same-main Ubuntu 24.04 and 26.04 success; Cloudflare Worker production still 2642f537; Python E2E failure category pending protected Sandbox",
       "current_source_tests": [
         "T0 actual live public Developer pages",
         "actual public SDK/Python/cookbook sandbox E2E pending protected release"
       ],
       "public_sdk_sandbox_e2e_approved_for_release_source_only": true,
       "public_sdk_sandbox_e2e_remote_verified": false,
-      "last_engine_source_ci_run": "39999549753"
+      "last_engine_source_ci_run": "40000606444",
+      "python_cookbook_failure_diagnostics_source_only": true,
+      "python_cookbook_live_failure_source_run": "39999990266",
+      "public_sdk_remote_observation": {
+        "run_id": 39999990266,
+        "source_sha": "3dd2c87bb5c162ff8bed99e5efb1fcbc16c90e4d",
+        "isolated_sandbox_migration": "10/10",
+        "tenant_and_key_lifecycle": "pass",
+        "javascript_sdk": "pass",
+        "javascript_cookbooks": "4/4 pass",
+        "python_cookbook": "fail_unknown_class",
+        "production_job": "not_permitted",
+        "ga_approved": false
+      }
     },
     "landing_new_source": {
       "sha": "41657131c23d716892032dc85c3cd9909c79dc0f",
