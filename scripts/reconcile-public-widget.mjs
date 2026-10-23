@@ -71,13 +71,26 @@ export async function reconcilePublicWidget(){
  if(pulls.length)return {status:"REVIEW_PENDING_EXISTING_PR",pr:pulls[0].number,writes:0};
  const refs=await gh("/repos/"+ROOT+"/git/matching-refs/heads/"+BRANCH);
  if(!Array.isArray(refs))fail("branch inventory unavailable");
- if(refs.length)return {status:"STALE_RECONCILE_BRANCH_REQUIRES_REVIEW",writes:0};
- await gh("/repos/"+ROOT+"/git/refs","POST",{ref:"refs/heads/"+BRANCH,sha:root});
- await gh("/repos/"+ROOT+"/contents/release/PUBLIC-RELEASE-MATRIX.json","PUT",{
-  message:"reconcile(t0): public SDK and Cookbook reviewed source candidate",
-  content:Buffer.from(JSON.stringify(plan.candidate,null,2)+"\n").toString("base64"),
-  sha:canonical.sha,branch:BRANCH
- });
+ const exact=refs.filter(ref=>ref.ref==="refs/heads/"+BRANCH);
+ if(exact.length!==refs.length||exact.length>1)fail("unexpected source reconciliation branch inventory");
+ let botFile=canonical;
+ if(!exact.length) {
+  // Crash after branch creation is recoverable: the next invocation uses the branch.
+  await gh("/repos/"+ROOT+"/git/refs","POST",{ref:"refs/heads/"+BRANCH,sha:root});
+ } else {
+  const refSha=exact[0]?.object?.sha;
+  if(!SHA.test(refSha||""))fail("invalid bot branch SHA");
+  botFile=await content(ROOT,"release/PUBLIC-RELEASE-MATRIX.json",refSha);
+  if(botFile.data?.state!=="PREVIEW"||botFile.data?.general_availability_approved!==false)
+   fail("bot branch changed release approval lifecycle");
+ }
+ const wanted=JSON.stringify(plan.candidate,null,2)+"\n";
+ if(JSON.stringify(botFile.data)!==JSON.stringify(plan.candidate))
+   await gh("/repos/"+ROOT+"/contents/release/PUBLIC-RELEASE-MATRIX.json","PUT",{
+     message:"reconcile(t0): public SDK and Cookbook reviewed source candidate",
+     content:Buffer.from(wanted).toString("base64"),
+     sha:botFile.sha,branch:BRANCH
+   });
  const pr=await gh("/repos/"+ROOT+"/pulls","POST",{
   title:"reconcile(T0): public SDK and Cookbook SHA-pinned source",
   head:BRANCH,base:"main",draft:false,
@@ -85,7 +98,7 @@ export async function reconcilePublicWidget(){
    "), Cookbooks "+cookbooks+" (successful main CI "+cookbooksCi+
    "), exact pinned SDK source. NO_GA, no Cloudflare writes. Independent PR review, central CI and protected Sandbox→Production remain mandatory."
  });
- return {status:"CREATED_REVIEWABLE_SOURCE_PR",pr:pr.number,writes:2,sdk,cookbooks};
+ return {status:"CREATED_REVIEWABLE_SOURCE_PR",pr:pr.number,branch_reused:!!exact.length,writes:2,sdk,cookbooks};
 }
 if(process.argv[1]===fileURLToPath(import.meta.url))
  reconcilePublicWidget().then(x=>console.log("T0_PUBLIC_WIDGET_RECONCILE",JSON.stringify(x)))
