@@ -1,6 +1,6 @@
 import {test} from "node:test";
 import assert from "node:assert/strict";
-import {buildCandidate} from "../scripts/reconcile-public-widget.mjs";
+import {buildCandidate,canResetOrFastForwardBotBranch} from "../scripts/reconcile-public-widget.mjs";
 const a="a".repeat(40), b="b".repeat(40),c="c".repeat(40);
 function matrix(){return {
  state:"PREVIEW",general_availability_approved:false,contract_version:"2.1.0",
@@ -29,4 +29,15 @@ test("malformed SHAs, absent CI proof, and unapproved GA fail closed",()=>{
  assert.throws(()=>buildCandidate({...matrix(),general_availability_approved:true},{sdk:a,sdkCi:11,cookbooks:b,cookbooksCi:12,cookbooksSdkPin:a}));
  assert.throws(()=>buildCandidate(matrix(),{sdk:"main",sdkCi:11,cookbooks:b,cookbooksCi:12,cookbooksSdkPin:a}));
  assert.throws(()=>buildCandidate(matrix(),{sdk:a,sdkCi:0,cookbooks:b,cookbooksCi:12,cookbooksSdkPin:a}));
+});
+
+test("interrupted reconciler only resets its own matrix-only commits, never an unknown actor or open PR",()=>{
+ const bot={commit:{message:"reconcile(t0): public SDK and Cookbook reviewed source candidate"},author:{login:"github-actions[bot]"}};
+ const base={status:"diverged",ahead_by:1,files:[{filename:"release/PUBLIC-RELEASE-MATRIX.json"}],commits:[bot]};
+ assert.equal(canResetOrFastForwardBotBranch(base),"bot_branch_reset");
+ assert.equal(canResetOrFastForwardBotBranch({...base,status:"behind",ahead_by:0,files:[],commits:[]}),"fast_forward");
+ assert.equal(canResetOrFastForwardBotBranch({...base,files:[{filename:"scripts/unsafe.mjs"}]}),null);
+ assert.equal(canResetOrFastForwardBotBranch({...base,commits:[{...bot,author:{login:"another-contributor"}}]}),null);
+ assert.equal(canResetOrFastForwardBotBranch({...base,ahead_by:999}),null);
+ assert.equal(canResetOrFastForwardBotBranch({}),null);
 });
