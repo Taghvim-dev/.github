@@ -19,7 +19,8 @@ export function verifyEngineProductionReceipt({observed,t0,candidate}) {
   assert.equal(engine.sha,admission?.engine_main_sha,"Live Engine source must match prewrite admission SHA");
   assert.equal(engine.ci_run,checked?.engine_ci,"Live Engine source must have canonical tested CI run");
   assert.equal(live?.controller_commit,engine.sha,"Live controller SHA must match tested Engine source");
-  assert.match(String(live?.production_run_id||""),/^[0-9]+$/,"Actual Engine release run required");
+  assert.equal(live?.production_run_id,39981975548,"Recorded authenticated Engine production run mismatch");
+  assert.equal(engine.controller_release_pin_sha,live?.controller_commit,"Engine controller pin must match actual deployment receipt");
   assert.equal(live?.sandbox_job,"success");
   assert.equal(live?.production_job,"success");
   assert.equal(live?.smoke,"success");
