@@ -15,15 +15,25 @@ test("self-consistent arbitrary live controller SHA cannot replace independently
  const x=original(),sha="a".repeat(40);
  x.candidate.post_release_observation_20261023.engine_new_source.sha=sha;
  x.candidate.post_release_observation_20261023.engine_new_source.current_production_release.controller_commit=sha;
- assert.throws(()=>check(x),/independently admitted/);
+ assert.throws(()=>check(x),/Live controller SHA|controller pin/);
 });
 test("receipt must bind T0 main, prewrite admission and canonical source CI",()=>{
  const x=original();x.t0.current_source.engine_main_sha="b".repeat(40);
- assert.throws(()=>check(x),/T0 current-main/);
+ assert.throws(()=>check(x),/Current controller\/T0 SHA drift/);
  const y=original();y.candidate.source_verification.t0_cross_repo_source_admission.engine_main_sha="c".repeat(40);
- assert.throws(()=>check(y),/prewrite admission/);
+ assert.throws(()=>check(y),/Current controller\/admission SHA drift/);
  const z=original();z.candidate.post_release_observation_20261023.engine_new_source.ci_run="999999";
- assert.throws(()=>check(z),/canonical tested CI/);
+ assert.throws(()=>check(z),/Deployed Engine must retain/);
+});
+test("advancing only the control plane must never rewrite existing Engine API production proof",()=>{
+ const x=original();
+ assert.notEqual(x.candidate.source_verification.latest_checked.engine_sha,
+  x.candidate.post_release_observation_20261023.engine_new_source.sha);
+ assert.doesNotThrow(()=>check(x));
+ const y=original();y.candidate.post_release_observation_20261023.engine_new_source.latest_controller_ci_run="999999";
+ assert.throws(()=>check(y),/New controller CI/);
+ const z=original();z.candidate.post_release_observation_20261023.engine_new_source.latest_controller_source_sha="f".repeat(40);
+ assert.throws(()=>check(z),/New controller source/);
 });
 test("production D1 identity, applied migration, ledger and pinned registry are checked",()=>{
  for(const [key,value] of [["d1_database_name","other-database"],["d1_database_id","11111111-1111-1111-1111-111111111111"],["migration_applied","0009_previous.sql"],["d1_migrations","9/9"]]){
