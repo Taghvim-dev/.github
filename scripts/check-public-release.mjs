@@ -24,6 +24,18 @@ const t0=JSON.parse(readFileSync(new URL("../release/T0-CONTROL-MATRIX.json",imp
 assert.equal(t0.schema_version,1,"T0 control ledger schema drift");
 assert.equal(t0.contract_version,candidate.contract_version,"T0 contract version drift");
 assert.equal(t0.general_availability_approved,candidate.general_availability_approved,"T0 GA split-brain");
+const observed=candidate.post_release_observation_20261023;
+assert.deepEqual(t0.post_release_observation_20261023,observed,"T0 live/source observation registry split-brain");
+assert.equal(observed?.engine_production?.version,"2.1.0");
+assert.equal(observed?.landing_production?.version,"2.1.0");
+assert.equal(candidate.deployment_observation?.public_landing_api_version,"2.1.0");
+assert.equal(candidate.deployment_observation?.landing_release_run,observed.landing_production.release_run);
+assert.equal(observed?.live_readonly_observation?.result,"success");
+assert.equal(observed?.engine_new_source?.production_deployed,false,"Unreleased Engine developer portal cannot be certified live");
+assert.equal(observed?.landing_new_source?.production_deployed,false,"Unreleased consent migration cannot be marked deployed");
+assert.equal(observed?.general_availability_approved,false,"Live read-only proof is not GA approval");
+assert.equal(candidate.general_availability_approved,false,"T0 onboarding remains PREVIEW");
+
 assert.equal(t0.current_source.engine_main_sha,candidate.source_verification.latest_checked.engine_sha,"T0 Engine source identity drift");
 assert.equal(t0.current_source.landing_main_sha,candidate.source_verification.latest_checked.landing_sha,"T0 Landing source identity drift");
 assert.equal(t0.current_source.shared_policy_sha,candidate.source_verification.t0_infrastructure_source?.shared_action_sha,"T0 Cloudflare guard pin drift");

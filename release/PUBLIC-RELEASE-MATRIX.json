@@ -25,11 +25,12 @@
     }
   ],
   "deployment_observation": {
-    "date": "2026-10-22",
+    "date": "2026-10-23",
     "public_api_version": "2.1.0",
-    "public_landing_api_version": "2.0.0",
-    "contract_parity": "BLOCKED_LANDING_NOT_LIVE_2_1",
-    "source_run": "39840864366"
+    "public_landing_api_version": "2.1.0",
+    "contract_parity": "VERIFIED_2_1_READONLY_LIVE_SMOKE_EARLY_ACCESS_ONLY",
+    "source_run": "39840864366",
+    "landing_release_run": "39956791674"
   },
   "prerequisites": {
     "published_contract_sync": false,
@@ -815,5 +816,58 @@
       "sdk_source_commit": "cc68bffeb1d7be5360d87d0afee356a914d2d709",
       "ci": "39696439898"
     }
+  },
+  "post_release_observation_20261023": {
+    "observed_at": "2026-10-23",
+    "scope": "read_only_production_plus_source_ci; early_access_only; no_general_availability",
+    "engine_production": {
+      "source_sha": "ed11999731930ee9674a7cb887a19322bffcf7a8",
+      "release_run": "39849513450",
+      "version": "2.1.0"
+    },
+    "landing_production": {
+      "source_sha": "48cf3a8f916a4d137a799ba7ad6271e06c2d83e0",
+      "source_tree": "9ab2b17c18ed6bc78884e0ceb325844f4541c5f1",
+      "release_run": "39956791674",
+      "d1_migrations": "3/3",
+      "workers": "mail,comms,web",
+      "version": "2.1.0"
+    },
+    "live_readonly_observation": {
+      "run": "39965766192",
+      "result": "success",
+      "version": "2.1.0",
+      "source_runtime_match": "historically released artifacts only"
+    },
+    "engine_new_source": {
+      "sha": "eabec0f177810c3c94fa3353c1ab1f64ea4dca68",
+      "ci_run": "39973810794",
+      "ci": "ubuntu-24.04 and ubuntu-26.04 success",
+      "sandbox_developer_invitation": true,
+      "one_time_test_keys": true,
+      "revocation": true,
+      "expiry_inheritance": true,
+      "live_key_escalation_blocked": true,
+      "paid_billing_blocked": true,
+      "production_deployed": false,
+      "real_invite_deliverability_certified": false
+    },
+    "landing_new_source": {
+      "sha": "bb59dfbf0d55cacab537f721b0745606cc512f8d",
+      "ci_run": "39969425556",
+      "consent_unsubscribe_candidate": true,
+      "migration": "0004_unsubscribe_tokens.sql",
+      "production_deployed": false
+    },
+    "owner_release_permission": {
+      "controller": "Taghvim-dev/engine",
+      "cloudflare_credentials_engine_only": true,
+      "authenticated_owner_approval_required": true,
+      "independent_review_pending": "Taghvim-dev/engine#111",
+      "automatic_push_can_mutate_cloudflare": false
+    },
+    "onboarding_scope": "source-tested invitation, not published self-service",
+    "checkout_certified": false,
+    "general_availability_approved": false
   }
 }
