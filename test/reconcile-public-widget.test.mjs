@@ -107,3 +107,41 @@ test("one commit contains both release matrices",async()=>{
  assert.ok(src.includes('plan.registry'));
  assert.ok(src.includes('plan.controls'));
 });
+
+test("CURRENT is decided from both ledgers, not only primary SDK/Cookbook source pins",()=>{
+ const {m,ctrl}=fullLedger();
+ const args={sdk:a,sdkCi:11,cookbooks:b,cookbooksCi:12,cookbooksSdkPin:a};
+ const actual=buildCoupledCandidate(m,ctrl,args);
+ assert.equal(actual.status,"CURRENT");
+ assert.equal(actual.registry,null);
+ assert.equal(actual.controls,null);
+
+ // Historical failure: primary package pins match but control CI is stale.
+ const staleControl=structuredClone(ctrl);
+ staleControl.controls[0].dependent_component_ci.SDK="old-run";
+ const fixControl=buildCoupledCandidate(m,staleControl,args);
+ assert.equal(fixControl.status,"PR_REQUIRED");
+ assert.equal(fixControl.controls.controls[0].dependent_component_ci.SDK,"11");
+ assert.equal(fixControl.registry.repositories[0].commit,a);
+ assert.equal(staleControl.controls[0].dependent_component_ci.SDK,"old-run");
+
+ // Also reconcile an isolated Widget operation source mirror drift.
+ const staleWidget=structuredClone(m);
+ staleWidget.source_verification.widget_sdk_api_integration_20261023.sdk_main_ci_run="unverified";
+ const fixWidget=buildCoupledCandidate(staleWidget,ctrl,args);
+ assert.equal(fixWidget.status,"PR_REQUIRED");
+ assert.equal(fixWidget.registry.source_verification.widget_sdk_api_integration_20261023.sdk_main_ci_run,"11");
+
+ // Also reconcile stale read-only observation mirrors in either ledger.
+ const staleObs=structuredClone(ctrl);
+ staleObs.post_release_observation_20261023.cookbooks_current_source_commit=c;
+ const fixObs=buildCoupledCandidate(m,staleObs,args);
+ assert.equal(fixObs.status,"PR_REQUIRED");
+ assert.equal(fixObs.controls.post_release_observation_20261023.cookbooks_current_source_commit,b);
+});
+test("SDK cookbook source mismatch blocks all coupled ledger mutation even when primary pins appear current",()=>{
+ const {m,ctrl}=fullLedger();
+ const p=buildCoupledCandidate(m,ctrl,{sdk:a,sdkCi:11,cookbooks:b,cookbooksCi:12,cookbooksSdkPin:c});
+ assert.equal(p.status,"BLOCKED_CROSS_REPO_SOURCE_DRIFT");
+ assert.equal(p.controls,null);
+});
