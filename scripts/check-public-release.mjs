@@ -31,7 +31,23 @@ assert.equal(observed?.landing_production?.version,"2.1.0");
 assert.equal(candidate.deployment_observation?.public_landing_api_version,"2.1.0");
 assert.equal(candidate.deployment_observation?.landing_release_run,observed.landing_production.release_run);
 assert.equal(observed?.live_readonly_observation?.result,"success");
-assert.equal(observed?.engine_new_source?.production_deployed,false,"Unreleased Engine developer portal cannot be certified live");
+// A source is live only when the actual authenticated production run and immutable
+// D1 / recovery / postdeploy receipts bind that exact source SHA. A newer source
+// must not inherit historical release evidence from an older Engine deployment.
+const liveEngine=observed?.engine_new_source?.current_production_release;
+if(observed?.engine_new_source?.production_deployed===true){
+ assert.equal(liveEngine?.controller_commit,observed.engine_new_source.sha,"Live Engine SHA must equal tested current main");
+ assert.match(String(liveEngine?.production_run_id||""),/^[0-9]+$/,"Actual Engine release run required");
+ assert.equal(liveEngine?.sandbox_job,"success");
+ assert.equal(liveEngine?.production_job,"success");
+ assert.equal(liveEngine?.smoke,"success");
+ assert.equal(liveEngine?.d1_migrations,"10/10","Migration 0010 not remotely certified");
+ for(const key of ["d1_ledger_receipt_sha256","recovery_bookmark_receipt_sha256","postdeploy_checkpoint_sha256"])
+   assert.match(liveEngine?.[key]||"",/^[a-f0-9]{64}$/,"Missing immutable remote evidence "+key);
+ assert.equal(liveEngine?.ga_approved,false);
+ assert.equal(liveEngine?.billing_certified,false);
+ assert.equal(liveEngine?.real_developer_email_inbox_delivery_certified,false);
+}else assert.equal(liveEngine,undefined,"Unreleased Engine cannot carry a live receipt");
 assert.equal(observed?.landing_new_source?.production_deployed,false,"Unreleased consent migration cannot be marked deployed");
 assert.equal(observed?.general_availability_approved,false,"Live read-only proof is not GA approval");
 assert.equal(candidate.general_availability_approved,false,"T0 onboarding remains PREVIEW");
