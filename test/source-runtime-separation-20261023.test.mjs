@@ -39,7 +39,10 @@ test("current main controller embeds the exact released-candidate Landing Git tr
   const o = pub.post_release_observation_20261023;
   const e = o.engine_new_source;
   const l = o.landing_new_source;
-  assert.equal(e.sha, e.controller_release_pin_sha);
+  // The tested Engine main can advance for source-only fixes without silently promoting the older controller.
+  assert.match(e.sha, /^[a-f0-9]{40}$/);
+  assert.match(e.controller_release_pin_sha, /^[a-f0-9]{40}$/);
+  assert.notEqual(e.controller_release_pin_sha, o.engine_production.source_sha);
   assert.equal(e.controller_landing_source_sha, l.sha);
   assert.equal(e.controller_landing_git_tree, l.exact_git_tree);
   assert.match(l.exact_git_tree, /^[a-f0-9]{40}$/);
@@ -52,4 +55,15 @@ test("current main controller embeds the exact released-candidate Landing Git tr
   assert.equal(o.remote_new_migrations_status, "NOT_VERIFIED_FOR_CURRENT_SOURCE");
   assert.equal(o.production_promotion_authorized, false);
   assert.equal(o.current_source_not_yet_deployed, true);
+});
+
+// A green workflow must execute these source/runtime assertions, not merely carry them in git.
+test("T0 source/runtime separation is required by both CI workflows", () => {
+  const validate = readFileSync(new URL("../.github/workflows/validate.yml", import.meta.url), "utf8");
+  const coordinated = readFileSync(new URL("../.github/workflows/coordinated-public-release.yml", import.meta.url), "utf8");
+  const command = "node --test test/source-runtime-separation-20261023.test.mjs";
+  assert.ok(validate.includes(command), "public-docs CI must run source/runtime regression");
+  assert.ok(coordinated.includes(command), "coordinated release CI must run source/runtime regression");
+  const path = '"test/source-runtime-separation-20261023.test.mjs"';
+  assert.equal(coordinated.split(path).length - 1, 2, "both PR and push path filters must include test changes");
 });

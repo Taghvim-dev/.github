@@ -51,6 +51,8 @@ jobs:
         run: node --test test/verify-production-environment.test.mjs test/independent-production-review.test.mjs
       - name: T0 verify independent SHA-bound authenticated owner approval
         run: node --test test/verify-owner-approval.test.mjs
+      - name: T0 enforce source/runtime separation and no-push release evidence
+        run: node --test test/source-runtime-separation-20261023.test.mjs
       - name: T0 same-run missing-artifact preflight contracts
         run: node --test test/release-artifact-inventory.test.mjs
       - name: Local canonical public registry
