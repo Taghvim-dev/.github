@@ -10,8 +10,8 @@
   "repositories": [
     {
       "name": "SDK",
-      "commit": "501fbac4a5ffbef15c2126af3c0bab8959361b96",
-      "ci_run": "40014892972"
+      "commit": "a0fb737f061f39abfc77a432796a62217625fd5e",
+      "ci_run": "40018523332"
     },
     {
       "name": "CLI",
@@ -20,8 +20,8 @@
     },
     {
       "name": "cookbooks",
-      "commit": "12a7c2ab6ecf91504d1dc474eabbdca27e9a8a88",
-      "ci_run": "40015679763"
+      "commit": "30df73398fac533dd85ab36481506672474fccc9",
+      "ci_run": "40018845699"
     }
   ],
   "deployment_observation": {
@@ -45,8 +45,8 @@
   "source_verification": {
     "date": "2026-10-23",
     "phase": "source-integrated-not-deployed",
-    "engine_main_merge_sha": "61fdc1ef21a3542442f70d7b24e77bf596995263",
-    "engine_offline_ci_run": "40018471346",
+    "engine_main_merge_sha": "16485966aee256b97a8c7859b4879373761dec94",
+    "engine_offline_ci_run": "40019157754",
     "engine_live_gate_ci_run": "39439068311",
     "landing_main_merge_sha": "30cc7cfa8ecbfccaf0cbb8125945dda74892613d",
     "landing_integration_merge_sha": "e380b5f3553b98faf35adeccd9f6a25440a778a4",
@@ -149,8 +149,8 @@
     },
     "latest_checked": {
       "date": "2026-10-23",
-      "engine_sha": "61fdc1ef21a3542442f70d7b24e77bf596995263",
-      "engine_ci": "40018471346",
+      "engine_sha": "16485966aee256b97a8c7859b4879373761dec94",
+      "engine_ci": "40019157754",
       "landing_sha": "30cc7cfa8ecbfccaf0cbb8125945dda74892613d",
       "landing_ci": "40015615331",
       "shared_release_actions_sha": "c195c8bfde573b6195bd1b3bd00e3535accc9040",
@@ -194,10 +194,10 @@
     },
     "engine_package_contract_identity": {
       "status": "SOURCE_TESTED_ENGINE_LIVE_VERIFIED",
-      "source_main_sha": "61fdc1ef21a3542442f70d7b24e77bf596995263",
-      "reviewed_pr": "Taghvim-dev/engine #130 source only",
-      "source_test_sha": "3893162633f42ab4e26d911a0f8f9f5b089551f8",
-      "ci_run": "40018471346",
+      "source_main_sha": "16485966aee256b97a8c7859b4879373761dec94",
+      "reviewed_pr": "Taghvim-dev/engine #143 source only; runtime not re-attested",
+      "source_test_sha": "16485966aee256b97a8c7859b4879373761dec94",
+      "ci_run": "40019157754",
       "api_version": "2.1.0",
       "package_version": "2.1.0",
       "lock_root_version": "2.1.0",
@@ -210,9 +210,9 @@
       "policy_main_sha": "f3bc8d18c5c31fd1125dd4da4887c86b9e3f8447",
       "policy_pr": "Taghvim-dev/.github PR #47",
       "policy_test_run": "39691890610",
-      "engine_main_sha": "61fdc1ef21a3542442f70d7b24e77bf596995263",
-      "engine_reviewed_head": "61fdc1ef21a3542442f70d7b24e77bf596995263",
-      "engine_ci_run": "40018471346",
+      "engine_main_sha": "16485966aee256b97a8c7859b4879373761dec94",
+      "engine_reviewed_head": "16485966aee256b97a8c7859b4879373761dec94",
+      "engine_ci_run": "40019157754",
       "landing_main_sha": "30cc7cfa8ecbfccaf0cbb8125945dda74892613d",
       "landing_reviewed_head": "30cc7cfa8ecbfccaf0cbb8125945dda74892613d",
       "landing_ci_run": "40015615331",
@@ -780,27 +780,25 @@
       "ga_approved": false
     },
     "widget_sdk_api_integration_20261023": {
-      "status": "SOURCE_TESTED_NOT_FULLY_DEPLOYED",
-      "sdk_main_sha": "501fbac4a5ffbef15c2126af3c0bab8959361b96",
-      "sdk_main_ci_run": "40014892972",
-      "cookbook_main_sha": "12a7c2ab6ecf91504d1dc474eabbdca27e9a8a88",
-      "cookbook_main_ci_run": "40015679763",
-      "landing_source_sha": "30cc7cfa8ecbfccaf0cbb8125945dda74892613d",
-      "landing_main_ci_run": "40015615331",
-      "sdk_widget_gateway_tenant_bound": true,
-      "supported_widget_operation_routes": 12,
-      "unavailable_canonical_backend": [
+      "status": "SOURCE_TESTED_NOT_RUNTIME_ATTESTED",
+      "engine_main_sha": "16485966aee256b97a8c7859b4879373761dec94",
+      "engine_ci": "40019157754",
+      "sdk_main_sha": "a0fb737f061f39abfc77a432796a62217625fd5e",
+      "sdk_ci": "40018523332",
+      "cookbooks_main_sha": "30df73398fac533dd85ab36481506672474fccc9",
+      "cookbooks_ci": "40018845699",
+      "widget_embed_supported_in_sdk": true,
+      "public_sdk_widget_route_count": 12,
+      "protected_sandbox_smoke_source": "Taghvim-dev/engine#143",
+      "verified_actual_remote_widget_receipt": false,
+      "canonical_missing_backend": [
         "booking",
         "availability",
         "workflow-run",
         "agent-execution"
       ],
-      "live_customer_key_and_tenant_isolation_certified": false,
-      "cloudflare_deployed_current_source_certified": false,
-      "general_availability_approved": false,
-      "engine_source_sha": "61fdc1ef21a3542442f70d7b24e77bf596995263",
-      "engine_main_ci_run": "40018471346",
-      "sandbox_widget_api_live_smoke_pending": true
+      "transaction_delivery_verified": false,
+      "ga_approved": false
     }
   },
   "package_identity": {
@@ -808,10 +806,10 @@
     "source_only": true,
     "remote_runtime_attested": false,
     "engine": {
-      "commit": "61fdc1ef21a3542442f70d7b24e77bf596995263",
+      "commit": "16485966aee256b97a8c7859b4879373761dec94",
       "package": "2.1.0",
       "lock": "2.1.0",
-      "ci": "40018471346"
+      "ci": "40019157754"
     },
     "landing": {
       "commit": "30cc7cfa8ecbfccaf0cbb8125945dda74892613d",
@@ -820,11 +818,11 @@
       "ci": "40015615331"
     },
     "SDK": {
-      "commit": "501fbac4a5ffbef15c2126af3c0bab8959361b96",
+      "commit": "a0fb737f061f39abfc77a432796a62217625fd5e",
       "root": "2.1.0",
       "javascript": "2.1.0",
       "python": "2.1.0",
-      "ci": "40014892972",
+      "ci": "40018523332",
       "registry_published": false
     },
     "CLI": {
@@ -834,10 +832,10 @@
       "registry_published": false
     },
     "cookbooks": {
-      "commit": "12a7c2ab6ecf91504d1dc474eabbdca27e9a8a88",
+      "commit": "30df73398fac533dd85ab36481506672474fccc9",
       "package": "2.1.0",
-      "sdk_source_commit": "501fbac4a5ffbef15c2126af3c0bab8959361b96",
-      "ci": "40015679763"
+      "sdk_source_commit": "a0fb737f061f39abfc77a432796a62217625fd5e",
+      "ci": "40018845699"
     }
   },
   "post_release_observation_20261023": {
