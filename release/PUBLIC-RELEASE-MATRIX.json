@@ -1077,6 +1077,57 @@
       "d1_recovery_sha256": "06cf5b3d88d6adf23255550fe95b50c446d124fa41bd45bdb5013585829d0ddf",
       "scope": "Engine API production and SDK/Widget real Sandbox verified; later controller source and Landing hero not yet live",
       "general_availability_approved": false
+    },
+    "sitekit_compatible_reconciliation_release": {
+      "kind": "sitekit_compatible_landing_reconciliation_live_release",
+      "source_repository": "Taghvim-dev/landing",
+      "landing_main_sha": "77f5afd18b10deb1e1a22741c7083a377ae5da1b",
+      "landing_git_tree_sha": "0dfb9fb0e0853630b3f43a3d7b1f13f2b9d9fa0c",
+      "sitekit_source_repository": "Iran-Open-Finance/kit",
+      "sitekit_pinned_upstream_sha": "68f65bd74416a3908e075cc8bca7b2c880254789",
+      "sitekit_vendored_git_blob_count": 252,
+      "build_uses": "@iof-kit/site buildSite, shared section registry, theme CSS/tokens and @iof-kit/calendar",
+      "browser_rtl_visual_ci": {
+        "run_id": "40030610527",
+        "conclusion": "success",
+        "tested_widths_px": [
+          320,
+          360,
+          375,
+          390,
+          414,
+          768,
+          1440
+        ],
+        "overflow_px_all": 0,
+        "js_errors_all": 0
+      },
+      "landing_main_ci": {
+        "run_id": "40030944473",
+        "conclusion": "success"
+      },
+      "protected_cloudflare_release": {
+        "controller_sha": "57fa10e0a58bf2d6a5ccfc582a2815516c4c44cd",
+        "release_run_id": "40031534154",
+        "admission": "success",
+        "sandbox": "success",
+        "production": "success",
+        "full_d1_ledger_and_integrity": "success",
+        "cloudflare_live_readonly_smoke": "success",
+        "production_artifact_id": "12534973293",
+        "production_artifact_sha256": "c825d227865f199dd14a6b17fc2ac8a395a94f7857eb6d0a264a1436be7db2e0",
+        "sandbox_artifact_id": "12534737684",
+        "sandbox_artifact_sha256": "8fdef15c3879130aea728d58728fe9d7a5738d66c3144608620076edc3362688"
+      },
+      "independent_live_web_observation": {
+        "http_status": 200,
+        "hero_reconciliation_visible": true,
+        "meta_updated": true,
+        "first_party_styles_and_scripts_failed_requests": 0,
+        "broken_internal_hash_links": 0
+      },
+      "release_scope": "Landing UI, canonical preview/source and API read-only smoke; does not certify unavailable widget backends, all-tenant onboarding, payment, or General Availability",
+      "ga_approved": false
     }
   }
 }
