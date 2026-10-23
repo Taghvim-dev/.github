@@ -5,7 +5,7 @@
   "contract_version": "2.1.0",
   "current_source": {
     "engine_main_sha": "6e51940de359d257da1d557b794c216e2150d243",
-    "landing_main_sha": "e5667be268afdf7420992b24a6471cc3a1361adc",
+    "landing_main_sha": "30cc7cfa8ecbfccaf0cbb8125945dda74892613d",
     "shared_policy_sha": "c195c8bfde573b6195bd1b3bd00e3535accc9040",
     "prewrite_source_policy_sha": "f3bc8d18c5c31fd1125dd4da4887c86b9e3f8447"
   },
