@@ -45,8 +45,8 @@
   "source_verification": {
     "date": "2026-10-23",
     "phase": "source-integrated-not-deployed",
-    "engine_main_merge_sha": "ece80ca1d1fc885bbb01b84efbf88aa69f63d6d1",
-    "engine_offline_ci_run": "39998267241",
+    "engine_main_merge_sha": "3dd2c87bb5c162ff8bed99e5efb1fcbc16c90e4d",
+    "engine_offline_ci_run": "39999549753",
     "engine_live_gate_ci_run": "39439068311",
     "landing_main_merge_sha": "41657131c23d716892032dc85c3cd9909c79dc0f",
     "landing_integration_merge_sha": "e380b5f3553b98faf35adeccd9f6a25440a778a4",
@@ -149,8 +149,8 @@
     },
     "latest_checked": {
       "date": "2026-10-23",
-      "engine_sha": "ece80ca1d1fc885bbb01b84efbf88aa69f63d6d1",
-      "engine_ci": "39998267241",
+      "engine_sha": "3dd2c87bb5c162ff8bed99e5efb1fcbc16c90e4d",
+      "engine_ci": "39999549753",
       "landing_sha": "41657131c23d716892032dc85c3cd9909c79dc0f",
       "landing_ci": "39976195222",
       "shared_release_actions_sha": "c195c8bfde573b6195bd1b3bd00e3535accc9040",
@@ -194,10 +194,10 @@
     },
     "engine_package_contract_identity": {
       "status": "SOURCE_TESTED_ENGINE_LIVE_VERIFIED",
-      "source_main_sha": "ece80ca1d1fc885bbb01b84efbf88aa69f63d6d1",
-      "reviewed_pr": "Taghvim-dev/engine PR #122 (source-only)",
-      "source_test_sha": "ece80ca1d1fc885bbb01b84efbf88aa69f63d6d1",
-      "ci_run": "39998267241",
+      "source_main_sha": "3dd2c87bb5c162ff8bed99e5efb1fcbc16c90e4d",
+      "reviewed_pr": "Taghvim-dev/engine main 3dd2c87 stage evidence; latest real SDK sandbox still pending",
+      "source_test_sha": "3dd2c87bb5c162ff8bed99e5efb1fcbc16c90e4d",
+      "ci_run": "39999549753",
       "api_version": "2.1.0",
       "package_version": "2.1.0",
       "lock_root_version": "2.1.0",
@@ -210,9 +210,9 @@
       "policy_main_sha": "f3bc8d18c5c31fd1125dd4da4887c86b9e3f8447",
       "policy_pr": "Taghvim-dev/.github PR #47",
       "policy_test_run": "39691890610",
-      "engine_main_sha": "ece80ca1d1fc885bbb01b84efbf88aa69f63d6d1",
+      "engine_main_sha": "3dd2c87bb5c162ff8bed99e5efb1fcbc16c90e4d",
       "engine_reviewed_head": "eab4bab5714e1377c6ebd85f595fe18721344ee4",
-      "engine_ci_run": "39998267241",
+      "engine_ci_run": "39999549753",
       "landing_main_sha": "41657131c23d716892032dc85c3cd9909c79dc0f",
       "landing_reviewed_head": "24a90746fe04820ab80e0e0a8d6c23b50c20b0c5",
       "landing_ci_run": "39976195222",
@@ -785,10 +785,10 @@
     "source_only": true,
     "remote_runtime_attested": false,
     "engine": {
-      "commit": "ece80ca1d1fc885bbb01b84efbf88aa69f63d6d1",
+      "commit": "3dd2c87bb5c162ff8bed99e5efb1fcbc16c90e4d",
       "package": "2.1.0",
       "lock": "2.1.0",
-      "ci": "39998267241"
+      "ci": "39999549753"
     },
     "landing": {
       "commit": "41657131c23d716892032dc85c3cd9909c79dc0f",
@@ -891,17 +891,20 @@
         "ga_approved": false
       },
       "live_schema_verified": true,
-      "latest_controller_source_sha": "ece80ca1d1fc885bbb01b84efbf88aa69f63d6d1",
-      "latest_controller_ci_run": "39998267241",
+      "latest_controller_source_sha": "3dd2c87bb5c162ff8bed99e5efb1fcbc16c90e4d",
+      "latest_controller_ci_run": "39999549753",
       "controller_only_change_not_api_worker": true,
-      "current_source_only_ci_scope": "same-main-ubuntu-24.04-and-ubuntu-26.04-success; Cloudflare API Worker still SHA 2642f537",
+      "current_source_only_ci_scope": "current main 3dd2c87 CI 39999549753 SUCCESS; not yet deployed; stage labels only; 39998970094 sandbox SDK blocked production skipped",
       "current_source_tests": [
         "T0 actual live public Developer pages",
         "actual public SDK/Python/cookbook sandbox E2E pending protected release"
       ],
       "public_sdk_sandbox_e2e_approved_for_release_source_only": true,
       "public_sdk_sandbox_e2e_remote_verified": false,
-      "last_engine_source_ci_run": "39998267241"
+      "last_engine_source_ci_run": "39999549753",
+      "public_sdk_sandbox_e2e_latest_failed_sandbox_run": 39998970094,
+      "public_sdk_sandbox_e2e_latest_failed_stage": "unknown_redacted_by_previous_source",
+      "public_sdk_sandbox_e2e_current_source_stage_labels": true
     },
     "landing_new_source": {
       "sha": "41657131c23d716892032dc85c3cd9909c79dc0f",
@@ -983,7 +986,7 @@
     "promotion_requires": "Future releases require authenticated owner, same-run Sandbox migration and D1 backup/prefix/ledger, Production smoke and approvals; GA remains prohibited",
     "remote_new_migrations_status": "ENGINE_0010_AND_LANDING_0004_REMOTE_VERIFIED",
     "production_promotion_authorized": false,
-    "last_source_sync": "2026-10-23T17:52:00Z",
+    "last_source_sync": "2026-10-23T18:06:00Z",
     "release_ledger_source_pins_still_require_independent_re_review": true,
     "both_product_components_live": true,
     "current_source_not_yet_deployed_scope": "LATEST_ENGINE_MAIN_CONTROLLER_CHANGE_NOT_API_WORKER; production Engine API remains deployed SHA 2642f537, Landing source 41657131",
