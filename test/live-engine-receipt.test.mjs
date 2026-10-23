@@ -34,6 +34,16 @@ test("production D1 identity, applied migration, ledger and pinned registry are 
  const x=original();x.t0.production_d1_identity.database_id="11111111-1111-1111-1111-111111111111";
  assert.throws(()=>check(x),/identity pin changed/);
 });
+test("run provenance and declared controller source cannot drift from deployed receipt",()=>{
+ for(const invalid of [39981975547,11111111111,"39981975548",null]){
+  const x=original();
+  x.candidate.post_release_observation_20261023.engine_new_source.current_production_release.production_run_id=invalid;
+  assert.throws(()=>check(x),/production run mismatch/);
+ }
+ const x=original();
+ x.candidate.post_release_observation_20261023.engine_new_source.controller_release_pin_sha="f".repeat(40);
+ assert.throws(()=>check(x),/controller pin/);
+});
 test("missing, string and ambiguous deployment flags fail closed",()=>{
  for(const value of [undefined,"true",null,1]){
   const x=original();
