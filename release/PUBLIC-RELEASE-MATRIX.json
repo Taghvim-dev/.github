@@ -45,8 +45,8 @@
   "source_verification": {
     "date": "2026-10-23",
     "phase": "source-integrated-not-deployed",
-    "engine_main_merge_sha": "61f33bc448ba4676189d3f389f01af6b934fa04e",
-    "engine_offline_ci_run": "40017525006",
+    "engine_main_merge_sha": "61fdc1ef21a3542442f70d7b24e77bf596995263",
+    "engine_offline_ci_run": "40018471346",
     "engine_live_gate_ci_run": "39439068311",
     "landing_main_merge_sha": "30cc7cfa8ecbfccaf0cbb8125945dda74892613d",
     "landing_integration_merge_sha": "e380b5f3553b98faf35adeccd9f6a25440a778a4",
@@ -149,8 +149,8 @@
     },
     "latest_checked": {
       "date": "2026-10-23",
-      "engine_sha": "61f33bc448ba4676189d3f389f01af6b934fa04e",
-      "engine_ci": "40017525006",
+      "engine_sha": "61fdc1ef21a3542442f70d7b24e77bf596995263",
+      "engine_ci": "40018471346",
       "landing_sha": "30cc7cfa8ecbfccaf0cbb8125945dda74892613d",
       "landing_ci": "40015615331",
       "shared_release_actions_sha": "c195c8bfde573b6195bd1b3bd00e3535accc9040",
@@ -194,10 +194,10 @@
     },
     "engine_package_contract_identity": {
       "status": "SOURCE_TESTED_ENGINE_LIVE_VERIFIED",
-      "source_main_sha": "61f33bc448ba4676189d3f389f01af6b934fa04e",
+      "source_main_sha": "61fdc1ef21a3542442f70d7b24e77bf596995263",
       "reviewed_pr": "Taghvim-dev/engine #130 source only",
       "source_test_sha": "3893162633f42ab4e26d911a0f8f9f5b089551f8",
-      "ci_run": "40017525006",
+      "ci_run": "40018471346",
       "api_version": "2.1.0",
       "package_version": "2.1.0",
       "lock_root_version": "2.1.0",
@@ -210,9 +210,9 @@
       "policy_main_sha": "f3bc8d18c5c31fd1125dd4da4887c86b9e3f8447",
       "policy_pr": "Taghvim-dev/.github PR #47",
       "policy_test_run": "39691890610",
-      "engine_main_sha": "61f33bc448ba4676189d3f389f01af6b934fa04e",
-      "engine_reviewed_head": "61f33bc448ba4676189d3f389f01af6b934fa04e",
-      "engine_ci_run": "40017525006",
+      "engine_main_sha": "61fdc1ef21a3542442f70d7b24e77bf596995263",
+      "engine_reviewed_head": "61fdc1ef21a3542442f70d7b24e77bf596995263",
+      "engine_ci_run": "40018471346",
       "landing_main_sha": "30cc7cfa8ecbfccaf0cbb8125945dda74892613d",
       "landing_reviewed_head": "30cc7cfa8ecbfccaf0cbb8125945dda74892613d",
       "landing_ci_run": "40015615331",
@@ -798,8 +798,8 @@
       "live_customer_key_and_tenant_isolation_certified": false,
       "cloudflare_deployed_current_source_certified": false,
       "general_availability_approved": false,
-      "engine_source_sha": "61f33bc448ba4676189d3f389f01af6b934fa04e",
-      "engine_main_ci_run": "40017525006",
+      "engine_source_sha": "61fdc1ef21a3542442f70d7b24e77bf596995263",
+      "engine_main_ci_run": "40018471346",
       "sandbox_widget_api_live_smoke_pending": true
     }
   },
@@ -808,10 +808,10 @@
     "source_only": true,
     "remote_runtime_attested": false,
     "engine": {
-      "commit": "61f33bc448ba4676189d3f389f01af6b934fa04e",
+      "commit": "61fdc1ef21a3542442f70d7b24e77bf596995263",
       "package": "2.1.0",
       "lock": "2.1.0",
-      "ci": "40017525006"
+      "ci": "40018471346"
     },
     "landing": {
       "commit": "30cc7cfa8ecbfccaf0cbb8125945dda74892613d",
@@ -914,8 +914,8 @@
         "ga_approved": false
       },
       "live_schema_verified": true,
-      "latest_controller_source_sha": "61f33bc448ba4676189d3f389f01af6b934fa04e",
-      "latest_controller_ci_run": "40017525006",
+      "latest_controller_source_sha": "61fdc1ef21a3542442f70d7b24e77bf596995263",
+      "latest_controller_ci_run": "40018471346",
       "controller_only_change_not_api_worker": true,
       "current_source_only_ci_scope": "current Engine main + immutable SDK and Cookbooks exact SHA/CI source success; Cloudflare API Worker still historical 2642f537",
       "current_source_tests": [
