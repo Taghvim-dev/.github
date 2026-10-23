@@ -23,6 +23,38 @@ export function buildCandidate(matrix,{sdk,sdkCi,cookbooks,cookbooksCi,cookbooks
  if(JSON.stringify(candidate)===JSON.stringify(matrix))return {status:"CURRENT",candidate:null};
  return {status:"PR_REQUIRED",candidate};
 }
+
+/** All mirrored source and T0 evidence must change together in one Git tree. */
+export function buildAtomicCandidate(release,controls,inputs){
+ if(!controls||controls.general_availability_approved!==false||
+   controls.contract_version!==release?.contract_version||!Array.isArray(controls.controls))
+   fail("invalid constitutional control matrix");
+ if(JSON.stringify(release.post_release_observation_20261023)!==
+    JSON.stringify(controls.post_release_observation_20261023))
+   fail("canonical source/runtime observations split across independent ledgers");
+ const result=buildCandidate(release,inputs);
+ if(result.status==="BLOCKED_CROSS_REPO_SOURCE_DRIFT")return {status:result.status,release:null,controls:null};
+ const next=result.candidate||structuredClone(release), t0=structuredClone(controls);
+ const source=next.post_release_observation_20261023;
+ const control=t0.controls.find(x=>x.id==="T0-PACKAGES-014");
+ if(!source||!control||!control.dependent_component_ci)fail("missing T0 package source observation and CI authority");
+ for(const [name,field,sha,ci] of [
+  ["SDK","sdk",inputs.sdk,inputs.sdkCi],
+  ["cookbooks","cookbooks",inputs.cookbooks,inputs.cookbooksCi]
+ ]){
+   const expected=release.repositories.find(x=>x.name===name);
+   if(!expected||control.dependent_component_ci[name]!==expected.ci_run)
+     fail("existing cross-ledger "+name+" CI proof drift");
+   source[field+"_current_source_commit"]=sha;
+   source[field+"_current_main_ci_run"]=String(ci);
+   control.dependent_component_ci[name]=String(ci);
+ }
+ t0.post_release_observation_20261023=structuredClone(source);
+ if(JSON.stringify(next)===JSON.stringify(release)&&JSON.stringify(t0)===JSON.stringify(controls))
+   return {status:"CURRENT",release:null,controls:null};
+ return {status:"PR_REQUIRED",release:next,controls:t0};
+}
+
 async function gh(path,method="GET",body){
  const token=process.env.GITHUB_TOKEN;
  if(!token)fail("missing job-scoped token");
@@ -57,7 +89,7 @@ export function canResetOrFastForwardBotBranch(compare){
  if(!compare||!["ahead","behind","diverged","identical"].includes(compare.status)||
    !Number.isInteger(compare.ahead_by)||compare.ahead_by<0||compare.ahead_by>3||
    !Array.isArray(compare.files)||!Array.isArray(compare.commits))return null;
- if(compare.files.some(f=>f.filename!=="release/PUBLIC-RELEASE-MATRIX.json"))return null;
+ if(compare.files.some(f=>!["release/PUBLIC-RELEASE-MATRIX.json","release/T0-CONTROL-MATRIX.json"].includes(f.filename)))return null;
  if(compare.ahead_by===0)return "fast_forward";
  if(compare.commits.length!==compare.ahead_by||!compare.commits.every(c=>
     c.commit?.message?.startsWith("reconcile(t0): public SDK and Cookbook reviewed source candidate") &&
@@ -69,14 +101,15 @@ export async function reconcilePublicWidget(){
  const [sdk,cookbooks,root]=await Promise.all([head("Taghvim-dev/SDK"),head("Taghvim-dev/cookbooks"),head(ROOT)]);
  // Root-scoped branch avoids drift from an orphan created against older main.
  const branch=BRANCH_PREFIX+root.slice(0,12);
- const [sdkCi,cookbooksCi,cookbookSource,canonical]=await Promise.all([
+ const [sdkCi,cookbooksCi,cookbookSource,canonical,controlFile]=await Promise.all([
   successfulMainCI("Taghvim-dev/SDK",sdk,"public-sdk-verify"),
   successfulMainCI("Taghvim-dev/cookbooks",cookbooks,"public-cookbooks-verify"),
   content("Taghvim-dev/cookbooks","release/SDK-SOURCE.json",cookbooks),
-  content(ROOT,"release/PUBLIC-RELEASE-MATRIX.json",root)
+  content(ROOT,"release/PUBLIC-RELEASE-MATRIX.json",root),
+  content(ROOT,"release/T0-CONTROL-MATRIX.json",root)
  ]);
  if(!sdkCi||!cookbooksCi)return {status:"WAIT_FOR_PUBLIC_MAIN_CI",writes:0};
- const plan=buildCandidate(canonical.data,{sdk,sdkCi,cookbooks,cookbooksCi,cookbooksSdkPin:cookbookSource.data?.commit});
+ const plan=buildAtomicCandidate(canonical.data,controlFile.data,{sdk,sdkCi,cookbooks,cookbooksCi,cookbooksSdkPin:cookbookSource.data?.commit});
  if(plan.status!=="PR_REQUIRED")return {status:plan.status,writes:0};
  const [sdkNow,cookbookNow,rootNow]=await Promise.all([head("Taghvim-dev/SDK"),head("Taghvim-dev/cookbooks"),head(ROOT)]);
  if(sdkNow!==sdk||cookbookNow!==cookbooks||rootNow!==root)return {status:"RACED_WITH_NEW_SOURCE",writes:0};
@@ -87,7 +120,6 @@ export async function reconcilePublicWidget(){
  if(!Array.isArray(refs))fail("branch inventory unavailable");
  const exact=refs.filter(ref=>ref.ref==="refs/heads/"+branch);
  if(exact.length!==refs.length||exact.length>1)fail("unexpected source reconciliation branch inventory");
- let botFile=canonical;
  if(!exact.length) {
   // Crash after branch creation is recoverable: the next invocation uses the branch.
   await gh("/repos/"+ROOT+"/git/refs","POST",{ref:"refs/heads/"+branch,sha:root});
@@ -104,15 +136,27 @@ export async function reconcilePublicWidget(){
       sha:root,force:recovery==="bot_branch_reset"
     });
   }
-  botFile=canonical;
  }
- const wanted=JSON.stringify(plan.candidate,null,2)+"\n";
- if(JSON.stringify(botFile.data)!==JSON.stringify(plan.candidate))
-   await gh("/repos/"+ROOT+"/contents/release/PUBLIC-RELEASE-MATRIX.json","PUT",{
-     message:"reconcile(t0): public SDK and Cookbook reviewed source candidate",
-     content:Buffer.from(wanted).toString("base64"),
-     sha:botFile.sha,branch:branch
-   });
+ // Atomic Git tree: the release matrix, T0 control CI and source observations
+ // become visible together, never as separate CI-triggering half-updates.
+ const base=await gh("/repos/"+ROOT+"/git/commits/"+root);
+ if(base?.sha!==root||!SHA.test(base.tree?.sha||""))fail("unverified release registry base Git tree");
+ const tree=await gh("/repos/"+ROOT+"/git/trees","POST",{
+   base_tree:base.tree.sha,
+   tree:[
+     {path:"release/PUBLIC-RELEASE-MATRIX.json",mode:"100644",type:"blob",
+      content:JSON.stringify(plan.release,null,2)+"\\n"},
+     {path:"release/T0-CONTROL-MATRIX.json",mode:"100644",type:"blob",
+      content:JSON.stringify(plan.controls,null,2)+"\\n"}
+   ]
+ });
+ if(!SHA.test(tree?.sha||""))fail("invalid candidate Git tree");
+ const commit=await gh("/repos/"+ROOT+"/git/commits","POST",{
+   message:"reconcile(t0): public SDK and Cookbook reviewed source candidate",
+   tree:tree.sha,parents:[root]
+ });
+ if(!SHA.test(commit?.sha||""))fail("invalid atomic Git commit");
+ await gh("/repos/"+ROOT+"/git/refs/heads/"+branch,"PATCH",{sha:commit.sha,force:false});
  const pr=await gh("/repos/"+ROOT+"/pulls","POST",{
   title:"reconcile(T0): public SDK and Cookbook SHA-pinned source",
   head:branch,base:"main",draft:false,
