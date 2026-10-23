@@ -404,5 +404,12 @@
     "production_promotion_authorized": false,
     "last_source_sync": "2026-10-23T15:19:35Z",
     "release_ledger_source_pins_still_require_independent_re_review": true
+  },
+  "production_d1_identity": {
+    "database_name": "taghvim-engine",
+    "database_id": "08e29424-2c68-4aef-bde3-3d5cad47ccc8",
+    "required_migration": "0010_developer_invitations.sql",
+    "expected_ledger": "10/10",
+    "source": "Taghvim-dev/engine/wrangler.toml@2642f537fac2302b7d8db6b10c06320a8b20be66"
   }
 }

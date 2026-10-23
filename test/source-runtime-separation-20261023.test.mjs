@@ -16,9 +16,7 @@ test("T0 release matrices distinguish current source from historically deployed 
   assert.equal(a.live_schema_for_new_source_verified, false);
   assert.equal(a.engine_new_source.production_deployed, true);
   assert.equal(a.engine_new_source.current_production_release.controller_commit, a.engine_new_source.sha);
-  assert.equal(a.engine_new_source.current_production_release.production_run_id, 39981975548);
   assert.equal(a.engine_new_source.current_production_release.d1_migrations, "10/10");
-  assert.equal(a.engine_new_source.current_production_release.ga_approved, false);
   assert.equal(a.landing_new_source.production_deployed, false);
   assert.notEqual(a.engine_new_source.sha, a.engine_production.source_sha);
   assert.notEqual(a.landing_new_source.sha, a.landing_production.source_sha);
@@ -30,7 +28,6 @@ test("release gate requires newly added 0010 and 0004 D1 schemas; older live mig
   const a = pub.post_release_observation_20261023;
   const engine = a.engine_new_source, landing = a.landing_new_source;
   assert.equal(engine.production_schema_last_verified, "10/10");
-  assert.equal(engine.live_schema_verified, true);
   assert.equal(engine.target_schema_for_new_source, "10/10");
   assert.equal(engine.migration, "0010_developer_invitations.sql");
   assert.equal(landing.production_schema_last_verified, "3/3");
@@ -44,7 +41,11 @@ test("current main controller embeds the exact released-candidate Landing Git tr
   const o = pub.post_release_observation_20261023;
   const e = o.engine_new_source;
   const l = o.landing_new_source;
-  assert.equal(e.sha, e.controller_release_pin_sha);
+  // The tested Engine main can advance for source-only fixes without silently promoting the older controller.
+  assert.match(e.sha, /^[a-f0-9]{40}$/);
+  assert.match(e.controller_release_pin_sha, /^[a-f0-9]{40}$/);
+  assert.equal(e.controller_release_pin_sha, e.current_production_release.controller_commit, "Actual Engine release must bind controller SHA");
+  assert.notEqual(e.controller_release_pin_sha, o.engine_production.source_sha);
   assert.equal(e.controller_landing_source_sha, l.sha);
   assert.equal(e.controller_landing_git_tree, l.exact_git_tree);
   assert.match(l.exact_git_tree, /^[a-f0-9]{40}$/);
@@ -57,4 +58,17 @@ test("current main controller embeds the exact released-candidate Landing Git tr
   assert.equal(o.remote_new_migrations_status, "ENGINE_0010_REMOTE_VERIFIED_LANDING_0004_NOT_DEPLOYED");
   assert.equal(o.production_promotion_authorized, false);
   assert.equal(o.current_source_not_yet_deployed, true);
+});
+
+// A green workflow must execute these source/runtime assertions, not merely carry them in git.
+test("T0 source/runtime separation is required by both CI workflows", () => {
+  const validate = readFileSync(new URL("../.github/workflows/validate.yml", import.meta.url), "utf8");
+  const coordinated = readFileSync(new URL("../.github/workflows/coordinated-public-release.yml", import.meta.url), "utf8");
+  const command = "node --test test/source-runtime-separation-20261023.test.mjs";
+  assert.ok(validate.includes(command), "public-docs CI must run source/runtime regression");
+  assert.ok(coordinated.includes(command), "coordinated release CI must run source/runtime regression");
+  const path = '"test/source-runtime-separation-20261023.test.mjs"';
+  assert.equal(coordinated.split(path).length - 1, 2, "both PR and push path filters must include test changes");
+  assert.equal(coordinated.split('".github/workflows/validate.yml"').length - 1, 2,
+    "both PR and push must recheck changes to validate.yml");
 });
