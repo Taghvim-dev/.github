@@ -73,8 +73,11 @@ export function sourcesAreConsistent(matrix,controls,engine,landing){
 }
 
 async function gh(path,method="GET",body){
- const token=/^\\/repos\\/Taghvim-dev\\/(?:engine|landing)(?:\\/|$)/.test(path)
-   ?process.env.TAGHVIM_PRIVATE_SOURCE_READ_TOKEN:process.env.GITHUB_TOKEN;
+ const privateSource=path==="/repos/Taghvim-dev/engine" ||
+   path.startsWith("/repos/Taghvim-dev/engine/") ||
+   path==="/repos/Taghvim-dev/landing" ||
+   path.startsWith("/repos/Taghvim-dev/landing/");
+ const token=privateSource?process.env.TAGHVIM_PRIVATE_SOURCE_READ_TOKEN:process.env.GITHUB_TOKEN;
  if(!token)fail("missing job-scoped token");
  const r=await fetch(API+path,{method,redirect:"error",cache:"no-store",
   headers:{accept:"application/vnd.github+json",authorization:"Bearer "+token,
