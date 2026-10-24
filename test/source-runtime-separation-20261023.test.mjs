@@ -79,3 +79,38 @@ test("T0 source/runtime separation is required by both CI workflows", () => {
   assert.equal(coordinated.split('".github/workflows/validate.yml"').length - 1, 2,
     "both PR and push must recheck changes to validate.yml");
 });
+
+
+test("latest independent Cloudflare Worker production receipts are durable, scoped, and do not rewrite historical source-only proofs",()=>{
+ const both=pub.post_release_observation_20261023.latest_verified_dual_production_release_20261024;
+ assert.deepEqual(both,t0.post_release_observation_20261023.latest_verified_dual_production_release_20261024);
+ assert.equal(both.kind,"taghvim_t0_dual_production_receipt");
+ assert.equal(both.status,"DEPLOYED_EARLY_ACCESS_NO_GA");
+ assert.equal(both.contract_version,"2.1.0");
+ assert.equal(both.canonical_operation_count,47);
+ assert.equal(both.openapi_git_blob_sha,pub.openapi_source_git_blob_sha);
+ assert.equal(both.engine.deployed_source_sha,"30ecef261a25979fec23e26fd86ddc258c250671");
+ assert.equal(both.engine.latest_controller_sha,pub.source_verification.latest_checked.engine_sha);
+ assert.equal(both.landing.source_sha,pub.source_verification.latest_checked.landing_sha);
+ assert.equal(both.landing.controller_sha,both.engine.latest_controller_sha);
+ assert.match(both.landing.source_git_tree,/^[a-f0-9]{40}$/);
+ assert.equal(both.engine.percent,100);assert.equal(both.landing.percent,100);
+ assert.equal(both.engine.d1_migrations,"12/12");
+ assert.equal(both.landing.d1_migrations,"5/5");
+ for(const w of Object.values(both.landing.worker_versions))assert.match(w,/^[0-9a-f-]{36}$/);
+ for(const run of [both.engine.release_run_id,both.landing.release_run_id])assert.match(run,/^[1-9][0-9]+$/);
+ assert.equal(both.engine.smoke,"ENGINE_2_1_PRODUCTION_SMOKE_PASS");
+ assert.equal(both.landing.smoke,"LANDING_2_1_PRODUCTION_SMOKE_PASS");
+ assert.match(both.landing.production_artifact_sha256,/^[0-9a-f]{64}$/);
+ assert.match(both.landing.sandbox_artifact_sha256,/^[0-9a-f]{64}$/);
+ assert.equal(both.certified.public_landing,true);
+ assert.equal(both.certified.sandbox_widget_sdk_api_trace,true);
+ assert.equal(both.certified.real_email_inbox_deliverability,false);
+ assert.equal(both.certified.authenticated_reconciliation_production,false);
+ assert.equal(both.certified.self_service_customer_onboarding,false);
+ assert.equal(both.certified.general_availability,false);
+ assert.equal(pub.general_availability_approved,false);
+ assert.equal(t0.general_availability_approved,false);
+ assert.equal(pub.package_identity.remote_runtime_attested,false,
+  "Source package registry and separately verified runtime receipts are different authorities");
+});

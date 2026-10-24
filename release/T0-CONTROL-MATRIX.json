@@ -712,8 +712,70 @@
       "engine_controller_sha": "c7016794941aa8fdd088b005bf8149c6124e00b8",
       "engine_controller_ci": "40139445719",
       "canonical_openapi_blob": "9e918c1f60db6984f2dffd9095aa6f4c361973af",
-      "cloudflare_production_deployed": false,
-      "general_availability_approved": false
+      "cloudflare_production_deployed": true,
+      "general_availability_approved": false,
+      "production_release_run": "40139733530",
+      "production_artifact_id": "12578331108",
+      "production_artifact_sha256": "af0407453916c77b96c36044c36f475bafcc6aa05b732e20fce5041a56dcc95a"
+    },
+    "latest_verified_dual_production_release_20261024": {
+      "schema_version": 1,
+      "kind": "taghvim_t0_dual_production_receipt",
+      "contract_version": "2.1.0",
+      "observed_date": "2026-10-24",
+      "status": "DEPLOYED_EARLY_ACCESS_NO_GA",
+      "canonical_operation_count": 47,
+      "openapi_git_blob_sha": "9e918c1f60db6984f2dffd9095aa6f4c361973af",
+      "engine": {
+        "origin": "https://api.taghvim.dev",
+        "release_run_id": "40138772101",
+        "deployed_source_sha": "30ecef261a25979fec23e26fd86ddc258c250671",
+        "latest_controller_sha": "c7016794941aa8fdd088b005bf8149c6124e00b8",
+        "version_id": "dde0dbb2-1dc6-490b-89fc-192168433fe7",
+        "percent": 100,
+        "d1_migrations": "12/12",
+        "sandbox": "success",
+        "production": "success",
+        "smoke": "ENGINE_2_1_PRODUCTION_SMOKE_PASS",
+        "smoke_scope": "READ_ONLY_FREE_CORE; AUTHENTICATED_NATIVE_RECONCILIATION_TESTED_ONLY_IN_SANDBOX"
+      },
+      "landing": {
+        "origin": "https://taghvim.dev",
+        "release_run_id": "40139733530",
+        "source_sha": "8bea44764f2f6c1d77d28452aa21bb5aee7597a6",
+        "controller_sha": "c7016794941aa8fdd088b005bf8149c6124e00b8",
+        "source_git_tree": "ae35e3fed95aa8c76d9b8014f0af9c9c2f6d4560",
+        "worker_versions": {
+          "mail": "b07bfefe-295b-4966-992f-eedb0942340f",
+          "comms": "7374abfc-3a72-4f28-9b13-d4432b777220",
+          "web": "2bfd2539-5474-4e64-b3d2-e27c2dfd5f7f"
+        },
+        "percent": 100,
+        "d1_migrations": "5/5",
+        "sandbox": "success",
+        "production": "success",
+        "smoke": "LANDING_2_1_PRODUCTION_SMOKE_PASS",
+        "exact_live_contract": true,
+        "sandbox_artifact_id": "12578910150",
+        "sandbox_artifact_sha256": "86d3d51741546768a0f42aaa4d5c9e5b7d2f8a13bff3df10e1f978f58030f66e",
+        "production_artifact_id": "12578331108",
+        "production_artifact_sha256": "af0407453916c77b96c36044c36f475bafcc6aa05b732e20fce5041a56dcc95a"
+      },
+      "certified": {
+        "public_landing": true,
+        "public_free_api_core": true,
+        "contract_parity": true,
+        "sandbox_widget_sdk_api_trace": true,
+        "self_service_customer_onboarding": false,
+        "real_email_inbox_deliverability": false,
+        "authenticated_reconciliation_production": false,
+        "booking_widget": false,
+        "availability_widget": false,
+        "agent_execution_widget": false,
+        "workflow_execution_widget": false,
+        "paid_checkout": false,
+        "general_availability": false
+      }
     }
   },
   "production_d1_identity": {
