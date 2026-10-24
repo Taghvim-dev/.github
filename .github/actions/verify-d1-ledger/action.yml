@@ -29,16 +29,13 @@ runs:
       shell: bash
       env:
         D1_DATABASE: ${{ inputs.database }}
+        PROBE: ${{ github.action_path }}/read-d1-metadata.mjs
       run: |
         set -euo pipefail
-        npx wrangler d1 execute "$D1_DATABASE" --remote --json --command "PRAGMA quick_check" > d1-quick-raw.json
-        npx wrangler d1 execute "$D1_DATABASE" --remote --json --command "PRAGMA foreign_key_check" > d1-foreign-raw.json
-        npx wrangler d1 execute "$D1_DATABASE" --remote --json --command "SELECT name,type FROM sqlite_master WHERE type IN ('table','view') ORDER BY name" > d1-objects-raw.json
-        if [ "$D1_DATABASE" = "taghvim-engine" ]; then
-          npx wrangler d1 execute "$D1_DATABASE" --remote --json --command "PRAGMA table_info(subscriptions)" > d1-columns-raw.json
-        else
-          npx wrangler d1 execute "$D1_DATABASE" --remote --json --command "PRAGMA table_info(leads)" > d1-columns-raw.json
-        fi
+        # T0: fixed read-only queries, structured response gates and named error
+        # telemetry. Retries only recognized transport errors; never integrity
+        # failures. Evidence files are written only after all 4 probes succeed.
+        node "$PROBE" "$D1_DATABASE"
     - name: Fail closed on corruption, orphaned references and missing migrated schema
       shell: bash
       env:
