@@ -4,8 +4,8 @@
   "product": "Taghvim.dev",
   "contract_version": "2.1.0",
   "current_source": {
-    "engine_main_sha": "9d4f0a0c5afc0085b9566460e88db11ff767c0ab",
-    "landing_main_sha": "00f0e3fc75e09c85f7f2bf03d3005c6f6948f540",
+    "engine_main_sha": "4b5ee01feee7c8095a1c69fb4981e08de0daa566",
+    "landing_main_sha": "932831e73ea131dbb1bd38e6222af293fdcc6a46",
     "shared_policy_sha": "c195c8bfde573b6195bd1b3bd00e3535accc9040",
     "prewrite_source_policy_sha": "f3bc8d18c5c31fd1125dd4da4887c86b9e3f8447"
   },
@@ -196,7 +196,7 @@
       "test": [
         "engine/test/release-identity.test.mjs"
       ],
-      "source_ci_run": "40034901734",
+      "source_ci_run": "40102236916",
       "live_evidence": null
     },
     {
@@ -216,8 +216,8 @@
       ],
       "source_ci_run": "39691890610",
       "dependent_component_ci": {
-        "engine": "40034901734",
-        "landing": "40032106855"
+        "engine": "40102236916",
+        "landing": "40101867116"
       },
       "policy_main_sha": "f3bc8d18c5c31fd1125dd4da4887c86b9e3f8447",
       "production_remote_receipt": null,
@@ -241,8 +241,8 @@
       "source_ci_run": "39691890610",
       "reviewed_action_main_sha": "f3bc8d18c5c31fd1125dd4da4887c86b9e3f8447",
       "component_source_ci": {
-        "engine": "40034901734",
-        "landing": "40032106855"
+        "engine": "40102236916",
+        "landing": "40101867116"
       },
       "live_evidence": null,
       "expected_workflow_ids": {
@@ -272,8 +272,8 @@
       ],
       "package_contract_version": "2.1.0",
       "dependent_component_ci": {
-        "engine": "40034901734",
-        "landing": "40032106855",
+        "engine": "40102236916",
+        "landing": "40101867116",
         "SDK": "40062983809",
         "CLI": "40008793826",
         "cookbooks": "40063188582"
@@ -365,10 +365,10 @@
         "ga_approved": false
       },
       "live_schema_verified": true,
-      "latest_controller_source_sha": "9d4f0a0c5afc0085b9566460e88db11ff767c0ab",
-      "latest_controller_ci_run": "40034901734",
+      "latest_controller_source_sha": "4b5ee01feee7c8095a1c69fb4981e08de0daa566",
+      "latest_controller_ci_run": "40102236916",
       "controller_only_change_not_api_worker": true,
-      "current_source_only_ci_scope": "current Engine main + immutable SDK and Cookbooks exact SHA/CI source success; Cloudflare API Worker still historical 2642f537",
+      "current_source_only_ci_scope": "current reviewed main Engine controller and SiteKit Landing source tests passed; API Worker and Landing runtime require fresh Cloudflare owner-approved release",
       "current_source_tests": [
         "T0 actual live public Developer pages",
         "actual public SDK/Python/cookbook sandbox E2E pending protected release"
@@ -504,16 +504,16 @@
       "general_availability_approved": false
     },
     "current_source_reconciliation": {
-      "source_sha_engine": "9d4f0a0c5afc0085b9566460e88db11ff767c0ab",
-      "source_ci_engine": "40034901734",
+      "source_sha_engine": "4b5ee01feee7c8095a1c69fb4981e08de0daa566",
+      "source_ci_engine": "40102236916",
       "source_sha_sdk": "7d7f4c3c8f4911ad9ac3a0871a98a1751e3d26a5",
       "source_ci_sdk": "40062983809",
       "source_sha_cookbooks": "ebb8367cd29ed781c28f799df0e4ea8d6b4db998",
       "source_ci_cookbooks": "40063188582",
-      "scope": "Engine remains at prior immutable SHA and needs private Actions runner recovery; public SDK Python+JavaScript reconciliation / Cookbooks SHA and CI proven. Neither native reconciliation API nor missing booking/agent backends, nor a new Engine deployment, nor GA is certified.",
+      "scope": "CURRENT_SOURCE_ONLY; exact SiteKit mobile source reviewed; no new Cloudflare production receipt yet; GA forbidden",
       "production_attested": false,
-      "source_sha_landing": "00f0e3fc75e09c85f7f2bf03d3005c6f6948f540",
-      "source_ci_landing": "40032106855"
+      "source_sha_landing": "932831e73ea131dbb1bd38e6222af293fdcc6a46",
+      "source_ci_landing": "40101867116"
     },
     "latest_engine_reconciliation_production": {
       "source_sha": "4b6d824b11941b45c20be32adb7b04739953ae66",
@@ -692,5 +692,17 @@
     "required_migration": "0010_developer_invitations.sql",
     "expected_ledger": "10/10",
     "source": "Taghvim-dev/engine/wrangler.toml@2642f537fac2302b7d8db6b10c06320a8b20be66"
+  },
+  "sitekit_mobile_release_candidate_20261024": {
+    "engine_source_sha": "4b5ee01feee7c8095a1c69fb4981e08de0daa566",
+    "engine_source_ci_run": "40102236916",
+    "landing_source_sha": "932831e73ea131dbb1bd38e6222af293fdcc6a46",
+    "landing_source_ci_run": "40101867116",
+    "landing_tree_sha": "0833cf20651c32b26a330de9bd48f10f9a47c608",
+    "source_sitekit_commit": "68f65bd74416a3908e075cc8bca7b2c880254789",
+    "visual_pr_ci_run": "40101755280",
+    "landing_pr_ci_run": "40101755270",
+    "production_attested": false,
+    "scope": "SiteKit source and responsive iOS QA; NOT Cloudflare production receipt until owner-approved release run"
   }
 }
