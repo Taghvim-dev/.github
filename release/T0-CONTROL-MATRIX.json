@@ -4,8 +4,8 @@
   "product": "Taghvim.dev",
   "contract_version": "2.1.0",
   "current_source": {
-    "engine_main_sha": "9d4f0a0c5afc0085b9566460e88db11ff767c0ab",
-    "landing_main_sha": "00f0e3fc75e09c85f7f2bf03d3005c6f6948f540",
+    "engine_main_sha": "4b5ee01feee7c8095a1c69fb4981e08de0daa566",
+    "landing_main_sha": "932831e73ea131dbb1bd38e6222af293fdcc6a46",
     "shared_policy_sha": "c195c8bfde573b6195bd1b3bd00e3535accc9040",
     "prewrite_source_policy_sha": "f3bc8d18c5c31fd1125dd4da4887c86b9e3f8447"
   },
@@ -196,7 +196,7 @@
       "test": [
         "engine/test/release-identity.test.mjs"
       ],
-      "source_ci_run": "40034901734",
+      "source_ci_run": "40102236916",
       "live_evidence": null
     },
     {
@@ -214,10 +214,10 @@
         "engine/test/promotion-first.test.mjs",
         "landing/test/promotion-first.test.mjs"
       ],
-      "source_ci_run": "39691890610",
+      "source_ci_run": "40102236916",
       "dependent_component_ci": {
-        "engine": "40034901734",
-        "landing": "40032106855"
+        "engine": "40102236916",
+        "landing": "40101867116"
       },
       "policy_main_sha": "f3bc8d18c5c31fd1125dd4da4887c86b9e3f8447",
       "production_remote_receipt": null,
@@ -238,11 +238,11 @@
         "engine/test/promotion-first.test.mjs",
         "landing/test/promotion-first.test.mjs"
       ],
-      "source_ci_run": "39691890610",
+      "source_ci_run": "40102236916",
       "reviewed_action_main_sha": "f3bc8d18c5c31fd1125dd4da4887c86b9e3f8447",
       "component_source_ci": {
-        "engine": "40034901734",
-        "landing": "40032106855"
+        "engine": "40102236916",
+        "landing": "40101867116"
       },
       "live_evidence": null,
       "expected_workflow_ids": {
@@ -272,13 +272,13 @@
       ],
       "package_contract_version": "2.1.0",
       "dependent_component_ci": {
-        "engine": "40034901734",
-        "landing": "40032106855",
+        "engine": "40102236916",
+        "landing": "40101867116",
         "SDK": "40062983809",
         "CLI": "40008793826",
         "cookbooks": "40063188582"
       },
-      "source_ci_run": "40002313088",
+      "source_ci_run": "40102236916",
       "live_evidence": null
     }
   ],
@@ -692,5 +692,17 @@
     "required_migration": "0010_developer_invitations.sql",
     "expected_ledger": "10/10",
     "source": "Taghvim-dev/engine/wrangler.toml@2642f537fac2302b7d8db6b10c06320a8b20be66"
+  },
+  "sitekit_mobile_release_candidate_20261024": {
+    "engine_source_sha": "4b5ee01feee7c8095a1c69fb4981e08de0daa566",
+    "engine_source_ci_run": "40102236916",
+    "landing_source_sha": "932831e73ea131dbb1bd38e6222af293fdcc6a46",
+    "landing_source_ci_run": "40101867116",
+    "landing_tree_sha": "0833cf20651c32b26a330de9bd48f10f9a47c608",
+    "source_sitekit_commit": "68f65bd74416a3908e075cc8bca7b2c880254789",
+    "visual_pr_ci_run": "40101755280",
+    "landing_pr_ci_run": "40101755270",
+    "production_attested": false,
+    "scope": "SiteKit source and responsive iOS QA; NOT Cloudflare production receipt until owner-approved release run"
   }
 }
