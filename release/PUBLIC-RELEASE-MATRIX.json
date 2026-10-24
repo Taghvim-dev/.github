@@ -43,7 +43,7 @@
   },
   "owner_action": "Do not declare GA or enable live billing until all prerequisites have evidence and pass their gates.",
   "source_verification": {
-    "date": "2026-10-23",
+    "date": "2026-10-24",
     "phase": "source-integrated-not-deployed",
     "engine_main_merge_sha": "4b5ee01feee7c8095a1c69fb4981e08de0daa566",
     "engine_offline_ci_run": "40102236916",
@@ -1247,6 +1247,5 @@
     "landing_pr_ci_run": "40101755270",
     "production_attested": false,
     "scope": "SiteKit source and responsive iOS QA; NOT Cloudflare production receipt until owner-approved release run"
-  },
-  "date": "2026-10-24"
+  }
 }
