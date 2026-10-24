@@ -194,10 +194,10 @@
     },
     "engine_package_contract_identity": {
       "status": "SOURCE_TESTED_ENGINE_LIVE_VERIFIED",
-      "source_main_sha": "4b5ee01feee7c8095a1c69fb4981e08de0daa566",
+      "source_main_sha": "0fe3a9858bd6cff2354a13bb9de8d1179a00cb40",
       "reviewed_pr": "Taghvim-dev/engine #146 source only; new Cloudflare runtime not yet re-attested",
-      "source_test_sha": "4b5ee01feee7c8095a1c69fb4981e08de0daa566",
-      "ci_run": "40102236916",
+      "source_test_sha": "0fe3a9858bd6cff2354a13bb9de8d1179a00cb40",
+      "ci_run": "40136597003",
       "api_version": "2.1.0",
       "package_version": "2.1.0",
       "lock_root_version": "2.1.0",
@@ -809,16 +809,16 @@
     "source_only": true,
     "remote_runtime_attested": false,
     "engine": {
-      "commit": "4b5ee01feee7c8095a1c69fb4981e08de0daa566",
+      "commit": "0fe3a9858bd6cff2354a13bb9de8d1179a00cb40",
       "package": "2.1.0",
       "lock": "2.1.0",
-      "ci": "40102236916"
+      "ci": "40136597003"
     },
     "landing": {
-      "commit": "932831e73ea131dbb1bd38e6222af293fdcc6a46",
+      "commit": "e6cfa9dcf22d1659aad65d167a2fb0b034409fb9",
       "package": "2.1.0",
       "lock": "2.1.0",
-      "ci": "40101867116"
+      "ci": "40133701170"
     },
     "SDK": {
       "commit": "7d7f4c3c8f4911ad9ac3a0871a98a1751e3d26a5",
@@ -1054,16 +1054,16 @@
       "general_availability_approved": false
     },
     "current_source_reconciliation": {
-      "source_sha_engine": "4b5ee01feee7c8095a1c69fb4981e08de0daa566",
-      "source_ci_engine": "40102236916",
+      "source_sha_engine": "0fe3a9858bd6cff2354a13bb9de8d1179a00cb40",
+      "source_ci_engine": "40136597003",
       "source_sha_sdk": "7d7f4c3c8f4911ad9ac3a0871a98a1751e3d26a5",
       "source_ci_sdk": "40062983809",
       "source_sha_cookbooks": "ebb8367cd29ed781c28f799df0e4ea8d6b4db998",
       "source_ci_cookbooks": "40063188582",
       "scope": "CURRENT_SOURCE_ONLY; exact SiteKit mobile source reviewed; no new Cloudflare production receipt yet; GA forbidden",
       "production_attested": false,
-      "source_sha_landing": "932831e73ea131dbb1bd38e6222af293fdcc6a46",
-      "source_ci_landing": "40101867116"
+      "source_sha_landing": "e6cfa9dcf22d1659aad65d167a2fb0b034409fb9",
+      "source_ci_landing": "40133701170"
     },
     "latest_engine_reconciliation_production": {
       "source_sha": "4b6d824b11941b45c20be32adb7b04739953ae66",
