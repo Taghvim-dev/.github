@@ -214,7 +214,7 @@
         "engine/test/promotion-first.test.mjs",
         "landing/test/promotion-first.test.mjs"
       ],
-      "source_ci_run": "40102236916",
+      "source_ci_run": "39691890610",
       "dependent_component_ci": {
         "engine": "40102236916",
         "landing": "40101867116"
@@ -238,7 +238,7 @@
         "engine/test/promotion-first.test.mjs",
         "landing/test/promotion-first.test.mjs"
       ],
-      "source_ci_run": "40102236916",
+      "source_ci_run": "39691890610",
       "reviewed_action_main_sha": "f3bc8d18c5c31fd1125dd4da4887c86b9e3f8447",
       "component_source_ci": {
         "engine": "40102236916",
@@ -278,7 +278,7 @@
         "CLI": "40008793826",
         "cookbooks": "40063188582"
       },
-      "source_ci_run": "40102236916",
+      "source_ci_run": "40002313088",
       "live_evidence": null
     }
   ],
