@@ -28,4 +28,7 @@ jobs:
       - name: Reconcile exact current public main SHAs only after successful release CI
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Optional fine-grained READ-ONLY authority for the two private
+          # source repos. Never store Cloudflare tokens in this public CI.
+          TAGHVIM_PRIVATE_SOURCE_READ_TOKEN: ${{ secrets.TAGHVIM_PRIVATE_SOURCE_READ_TOKEN }}
         run: node scripts/reconcile-public-widget.mjs

@@ -73,7 +73,11 @@ export function sourcesAreConsistent(matrix,controls,engine,landing){
 }
 
 async function gh(path,method="GET",body){
- const token=process.env.GITHUB_TOKEN;
+ const privateSource=path==="/repos/Taghvim-dev/engine" ||
+   path.startsWith("/repos/Taghvim-dev/engine/") ||
+   path==="/repos/Taghvim-dev/landing" ||
+   path.startsWith("/repos/Taghvim-dev/landing/");
+ const token=privateSource?process.env.TAGHVIM_PRIVATE_SOURCE_READ_TOKEN:process.env.GITHUB_TOKEN;
  if(!token)fail("missing job-scoped token");
  const r=await fetch(API+path,{method,redirect:"error",cache:"no-store",
   headers:{accept:"application/vnd.github+json",authorization:"Bearer "+token,
@@ -116,6 +120,12 @@ export function canResetOrFastForwardBotBranch(compare){
 }
 export async function reconcilePublicWidget(){
  if(process.env.GITHUB_REPOSITORY!==ROOT||process.env.GITHUB_REF!=="refs/heads/main")fail("not trusted main controller");
+ // Private Engine and Landing MUST NOT be queried with this public repository's
+ // limited GITHUB_TOKEN. Missing explicit private read authority is expected and
+ // should be represented as a fail-closed WAIT status, never a recurring 404.
+ if(!process.env.TAGHVIM_PRIVATE_SOURCE_READ_TOKEN)
+   return {status:"WAIT_FOR_PRIVATE_SOURCE_READ_AUTHORITY",writes:0,read_private:false,ga_approved:false};
+
  const [sdk,cookbooks,root]=await Promise.all([head("Taghvim-dev/SDK"),head("Taghvim-dev/cookbooks"),head(ROOT)]);
  // Root-scoped branch avoids drift from an orphan created against older main.
  const branch=BRANCH_PREFIX+root.slice(0,12);

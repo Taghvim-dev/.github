@@ -145,3 +145,13 @@ test("SDK cookbook source mismatch blocks all coupled ledger mutation even when 
  assert.equal(p.status,"BLOCKED_CROSS_REPO_SOURCE_DRIFT");
  assert.equal(p.controls,null);
 });
+
+test("scheduled public reconciler never treats missing private-source read authority as CI failure or verified GA",async()=>{
+ const {readFileSync}=await import("node:fs");
+ const script=readFileSync(new URL("../scripts/reconcile-public-widget.mjs",import.meta.url),"utf8");
+ const workflow=readFileSync(new URL("../.github/workflows/t0-public-widget-sdk-reconciler.yml",import.meta.url),"utf8");
+ assert.ok(script.includes('status:"WAIT_FOR_PRIVATE_SOURCE_READ_AUTHORITY",writes:0,read_private:false,ga_approved:false'));
+ assert.ok(script.includes("process.env.TAGHVIM_PRIVATE_SOURCE_READ_TOKEN"));
+ assert.ok(workflow.includes("TAGHVIM_PRIVATE_SOURCE_READ_TOKEN: ${{ secrets.TAGHVIM_PRIVATE_SOURCE_READ_TOKEN }}"));
+ assert.equal(false,workflow.includes("CLOUDFLARE_API_TOKEN"));
+});
