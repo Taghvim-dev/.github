@@ -274,9 +274,9 @@
       "dependent_component_ci": {
         "engine": "40034901734",
         "landing": "40032106855",
-        "SDK": "40028869453",
+        "SDK": "40062983809",
         "CLI": "40008793826",
-        "cookbooks": "40029335220"
+        "cookbooks": "40063188582"
       },
       "source_ci_run": "40002313088",
       "live_evidence": null
@@ -474,11 +474,11 @@
     "release_ledger_source_pins_still_require_independent_re_review": true,
     "both_product_components_live": true,
     "current_source_not_yet_deployed_scope": "LATEST_ENGINE_MAIN_CONTROLLER_CHANGE_NOT_API_WORKER; production Engine API remains deployed SHA 2642f537, Landing source 41657131",
-    "sdk_current_source_commit": "d5bda0b72687fc1c5feb2f34e27ba852d27aeaab",
-    "cookbooks_current_source_commit": "803e054e51457049bd26cd7c9003f7ecf8988a2b",
-    "cookbooks_current_main_ci_run": "40029335220",
+    "sdk_current_source_commit": "7d7f4c3c8f4911ad9ac3a0871a98a1751e3d26a5",
+    "cookbooks_current_source_commit": "ebb8367cd29ed781c28f799df0e4ea8d6b4db998",
+    "cookbooks_current_main_ci_run": "40063188582",
     "sdk_publication_status": "source_preview; npm_PyPI_not_published; real_python_sdk_cloudflare_sandbox_retest_required",
-    "sdk_current_main_ci_run": "40028869453",
+    "sdk_current_main_ci_run": "40062983809",
     "cli_current_source_commit": "d723958869b82d9b92907fed6689b32790f0491c",
     "cli_current_main_ci_run": "40008793826",
     "workerd_runtime_and_widget_sandbox_evidence": {
@@ -506,11 +506,11 @@
     "current_source_reconciliation": {
       "source_sha_engine": "9d4f0a0c5afc0085b9566460e88db11ff767c0ab",
       "source_ci_engine": "40034901734",
-      "source_sha_sdk": "d5bda0b72687fc1c5feb2f34e27ba852d27aeaab",
-      "source_ci_sdk": "40028869453",
-      "source_sha_cookbooks": "803e054e51457049bd26cd7c9003f7ecf8988a2b",
-      "source_ci_cookbooks": "40029335220",
-      "scope": "Current engine source/CI only; D1 resource migration 0012 NOT YET in Production; no booking API or GA.",
+      "source_sha_sdk": "7d7f4c3c8f4911ad9ac3a0871a98a1751e3d26a5",
+      "source_ci_sdk": "40062983809",
+      "source_sha_cookbooks": "ebb8367cd29ed781c28f799df0e4ea8d6b4db998",
+      "source_ci_cookbooks": "40063188582",
+      "scope": "Engine remains at prior immutable SHA and needs private Actions runner recovery; public SDK Python+JavaScript reconciliation / Cookbooks SHA and CI proven. Neither native reconciliation API nor missing booking/agent backends, nor a new Engine deployment, nor GA is certified.",
       "production_attested": false,
       "source_sha_landing": "00f0e3fc75e09c85f7f2bf03d3005c6f6948f540",
       "source_ci_landing": "40032106855"
@@ -674,6 +674,16 @@
       "protected_run_sandbox_artifact_digest": "f646eab9bcba178d5c37020ece16434dc016618155e9cf5744282cc1e14e4f19",
       "owner_release_receipt_comment": "6376216441",
       "live_api_readonly_smoke": "SUCCESS"
+    },
+    "python_calendar_reconciliation_20261024": {
+      "source": "public SDK + Cookbooks",
+      "sdk_sha": "7d7f4c3c8f4911ad9ac3a0871a98a1751e3d26a5",
+      "sdk_ci": "40062983809",
+      "cookbooks_sha": "ebb8367cd29ed781c28f799df0e4ea8d6b4db998",
+      "cookbooks_ci": "40063188582",
+      "scope": "Python SDK and widget via two authenticated metered convert calls, no native reconcile endpoint, no new Engine runtime attestation",
+      "pending_engine_private_ci": "Taghvim-dev/engine#159",
+      "full_product_ga": false
     }
   },
   "production_d1_identity": {
