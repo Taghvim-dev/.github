@@ -915,8 +915,8 @@
         "ga_approved": false
       },
       "live_schema_verified": true,
-      "latest_controller_source_sha": "4b5ee01feee7c8095a1c69fb4981e08de0daa566",
-      "latest_controller_ci_run": "40102236916",
+      "latest_controller_source_sha": "0fe3a9858bd6cff2354a13bb9de8d1179a00cb40",
+      "latest_controller_ci_run": "40136597003",
       "controller_only_change_not_api_worker": true,
       "current_source_only_ci_scope": "current reviewed main Engine controller and SiteKit Landing source tests passed; API Worker and Landing runtime require fresh Cloudflare owner-approved release",
       "current_source_tests": [
