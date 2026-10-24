@@ -155,7 +155,7 @@
       "landing_ci": "40101867116",
       "shared_release_actions_sha": "c195c8bfde573b6195bd1b3bd00e3535accc9040",
       "vendored_engine_files_matched": 11,
-      "sandbox_to_production_status": "NO_GO_PENDING_NEW_SOURCE_PRODUCTION_SMOKE",
+      "sandbox_to_production_status": "NO_GO",
       "production_workflow_runs": 1,
       "landing_integration_sha": "e380b5f3553b98faf35adeccd9f6a25440a778a4",
       "landing_integration_ci": "39774645927"
