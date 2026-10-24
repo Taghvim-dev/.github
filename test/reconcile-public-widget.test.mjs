@@ -1,6 +1,6 @@
 import {test} from "node:test";
 import assert from "node:assert/strict";
-import {buildCandidate,buildCoupledCandidate,sourcesAreConsistent,canResetOrFastForwardBotBranch} from "../scripts/reconcile-public-widget.mjs";
+import {buildCandidate,buildCoupledCandidate,sourcesAreConsistent,canResetOrFastForwardBotBranch,privateSourceAccessDenied} from "../scripts/reconcile-public-widget.mjs";
 const a="a".repeat(40), b="b".repeat(40),c="c".repeat(40);
 function matrix(){return {
  state:"PREVIEW",general_availability_approved:false,contract_version:"2.1.0",
@@ -154,4 +154,21 @@ test("scheduled public reconciler never treats missing private-source read autho
  assert.ok(script.includes("process.env.TAGHVIM_PRIVATE_SOURCE_READ_TOKEN"));
  assert.ok(workflow.includes("TAGHVIM_PRIVATE_SOURCE_READ_TOKEN: ${{ secrets.TAGHVIM_PRIVATE_SOURCE_READ_TOKEN }}"));
  assert.equal(false,workflow.includes("CLOUDFLARE_API_TOKEN"));
+});
+
+test("only inaccessible scoped PRIVATE source main-ref 404 produces blocked checkpoint",()=>{
+ for(const repo of ["Taghvim-dev/engine","Taghvim-dev/landing"]){
+  const msg="T0_PUBLIC_WIDGET_RECONCILE_BLOCKED: GitHub API 404 at /repos/"+repo+"/git/ref/heads/main";
+  assert.equal(privateSourceAccessDenied(new Error(msg),repo),true);
+  assert.equal(privateSourceAccessDenied(new Error("GitHub API 403"),repo),false);
+  assert.equal(privateSourceAccessDenied(new Error(msg),"Taghvim-dev/SDK"),false);
+  assert.equal(privateSourceAccessDenied(new Error("T0_PUBLIC_WIDGET_RECONCILE_BLOCKED: GitHub API 404 at /repos/Taghvim-dev/SDK/git/ref/heads/main"),repo),false);
+ }
+});
+test("no mutable release candidate or false GA when scoped private source cannot be read",async()=>{
+ const {readFileSync}=await import("node:fs");
+ const source=readFileSync(new URL("../scripts/reconcile-public-widget.mjs",import.meta.url),"utf8");
+ assert.ok(source.includes('return {status:"WAIT_FOR_PRIVATE_SOURCE_ACCESS",writes:0,ga_approved:false'));
+ assert.ok(source.indexOf('WAIT_FOR_PRIVATE_SOURCE_ACCESS')<source.indexOf('buildCoupledCandidate(canonical.data,control.data'));
+ assert.ok(source.includes('headPrivate("Taghvim-dev/engine"),headPrivate("Taghvim-dev/landing")'));
 });
