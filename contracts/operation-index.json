@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
   "contractVersion": "2.1.0",
-  "openApiGitBlobSHA": "c0d163f8e2d883125fc3778b17842bd19fe3f6bf",
-  "sourceCommit": "292948b575c3417960b90e51f837f409c7385028",
-  "generatedAt": "2026-10-20",
+  "openApiGitBlobSHA": "9e918c1f60db6984f2dffd9095aa6f4c361973af",
+  "sourceCommit": "ac03f48edf54bfc09968575621fe093c2187bfc2",
+  "generatedAt": "2026-10-24",
   "status": "preview",
   "operations": [
     {
@@ -42,6 +42,14 @@
       "method": "POST",
       "path": "/v1/dates/convert",
       "operationId": "convertDate",
+      "auth": [
+        "ApiKey"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/v1/dates/reconcile",
+      "operationId": "reconcileDates",
       "auth": [
         "ApiKey"
       ]
