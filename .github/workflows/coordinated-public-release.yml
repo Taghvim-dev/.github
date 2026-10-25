@@ -1,6 +1,7 @@
 name: coordinated-public-release
 on:
   pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
     paths:
       - "release/PUBLIC-RELEASE-MATRIX.json"
       - "release/T0-CONTROL-MATRIX.json"
@@ -51,6 +52,9 @@ concurrency:
   cancel-in-progress: true
 jobs:
   public-contract-parity:
+    # Draft = inert candidate; ready_for_review must request a complete, tested SHA.
+    # Main pushes and explicit owner-driven verification still execute normally.
+    if: github.event_name != 'pull_request' || github.event.pull_request.draft == false
     runs-on: ubuntu-24.04
     timeout-minutes: 12
     steps:

@@ -119,3 +119,28 @@ test("latest independent Cloudflare Worker production receipts are durable, scop
  assert.equal(pub.package_identity.remote_runtime_attested,false,
   "Source package registry and separately verified runtime receipts are different authorities");
 });
+
+
+// T0: a partially authored, draft cross-repo release must not launch full
+// verification jobs / repeated failed emails. The Ready event invokes them.
+test("T0 draft candidates stay inert; ready-for-review invokes required admission for both CI paths",()=>{
+ const docs=readFileSync(new URL("../.github/workflows/validate.yml",import.meta.url),"utf8");
+ const release=readFileSync(new URL("../.github/workflows/coordinated-public-release.yml",import.meta.url),"utf8");
+ for(const [name,y] of [["docs",docs],["release",release]]){
+  assert.ok(y.includes("ready_for_review"),name+": ready-for-review trigger required");
+  assert.ok(y.includes("github.event.pull_request.draft == false"),name+": draft gate required");
+  assert.ok(y.includes("github.event_name != 'pull_request'"),name+": main pushes must still verify");
+  assert.ok(y.includes("cancel-in-progress: true"),name+": superseded candidate CI must be cancelled");
+ }
+});
+test("T0 release-matrix-only updates have exactly one independent full CI admission, never none or two",()=>{
+ const docs=readFileSync(new URL("../.github/workflows/validate.yml",import.meta.url),"utf8");
+ const release=readFileSync(new URL("../.github/workflows/coordinated-public-release.yml",import.meta.url),"utf8");
+ for(const file of ["release/PUBLIC-RELEASE-MATRIX.json","release/T0-CONTROL-MATRIX.json"]){
+  const q='"'+file+'"';
+  assert.equal(docs.split(q).length-1,2,"public-docs must ignore matrix-only on PR and push");
+  assert.equal(release.split(q).length-1,2,"coordinated must verify matrix on PR and push");
+ }
+ assert.ok(release.includes("node --test test/source-runtime-separation-20261023.test.mjs"));
+ assert.ok(release.includes("node scripts/check-public-release.mjs"));
+});
