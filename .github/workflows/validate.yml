@@ -2,8 +2,18 @@ name: public-docs-verify
 
 on:
   pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    # Release-matrix-only changes are verified by coordinated-public-release,
+    # which runs these same shared source/runtime regression tests.
+    # Avoid two separate failure notification paths for a single matrix edit.
+    paths-ignore:
+      - "release/PUBLIC-RELEASE-MATRIX.json"
+      - "release/T0-CONTROL-MATRIX.json"
   push:
     branches: [main]
+    paths-ignore:
+      - "release/PUBLIC-RELEASE-MATRIX.json"
+      - "release/T0-CONTROL-MATRIX.json"
 
 permissions:
   contents: read
@@ -14,6 +24,8 @@ concurrency:
 
 jobs:
   validate:
+    # PR source is untrusted until complete: only Ready PRs enter CI.
+    if: github.event_name != 'pull_request' || github.event.pull_request.draft == false
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
