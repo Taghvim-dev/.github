@@ -43,10 +43,10 @@
   },
   "owner_action": "Do not declare GA or enable live billing until all prerequisites have evidence and pass their gates.",
   "source_verification": {
-    "date": "2026-10-24",
+    "date": "2026-10-25",
     "phase": "source-integrated-not-deployed",
-    "engine_main_merge_sha": "c7016794941aa8fdd088b005bf8149c6124e00b8",
-    "engine_offline_ci_run": "40139445719",
+    "engine_main_merge_sha": "7a519224c01134bd334c8568172c7da963f7de6c",
+    "engine_offline_ci_run": "40158778609",
     "engine_live_gate_ci_run": "39439068311",
     "landing_main_merge_sha": "8bea44764f2f6c1d77d28452aa21bb5aee7597a6",
     "landing_integration_merge_sha": "e380b5f3553b98faf35adeccd9f6a25440a778a4",
@@ -148,9 +148,9 @@
       "note": "GitHub repository environment settings cannot be read/managed by current connector. Actual deploy job independently verifies via GitHub API; no production action authorized yet."
     },
     "latest_checked": {
-      "date": "2026-10-24",
-      "engine_sha": "c7016794941aa8fdd088b005bf8149c6124e00b8",
-      "engine_ci": "40139445719",
+      "date": "2026-10-25",
+      "engine_sha": "7a519224c01134bd334c8568172c7da963f7de6c",
+      "engine_ci": "40158778609",
       "landing_sha": "8bea44764f2f6c1d77d28452aa21bb5aee7597a6",
       "landing_ci": "40139247602",
       "shared_release_actions_sha": "c195c8bfde573b6195bd1b3bd00e3535accc9040",
@@ -194,10 +194,10 @@
     },
     "engine_package_contract_identity": {
       "status": "SOURCE_TESTED_ENGINE_LIVE_VERIFIED",
-      "source_main_sha": "c7016794941aa8fdd088b005bf8149c6124e00b8",
-      "reviewed_pr": "Taghvim-dev/engine #178 exact 11-file SiteKit Landing mirror; current controller source only, Engine Worker previous 30ece release already live",
-      "source_test_sha": "c7016794941aa8fdd088b005bf8149c6124e00b8",
-      "ci_run": "40139445719",
+      "source_main_sha": "7a519224c01134bd334c8568172c7da963f7de6c",
+      "reviewed_pr": "Taghvim-dev/engine PR #179 parser assertion fix, reviewed head 6844829, merged main 7a51922 with exact Git-tree parity; SOURCE ONLY, historical production receipt unchanged",
+      "source_test_sha": "684482991cf39288d56d4daefd7461f208d7d9f6",
+      "ci_run": "40158778609",
       "api_version": "2.1.0",
       "package_version": "2.1.0",
       "lock_root_version": "2.1.0",
@@ -210,9 +210,9 @@
       "policy_main_sha": "f3bc8d18c5c31fd1125dd4da4887c86b9e3f8447",
       "policy_pr": "Taghvim-dev/.github PR #47",
       "policy_test_run": "39691890610",
-      "engine_main_sha": "c7016794941aa8fdd088b005bf8149c6124e00b8",
-      "engine_reviewed_head": "c7016794941aa8fdd088b005bf8149c6124e00b8",
-      "engine_ci_run": "40139445719",
+      "engine_main_sha": "7a519224c01134bd334c8568172c7da963f7de6c",
+      "engine_reviewed_head": "684482991cf39288d56d4daefd7461f208d7d9f6",
+      "engine_ci_run": "40158778609",
       "landing_main_sha": "8bea44764f2f6c1d77d28452aa21bb5aee7597a6",
       "landing_reviewed_head": "8bea44764f2f6c1d77d28452aa21bb5aee7597a6",
       "landing_ci_run": "40139247602",
@@ -809,10 +809,10 @@
     "source_only": true,
     "remote_runtime_attested": false,
     "engine": {
-      "commit": "c7016794941aa8fdd088b005bf8149c6124e00b8",
+      "commit": "7a519224c01134bd334c8568172c7da963f7de6c",
       "package": "2.1.0",
       "lock": "2.1.0",
-      "ci": "40139445719"
+      "ci": "40158778609"
     },
     "landing": {
       "commit": "8bea44764f2f6c1d77d28452aa21bb5aee7597a6",
@@ -915,10 +915,10 @@
         "ga_approved": false
       },
       "live_schema_verified": true,
-      "latest_controller_source_sha": "c7016794941aa8fdd088b005bf8149c6124e00b8",
-      "latest_controller_ci_run": "40139445719",
+      "latest_controller_source_sha": "7a519224c01134bd334c8568172c7da963f7de6c",
+      "latest_controller_ci_run": "40158778609",
       "controller_only_change_not_api_worker": true,
-      "current_source_only_ci_scope": "Current Engine main c701 controller includes exact Landing 8bea tree ae35e3 and passes 40139445719; newest worker runtime previously promoted at Engine 30ece run 40138772101, Landing 8bea is not yet Cloudflare deployed",
+      "current_source_only_ci_scope": "Current Engine main 7a51922 parser assertion fix has independently passing main CI 40158778609; historic Worker releases and Cloudflare receipts remain tied to their original deployed SHA. This newer Engine source has NOT been promoted to Cloudflare.",
       "current_source_tests": [
         "Taghvim Engine main test 40138091154 successful",
         "SDK JavaScript/Python main 40137472813 successful",
@@ -1280,7 +1280,7 @@
         "origin": "https://api.taghvim.dev",
         "release_run_id": "40138772101",
         "deployed_source_sha": "30ecef261a25979fec23e26fd86ddc258c250671",
-        "latest_controller_sha": "c7016794941aa8fdd088b005bf8149c6124e00b8",
+        "latest_controller_sha": "7a519224c01134bd334c8568172c7da963f7de6c",
         "version_id": "dde0dbb2-1dc6-490b-89fc-192168433fe7",
         "percent": 100,
         "d1_migrations": "12/12",
@@ -1293,7 +1293,7 @@
         "origin": "https://taghvim.dev",
         "release_run_id": "40139733530",
         "source_sha": "8bea44764f2f6c1d77d28452aa21bb5aee7597a6",
-        "controller_sha": "c7016794941aa8fdd088b005bf8149c6124e00b8",
+        "controller_sha": "7a519224c01134bd334c8568172c7da963f7de6c",
         "source_git_tree": "ae35e3fed95aa8c76d9b8014f0af9c9c2f6d4560",
         "worker_versions": {
           "mail": "b07bfefe-295b-4966-992f-eedb0942340f",
@@ -1339,5 +1339,22 @@
     "landing_pr_ci_run": "40101755270",
     "production_attested": false,
     "scope": "SiteKit source and responsive iOS QA; NOT Cloudflare production receipt until owner-approved release run"
+  },
+  "source_reconciliation_20261025": {
+    "scope": "SOURCE_ONLY_NO_CLOUDFLARE_WRITE",
+    "engine_pr": "Taghvim-dev/engine#179",
+    "engine_reviewed_head_sha": "684482991cf39288d56d4daefd7461f208d7d9f6",
+    "engine_merged_main_sha": "7a519224c01134bd334c8568172c7da963f7de6c",
+    "engine_exact_git_tree_sha": "8228b0da86d7409b08abcb463e4d06190ea41395",
+    "engine_main_ci_run": "40158778609",
+    "engine_ci_workflow_id": 372423484,
+    "engine_ci_job_names": [
+      "test (ubuntu-24.04)",
+      "test (ubuntu-26.04)"
+    ],
+    "landing_main_unchanged_sha": "8bea44764f2f6c1d77d28452aa21bb5aee7597a6",
+    "release_contract": "2.1.0",
+    "production_promotion_for_new_engine_source": "NOT_DISPATCHED",
+    "general_availability_approved": false
   }
 }
