@@ -90,10 +90,15 @@ test("latest independent Cloudflare Worker production receipts are durable, scop
  assert.equal(both.canonical_operation_count,47);
  assert.equal(both.openapi_git_blob_sha,pub.openapi_source_git_blob_sha);
  assert.equal(both.engine.deployed_source_sha,"30ecef261a25979fec23e26fd86ddc258c250671");
- assert.equal(both.engine.latest_controller_sha,pub.source_verification.latest_checked.engine_sha);
- assert.equal(both.landing.source_sha,pub.source_verification.latest_checked.landing_sha);
+ // A sealed deployment receipt MUST NOT drift whenever a newer main is reviewed.
+ // Deployment-time controller/landing identities are historical immutable evidence;
+ // latest_checked belongs to a separate current-source ledger and is intentionally mutable.
+ assert.match(both.engine.latest_controller_sha,/^[a-f0-9]{40}$/);
+ assert.equal(both.landing.source_sha,pub.post_release_observation_20261023.landing_latest_source_candidate_20261024.source_sha);
  assert.equal(both.landing.controller_sha,both.engine.latest_controller_sha);
- assert.match(both.landing.source_git_tree,/^[a-f0-9]{40}$/);
+ assert.equal(both.landing.source_git_tree,pub.post_release_observation_20261023.landing_latest_source_candidate_20261024.full_git_tree);
+ assert.equal(pub.source_verification.latest_checked.engine_sha,t0.current_source.engine_main_sha);
+ assert.equal(pub.source_verification.latest_checked.landing_sha,t0.current_source.landing_main_sha);
  assert.equal(both.engine.percent,100);assert.equal(both.landing.percent,100);
  assert.equal(both.engine.d1_migrations,"12/12");
  assert.equal(both.landing.d1_migrations,"5/5");
