@@ -4,7 +4,7 @@
   "product": "Taghvim.dev",
   "contract_version": "2.1.0",
   "current_source": {
-    "engine_main_sha": "c7016794941aa8fdd088b005bf8149c6124e00b8",
+    "engine_main_sha": "7a519224c01134bd334c8568172c7da963f7de6c",
     "landing_main_sha": "8bea44764f2f6c1d77d28452aa21bb5aee7597a6",
     "shared_policy_sha": "c195c8bfde573b6195bd1b3bd00e3535accc9040",
     "prewrite_source_policy_sha": "f3bc8d18c5c31fd1125dd4da4887c86b9e3f8447"
@@ -196,7 +196,7 @@
       "test": [
         "engine/test/release-identity.test.mjs"
       ],
-      "source_ci_run": "40139445719",
+      "source_ci_run": "40158778609",
       "live_evidence": null
     },
     {
@@ -216,7 +216,7 @@
       ],
       "source_ci_run": "39691890610",
       "dependent_component_ci": {
-        "engine": "40139445719",
+        "engine": "40158778609",
         "landing": "40139247602"
       },
       "policy_main_sha": "f3bc8d18c5c31fd1125dd4da4887c86b9e3f8447",
@@ -241,7 +241,7 @@
       "source_ci_run": "39691890610",
       "reviewed_action_main_sha": "f3bc8d18c5c31fd1125dd4da4887c86b9e3f8447",
       "component_source_ci": {
-        "engine": "40139445719",
+        "engine": "40158778609",
         "landing": "40139247602"
       },
       "live_evidence": null,
@@ -272,7 +272,7 @@
       ],
       "package_contract_version": "2.1.0",
       "dependent_component_ci": {
-        "engine": "40139445719",
+        "engine": "40158778609",
         "landing": "40139247602",
         "SDK": "40137472813",
         "CLI": "40138494477",
@@ -796,5 +796,22 @@
     "landing_pr_ci_run": "40101755270",
     "production_attested": false,
     "scope": "SiteKit source and responsive iOS QA; NOT Cloudflare production receipt until owner-approved release run"
+  },
+  "source_reconciliation_20261025": {
+    "scope": "SOURCE_ONLY_NO_CLOUDFLARE_WRITE",
+    "engine_pr": "Taghvim-dev/engine#179",
+    "engine_reviewed_head_sha": "684482991cf39288d56d4daefd7461f208d7d9f6",
+    "engine_merged_main_sha": "7a519224c01134bd334c8568172c7da963f7de6c",
+    "engine_exact_git_tree_sha": "8228b0da86d7409b08abcb463e4d06190ea41395",
+    "engine_main_ci_run": "40158778609",
+    "engine_ci_workflow_id": 372423484,
+    "engine_ci_job_names": [
+      "test (ubuntu-24.04)",
+      "test (ubuntu-26.04)"
+    ],
+    "landing_main_unchanged_sha": "8bea44764f2f6c1d77d28452aa21bb5aee7597a6",
+    "release_contract": "2.1.0",
+    "production_promotion_for_new_engine_source": "NOT_DISPATCHED",
+    "general_availability_approved": false
   }
 }
