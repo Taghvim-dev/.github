@@ -43,7 +43,7 @@
   },
   "owner_action": "Do not declare GA or enable live billing until all prerequisites have evidence and pass their gates.",
   "source_verification": {
-    "date": "2026-10-24",
+    "date": "2026-10-25",
     "phase": "source-integrated-not-deployed",
     "engine_main_merge_sha": "7a519224c01134bd334c8568172c7da963f7de6c",
     "engine_offline_ci_run": "40158778609",
