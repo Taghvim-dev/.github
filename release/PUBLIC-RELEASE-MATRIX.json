@@ -1280,7 +1280,7 @@
         "origin": "https://api.taghvim.dev",
         "release_run_id": "40138772101",
         "deployed_source_sha": "30ecef261a25979fec23e26fd86ddc258c250671",
-        "latest_controller_sha": "7a519224c01134bd334c8568172c7da963f7de6c",
+        "latest_controller_sha": "c7016794941aa8fdd088b005bf8149c6124e00b8",
         "version_id": "dde0dbb2-1dc6-490b-89fc-192168433fe7",
         "percent": 100,
         "d1_migrations": "12/12",
@@ -1293,7 +1293,7 @@
         "origin": "https://taghvim.dev",
         "release_run_id": "40139733530",
         "source_sha": "8bea44764f2f6c1d77d28452aa21bb5aee7597a6",
-        "controller_sha": "7a519224c01134bd334c8568172c7da963f7de6c",
+        "controller_sha": "c7016794941aa8fdd088b005bf8149c6124e00b8",
         "source_git_tree": "ae35e3fed95aa8c76d9b8014f0af9c9c2f6d4560",
         "worker_versions": {
           "mail": "b07bfefe-295b-4966-992f-eedb0942340f",

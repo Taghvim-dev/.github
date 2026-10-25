@@ -90,9 +90,15 @@ test("latest independent Cloudflare Worker production receipts are durable, scop
  assert.equal(both.canonical_operation_count,47);
  assert.equal(both.openapi_git_blob_sha,pub.openapi_source_git_blob_sha);
  assert.equal(both.engine.deployed_source_sha,"30ecef261a25979fec23e26fd86ddc258c250671");
- assert.equal(both.engine.latest_controller_sha,pub.source_verification.latest_checked.engine_sha);
- assert.equal(both.landing.source_sha,pub.source_verification.latest_checked.landing_sha);
- assert.equal(both.landing.controller_sha,both.engine.latest_controller_sha);
+ // This is an IMMUTABLE 2026-10-24 deployment observation. Its controller
+ // and Landing source must match the actual protected release at that time,
+ // never the latest evolving GitHub main (which can change before deployment).
+ const deployed=pub.post_release_observation_20261023.landing_latest_source_candidate_20261024;
+ assert.equal(deployed.production_release_run,both.landing.release_run_id);
+ assert.equal(deployed.cloudflare_production_deployed,true);
+ assert.equal(both.engine.latest_controller_sha,deployed.engine_controller_sha);
+ assert.equal(both.landing.source_sha,deployed.source_sha);
+ assert.equal(both.landing.controller_sha,deployed.engine_controller_sha);
  assert.match(both.landing.source_git_tree,/^[a-f0-9]{40}$/);
  assert.equal(both.engine.percent,100);assert.equal(both.landing.percent,100);
  assert.equal(both.engine.d1_migrations,"12/12");
