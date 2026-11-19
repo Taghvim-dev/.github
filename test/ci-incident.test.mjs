@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { classify, incidentKey, monitoredRun, currentHeadDeleted } from "../.github/actions/ci-incident/reconcile.mjs";
+import { classify, incidentKey, monitoredRun, currentHeadDeleted, shouldRetireIncident } from "../.github/actions/ci-incident/reconcile.mjs";
 import CONTROL from "../release/CI-CONTROL-REGISTRY.json" with {type:"json"};
 
 const repo = "Taghvim-dev/engine";
@@ -93,4 +93,17 @@ test("T0 all Taghvim repos use one canonical CI incident scope, no untrusted for
 test("Deleted feature branches are historical, not repeated CI incident failures",()=>{
  assert.equal(currentHeadDeleted(404),true);
  for(const status of [401,403,429,500,503])assert.equal(currentHeadDeleted(status),false);
+});
+
+test("T0 status reconciler retires stale heads without touching current unresolved failures",()=>{
+ const r={...run,head_sha:"aa".repeat(20)};
+ assert.equal(shouldRetireIncident({run:r,currentSha:r.head_sha,repository:repo}),false);
+ assert.equal(shouldRetireIncident({run:r,currentSha:"bb".repeat(20),repository:repo}),true);
+ assert.equal(shouldRetireIncident({run:r,currentSha:null,repository:repo}),true);
+ const pr={...r,event:"pull_request",head_branch:"feature/x"};
+ const opened={state:"open",head:{repo:{full_name:repo},ref:"feature/x",sha:pr.head_sha}};
+ assert.equal(shouldRetireIncident({run:pr,currentSha:pr.head_sha,openPulls:[opened],repository:repo}),false);
+ assert.equal(shouldRetireIncident({run:pr,currentSha:pr.head_sha,openPulls:[],repository:repo}),true);
+ assert.equal(shouldRetireIncident({run:pr,currentSha:pr.head_sha,openPulls:[{...opened,state:"closed"}],repository:repo}),true);
+ assert.equal(shouldRetireIncident({run:{...pr,head_repository:{full_name:"foreign/fork"}},currentSha:null,repository:repo}),false);
 });

@@ -78,6 +78,22 @@ async function api(path, method = "GET", body, {allowMissing=false} = {}) {
   return r.json();
 }
 
+/** Historical run remains in Actions; only the operational incident is retired.
+ * The authority is the current source SHA plus an open same-repository PR. */
+export function shouldRetireIncident({run,currentSha,openPulls=[],repository}){
+ if(!run||run.head_repository?.full_name!==repository||!Number.isInteger(run.workflow_id)||
+    !run.head_branch||!/^[a-f0-9]{40}$/.test(run.head_sha||""))return false;
+ if(run.event==="pull_request"&&!openPulls.some(pr=>pr.state==="open"&&
+    pr.head?.repo?.full_name===repository&&pr.head?.ref===run.head_branch&&pr.head?.sha===run.head_sha))return true;
+ return !currentSha||currentSha!==run.head_sha;
+}
+async function closeUnchangedIssue(repo,issue){
+ if(!issue||issue.state!=="open")return "already_clear";
+ const latest=await api("/repos/"+repo+"/issues/"+issue.number);
+ if(latest?.state!=="open"||latest?.body!==issue.body)return "raced_no_mutation";
+ await api("/repos/"+repo+"/issues/"+issue.number,"PATCH",{state:"closed",state_reason:"not_planned"});
+ return "retired";
+}
 async function findIssue(repo, key,{openOnly=false}={}) {
   const mark = "<!-- taghvim-ci-incident:" + key + " -->";
   // A successful run can only close an OPEN incident; do not scan the full
@@ -105,12 +121,19 @@ export async function reconcile(payload) {
   const pulls = run.event === "pull_request"
     ? await api("/repos/" + repo + "/pulls?state=open&head=" +
         encodeURIComponent("Taghvim-dev:" + run.head_branch) + "&per_page=100") : [];
-  if (run.event === "pull_request" && !pulls.some(pr =>
-      pr.head?.repo?.full_name === repo && pr.head?.ref === run.head_branch)) return "ignored";
+  const key=incidentKey(run.workflow_id,run.head_branch);
+  if(run.event==="pull_request"&&!pulls.some(pr=>pr.state==="open"&&
+      pr.head?.repo?.full_name===repo&&pr.head?.ref===run.head_branch)){
+    const issue=await findIssue(repo,key,{openOnly:true});
+    return issue?.state==="open"?await closeUnchangedIssue(repo,issue):"ignored_retired_pr";
+  }
   // Stale workflow_run may arrive after an obsolete feature branch is deleted.
   // This is not an actionable incident and must not create a *new* bot error.
   const current = await api("/repos/" + repo + "/branches/" + branch,"GET",undefined,{allowMissing:true});
-  if(!current)return "ignored_deleted_head";
+  if(!current){
+    const issue=await findIssue(repo,key,{openOnly:true});
+    return issue?.state==="open"?await closeUnchangedIssue(repo,issue):"ignored_deleted_head";
+  }
   const currentSha = current.commit?.sha;
   const results = await api("/repos/" + repo + "/actions/workflows/" + run.workflow_id +
     "/runs?branch=" + branch + "&per_page=30");
@@ -118,10 +141,18 @@ export async function reconcile(payload) {
     run, currentSha, openPulls: pulls, recent: results.workflow_runs || [], repository: repo
   });
   if (verdict === "ignore") return "ignored";
-  const key = incidentKey(run.workflow_id, run.head_branch);
   const issue = await findIssue(repo, key,{openOnly:verdict==="close"});
   if (verdict === "open") {
-    if (issue?.state === "open") return "already_open";
+    if(issue?.state==="open"){
+      const updated=issueBody({key,run});
+      if(issue.body!==updated){
+        const currentIssue=await api("/repos/"+repo+"/issues/"+issue.number);
+        if(currentIssue.state!=="open"||currentIssue.body!==issue.body)return "raced_no_mutation";
+        await api("/repos/"+repo+"/issues/"+issue.number,"PATCH",{body:updated});
+        return "updated_current_failure";
+      }
+      return "already_open";
+    }
     if (issue) {
       await api("/repos/" + repo + "/issues/" + issue.number, "PATCH", { state: "open", body: issueBody({ key, run }) });
       return "reopened";
@@ -132,16 +163,50 @@ export async function reconcile(payload) {
     });
     return "opened";
   }
-  if (issue?.state === "open") {
-    await api("/repos/" + repo + "/issues/" + issue.number, "PATCH", { state: "closed", state_reason: "completed" });
-    return "closed";
+  if(issue?.state==="open"){
+    const out=await closeUnchangedIssue(repo,issue);
+    return out==="retired"?"closed":out;
   }
   return "already_clear";
 }
 
+/** Reconcile historical incident issues against current authoritative branch/PR
+ * state. Read and validate all source facts before issuing any close writes. */
+export async function sweepStaleIncidents(){
+ const repo=process.env.GITHUB_REPOSITORY;
+ if(!Object.hasOwn(CONTROL.monitored_repositories,repo||""))throw Error("CI_INCIDENT_REPO_SCOPE");
+ const plan=[];
+ for(let page=1;page<=10;page++){
+  const issues=await api("/repos/"+repo+"/issues?state=open&per_page=100&page="+page);
+  if(!Array.isArray(issues))throw Error("CI_INCIDENT_ISSUE_INVENTORY_INVALID");
+  for(const issue of issues){
+   if(issue.pull_request||issue.state!=="open")continue;
+   const mark=issue.body?.match(/<!-- taghvim-ci-incident:([a-f0-9]{20}) -->/);
+   const link=issue.body?.match(/Evidence: https:\/\/github\.com\/Taghvim-dev\/(engine|landing)\/actions\/runs\/([0-9]+)/);
+   if(!mark||!link||"Taghvim-dev/"+link[1]!==repo)continue;
+   const run=await api("/repos/"+repo+"/actions/runs/"+link[2],"GET",undefined,{allowMissing:true});
+   if(!run||run.status!=="completed"||!monitoredRun(repo,run.name)||
+       incidentKey(run.workflow_id,run.head_branch)!==mark[1]||
+       run.head_repository?.full_name!==repo)continue;
+   const current=await api("/repos/"+repo+"/branches/"+encodeURIComponent(run.head_branch),"GET",undefined,{allowMissing:true});
+   const prs=run.event==="pull_request"?
+     await api("/repos/"+repo+"/pulls?state=open&head="+encodeURIComponent("Taghvim-dev:"+run.head_branch)+"&per_page=100"):[];
+   if(!Array.isArray(prs))throw Error("CI_INCIDENT_PR_INVENTORY_INVALID");
+   if(shouldRetireIncident({run,currentSha:current?.commit?.sha,openPulls:prs,repository:repo}))
+      plan.push(issue);
+  }
+  if(issues.length<100)break;
+  if(page===10)throw Error("CI_INCIDENT_REGISTRY_TOO_LARGE");
+ }
+ const outcomes=[];
+ for(const issue of plan)outcomes.push({issue:issue.number,result:await closeUnchangedIssue(repo,issue)});
+ return {checked:"current_source_and_real_pr",retired:outcomes.filter(x=>x.result==="retired").length,outcomes};
+}
+
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
-  const payload = JSON.parse(readFileSync(process.env.GITHUB_EVENT_PATH, "utf8"));
-  reconcile(payload)
-    .then(status => console.log("CI_INCIDENT_RECONCILED", status))
-    .catch(error => { console.error("::error::" + String(error.message || error)); process.exitCode = 1; });
+  const task=["schedule","workflow_dispatch"].includes(process.env.GITHUB_EVENT_NAME)?
+    sweepStaleIncidents():
+    reconcile(JSON.parse(readFileSync(process.env.GITHUB_EVENT_PATH,"utf8")));
+  task.then(status=>console.log("CI_INCIDENT_RECONCILED",JSON.stringify(status)))
+    .catch(error=>{console.error("::error::"+String(error.message||error));process.exitCode=1;});
 }
