@@ -273,7 +273,10 @@
       "package_contract_version": "2.1.0",
       "dependent_component_ci": {
         "engine": "44608700943",
-        "landing": "44607239274"
+        "landing": "44607239274",
+        "SDK": "40137472813",
+        "CLI": "40138494477",
+        "cookbooks": "40137667999"
       },
       "source_ci_run": "40002313088",
       "live_evidence": null
