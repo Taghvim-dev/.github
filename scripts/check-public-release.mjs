@@ -189,7 +189,28 @@ for(const incident of incidents.root_cause_groups||[]){
 assert.ok(incidentIds.size>=5,"Incomplete recovered CI root-cause coverage");
 const requiredT0=["T0-SOURCE-001","T0-INFRA-002","T0-SECRET-003","T0-PROMOTE-004",
 "T0-D1-005","T0-EXEC-006","T0-API-007","T0-ONBOARD-008","T0-RELEASE-009","T0-GA-010","T0-IDENTITY-011","T0-PREWRITE-012","T0-CI-BOUND-013","T0-PACKAGES-014"];
-assert.deepEqual(t0.controls.map(c=>c.id).sort(),requiredT0.sort(),"T0 capability coverage drift");
+// Baseline controls are constitutional minimums, not a frozen count. Additional
+// canonical controls must be fully typed, unique, fail-closed and CI-bound.
+// A hardcoded exact array would prevent legitimate contract-first evolution.
+const actualT0=t0.controls.map(c=>c.id);
+assert.equal(new Set(actualT0).size,actualT0.length,"Duplicate canonical T0 control");
+for(const id of requiredT0)assert.ok(actualT0.includes(id),"Missing mandatory T0 baseline "+id);
+for(const control of t0.controls){
+ assert.match(control.id||"",/^T0-[A-Z0-9][A-Z0-9-]*-[0-9]{3}$/,"Invalid T0 control identity");
+ assert.ok(["SOURCE_VERIFIED","LIVE_UNVERIFIED","LIVE_VERIFIED"].includes(control.state),
+  "Unreviewed control state "+control.id);
+ assert.equal(typeof control.requires_live_proof,"boolean","Untyped T0 live gate "+control.id);
+ assert.ok(Array.isArray(control.code)&&control.code.length>0,
+  "Missing canonical control code trace "+control.id);
+ assert.ok(Array.isArray(control.test)&&control.test.length>0,
+  "Missing canonical control test trace "+control.id);
+ if(!requiredT0.includes(control.id)){
+  assert.equal(control.requires_live_proof,true,"New control cannot skip live evidence "+control.id);
+  assert.match(String(control.source_ci_run||""),/^[0-9]+$/,
+   "New T0 control must bind exact CI run "+control.id);
+  assert.equal(control.live_evidence,null,"New control cannot pre-claim unverified deployment "+control.id);
+ }
+}
 // Mirror the current Engine release facts into the central declaration and
 // bind their evidence to the exact reviewed main revision and source CI run.
 // Historical incident receipts remain unchanged and cannot substitute current CI.
