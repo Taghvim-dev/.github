@@ -1,6 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { classify, incidentKey } from "../.github/actions/ci-incident/reconcile.mjs";
+import { classify, incidentKey, monitoredRun, currentHeadDeleted } from "../.github/actions/ci-incident/reconcile.mjs";
+import CONTROL from "../release/CI-CONTROL-REGISTRY.json" with {type:"json"};
 
 const repo = "Taghvim-dev/engine";
 const run = {
@@ -73,4 +74,23 @@ test("T0 scheduled live-readiness failures open a durable incident and recovered
  assert.equal(classify({...opts,run:{...timed,head_branch:"feature"}}),"ignore");
  const newer={...timed,id:406,run_number:19,conclusion:"success"};
  assert.equal(classify({...opts,recent:[timed,newer]}),"ignore");
+});
+
+test("T0 all Taghvim repos use one canonical CI incident scope, no untrusted forks or bot cascades",()=>{
+ const repos=["engine","landing","SDK","CLI","cookbooks",".github"].map(x=>"Taghvim-dev/"+x);
+ assert.deepEqual(Object.keys(CONTROL.monitored_repositories).sort(),repos.sort());
+ assert.equal(CONTROL.production_mutation_authority,false);
+ assert.equal(CONTROL.trusted_actions_only,true);
+ for(const [repo,names] of Object.entries(CONTROL.monitored_repositories)){
+  assert.equal(new Set(names).size,names.length);
+  assert.ok(names.length>0,repo);
+  for(const name of names)assert.equal(monitoredRun(repo,name),true);
+  assert.equal(monitoredRun(repo,"t0-ci-incident-reconciler"),false);
+ }
+ assert.equal(monitoredRun("Outside/engine","test"),false);
+ assert.equal(monitoredRun("Taghvim-dev/engine","unreviewed-actionbot"),false);
+});
+test("Deleted feature branches are historical, not repeated CI incident failures",()=>{
+ assert.equal(currentHeadDeleted(404),true);
+ for(const status of [401,403,429,500,503])assert.equal(currentHeadDeleted(status),false);
 });

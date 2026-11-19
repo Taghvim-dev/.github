@@ -1,0 +1,73 @@
+{
+  "version": "1.0.0",
+  "authority": "Taghvim-dev/.github",
+  "constitution": "T0 canonical, pre-effect, authenticated-current-source-only, fail-closed",
+  "product": "Taghvim.dev",
+  "notification_policy": "one durable incident per workflow+branch; no issue or email for stale/success/skipped; close on recovery",
+  "monitored_repositories": {
+    "Taghvim-dev/engine": [
+      "test",
+      "t0-live-readiness",
+      "controlled-engine-release",
+      "t0-owner-protected-release-request",
+      "t0-central-landing-cloudflare-release",
+      "t0-engine-sandbox-d1-bootstrap",
+      "t0-cloudflare-d1-readonly-probe",
+      "t0-immutable-landing-sandbox-d1-recovery",
+      "t0-cloudflare-workers-live-readonly-observation"
+    ],
+    "Taghvim-dev/landing": [
+      "landing-verify",
+      "visual-rtl-acceptance",
+      "t0-owner-protected-release-request"
+    ],
+    "Taghvim-dev/SDK": [
+      "public-sdk-verify",
+      "sdk-contract-and-tests"
+    ],
+    "Taghvim-dev/CLI": [
+      "public-cli-verify"
+    ],
+    "Taghvim-dev/cookbooks": [
+      "public-cookbooks-verify"
+    ],
+    "Taghvim-dev/.github": [
+      "public-docs-verify",
+      "coordinated-public-release",
+      "t0-public-widget-sdk-reconciler",
+      "d1-applied-ledger-contract",
+      "d1-prefix-contract",
+      "d1-recovery-bookmark-contract",
+      "durable-private-release-registry-contract",
+      "release-checkpoint-contract",
+      "sandbox-origin-ownership-contract",
+      "t0-current-source-admission-contract",
+      "verify-production-environment-contract"
+    ]
+  },
+  "outcomes": {
+    "incident": [
+      "failure",
+      "timed_out",
+      "startup_failure",
+      "action_required"
+    ],
+    "recovery": [
+      "success"
+    ],
+    "ignore": [
+      "cancelled",
+      "skipped",
+      "neutral"
+    ]
+  },
+  "allowed_events": [
+    "push",
+    "pull_request",
+    "workflow_dispatch",
+    "issue_comment",
+    "schedule"
+  ],
+  "trusted_actions_only": true,
+  "production_mutation_authority": false
+}
