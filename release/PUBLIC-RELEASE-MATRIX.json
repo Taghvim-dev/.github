@@ -45,7 +45,7 @@
   "source_verification": {
     "date": "2026-11-19",
     "phase": "source-integrated-not-deployed",
-    "engine_main_merge_sha": "f959c63ef8159bdede21c7640baa0dfc91f31cfc",
+    "engine_main_merge_sha": "61c5b1ebd4b644b351fb4cb4d0cabd89b979c8ad",
     "engine_offline_ci_run": "40195989813",
     "engine_live_gate_ci_run": "39439068311",
     "landing_main_merge_sha": "f759a5a79121b6741c16814f5a1f833f7a689613",
@@ -149,8 +149,8 @@
     },
     "latest_checked": {
       "date": "2026-11-19",
-      "engine_sha": "f959c63ef8159bdede21c7640baa0dfc91f31cfc",
-      "engine_ci": "44609061501",
+      "engine_sha": "61c5b1ebd4b644b351fb4cb4d0cabd89b979c8ad",
+      "engine_ci": "44611804583",
       "landing_sha": "f759a5a79121b6741c16814f5a1f833f7a689613",
       "landing_ci": "44607239274",
       "shared_release_actions_sha": "c195c8bfde573b6195bd1b3bd00e3535accc9040",
@@ -210,9 +210,9 @@
       "policy_main_sha": "f3bc8d18c5c31fd1125dd4da4887c86b9e3f8447",
       "policy_pr": "Taghvim-dev/.github PR #47",
       "policy_test_run": "39691890610",
-      "engine_main_sha": "f959c63ef8159bdede21c7640baa0dfc91f31cfc",
-      "engine_reviewed_head": "f959c63ef8159bdede21c7640baa0dfc91f31cfc",
-      "engine_ci_run": "44609061501",
+      "engine_main_sha": "61c5b1ebd4b644b351fb4cb4d0cabd89b979c8ad",
+      "engine_reviewed_head": "51d53c96a906ba3fb991d4eac995a2b6d54f34ec",
+      "engine_ci_run": "44611804583",
       "landing_main_sha": "f759a5a79121b6741c16814f5a1f833f7a689613",
       "landing_reviewed_head": "db8268f31fcf714fab13fcf0f176fcda6261e81a",
       "landing_ci_run": "44607239274",
@@ -809,10 +809,10 @@
     "source_only": true,
     "remote_runtime_attested": false,
     "engine": {
-      "commit": "f959c63ef8159bdede21c7640baa0dfc91f31cfc",
+      "commit": "61c5b1ebd4b644b351fb4cb4d0cabd89b979c8ad",
       "package": "2.1.0",
       "lock": "2.1.0",
-      "ci": "44609061501"
+      "ci": "44611804583"
     },
     "landing": {
       "commit": "f759a5a79121b6741c16814f5a1f833f7a689613",
