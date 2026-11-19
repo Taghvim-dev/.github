@@ -196,7 +196,7 @@ const actualT0=t0.controls.map(c=>c.id);
 assert.equal(new Set(actualT0).size,actualT0.length,"Duplicate canonical T0 control");
 for(const id of requiredT0)assert.ok(actualT0.includes(id),"Missing mandatory T0 baseline "+id);
 for(const control of t0.controls){
- assert.match(control.id||"",/^T0-[A-Z][A-Z-]*-[0-9]{3}$/,"Invalid T0 control identity");
+ assert.match(control.id||"",/^T0-[A-Z0-9][A-Z0-9-]*-[0-9]{3}$/,"Invalid T0 control identity");
  assert.ok(["SOURCE_VERIFIED","LIVE_UNVERIFIED","LIVE_VERIFIED"].includes(control.state),
   "Unreviewed control state "+control.id);
  assert.equal(typeof control.requires_live_proof,"boolean","Untyped T0 live gate "+control.id);
