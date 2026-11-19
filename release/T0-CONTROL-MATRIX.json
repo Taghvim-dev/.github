@@ -4,8 +4,8 @@
   "product": "Taghvim.dev",
   "contract_version": "2.1.0",
   "current_source": {
-    "engine_main_sha": "6e449a729069f327a73a24865b6995412529ee98",
-    "landing_main_sha": "ba9209f5832a531b6955041729423796629c25c7",
+    "engine_main_sha": "6aa416178ad1457eed11de7ceefe47d76dd772fd",
+    "landing_main_sha": "5c74a548f181a8c2b6cb70f2a3c13e5f79319d2b",
     "shared_policy_sha": "c195c8bfde573b6195bd1b3bd00e3535accc9040",
     "prewrite_source_policy_sha": "f3bc8d18c5c31fd1125dd4da4887c86b9e3f8447"
   },
