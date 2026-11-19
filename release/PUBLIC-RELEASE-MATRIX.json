@@ -41,14 +41,14 @@
     "approved_migrations": false,
     "manual_production_approval": false
   },
-  "owner_action": "Do not declare GA or enable live billing until all prerequisites have evidence and pass their gates.",
+  "owner_action": "Promote all NON-PAYMENT GA capabilities only after all immutable live evidence gates pass. Customer checkout and Vandar money movement are separately deferred and denied pre-effect, not GA dependencies.",
   "source_verification": {
     "date": "2026-11-19",
     "phase": "source-integrated-not-deployed",
-    "engine_main_merge_sha": "61c5b1ebd4b644b351fb4cb4d0cabd89b979c8ad",
+    "engine_main_merge_sha": "fae436019dc1ad6c6ac184852db638cccc3ae0a7",
     "engine_offline_ci_run": "40195989813",
     "engine_live_gate_ci_run": "39439068311",
-    "landing_main_merge_sha": "f759a5a79121b6741c16814f5a1f833f7a689613",
+    "landing_main_merge_sha": "5adf4c6ef1acaa7265ef720bd93ab4c4e4311bfe",
     "landing_integration_merge_sha": "e380b5f3553b98faf35adeccd9f6a25440a778a4",
     "landing_integration_ci_run": "39774645927",
     "landing_rtl_ci_run": "40133550240",
@@ -149,10 +149,10 @@
     },
     "latest_checked": {
       "date": "2026-11-19",
-      "engine_sha": "61c5b1ebd4b644b351fb4cb4d0cabd89b979c8ad",
-      "engine_ci": "44611804583",
-      "landing_sha": "f759a5a79121b6741c16814f5a1f833f7a689613",
-      "landing_ci": "44607239274",
+      "engine_sha": "fae436019dc1ad6c6ac184852db638cccc3ae0a7",
+      "engine_ci": "44625238735",
+      "landing_sha": "5adf4c6ef1acaa7265ef720bd93ab4c4e4311bfe",
+      "landing_ci": "44625572229",
       "shared_release_actions_sha": "c195c8bfde573b6195bd1b3bd00e3535accc9040",
       "vendored_engine_files_matched": 11,
       "sandbox_to_production_status": "NO_GO",
@@ -210,12 +210,12 @@
       "policy_main_sha": "f3bc8d18c5c31fd1125dd4da4887c86b9e3f8447",
       "policy_pr": "Taghvim-dev/.github PR #47",
       "policy_test_run": "39691890610",
-      "engine_main_sha": "61c5b1ebd4b644b351fb4cb4d0cabd89b979c8ad",
-      "engine_reviewed_head": "51d53c96a906ba3fb991d4eac995a2b6d54f34ec",
-      "engine_ci_run": "44611804583",
-      "landing_main_sha": "f759a5a79121b6741c16814f5a1f833f7a689613",
-      "landing_reviewed_head": "db8268f31fcf714fab13fcf0f176fcda6261e81a",
-      "landing_ci_run": "44607239274",
+      "engine_main_sha": "fae436019dc1ad6c6ac184852db638cccc3ae0a7",
+      "engine_reviewed_head": "fae436019dc1ad6c6ac184852db638cccc3ae0a7",
+      "engine_ci_run": "44625238735",
+      "landing_main_sha": "5adf4c6ef1acaa7265ef720bd93ab4c4e4311bfe",
+      "landing_reviewed_head": "5adf4c6ef1acaa7265ef720bd93ab4c4e4311bfe",
+      "landing_ci_run": "44625572229",
       "admission_scope": "MUTATION_BLOCKING_SOURCE_ONLY",
       "runtime_cloudflare_gate": "ENGINE_AND_LANDING_PRODUCTION_VERIFIED_EARLY_ACCESS_NO_GA",
       "cross_repo_immutable_ref": true,
@@ -809,16 +809,16 @@
     "source_only": true,
     "remote_runtime_attested": false,
     "engine": {
-      "commit": "61c5b1ebd4b644b351fb4cb4d0cabd89b979c8ad",
+      "commit": "fae436019dc1ad6c6ac184852db638cccc3ae0a7",
       "package": "2.1.0",
       "lock": "2.1.0",
-      "ci": "44611804583"
+      "ci": "44625238735"
     },
     "landing": {
-      "commit": "f759a5a79121b6741c16814f5a1f833f7a689613",
+      "commit": "5adf4c6ef1acaa7265ef720bd93ab4c4e4311bfe",
       "package": "2.1.0",
       "lock": "2.1.0",
-      "ci": "44607239274"
+      "ci": "44625572229"
     },
     "SDK": {
       "commit": "3abed87ca07544ce307e9fe16b491302ad078e3a",
@@ -1396,6 +1396,17 @@
     "landing_main_unchanged_sha": "8bea44764f2f6c1d77d28452aa21bb5aee7597a6",
     "release_contract": "2.1.0",
     "production_promotion_for_new_engine_source": "NOT_DISPATCHED",
+    "general_availability_approved": false
+  },
+  "nonpayment_ga_scope": {
+    "schema_version": 1,
+    "state": "SOURCE_TESTED_RUNTIME_NO_GO",
+    "source_authority": "Taghvim-dev/engine/contracts/constitution/v1/ga-nonpayment-scope.json",
+    "engine_main_sha": "fae436019dc1ad6c6ac184852db638cccc3ae0a7",
+    "source_ci_run": "44625238735",
+    "payment_provider": "Vandar",
+    "customer_checkout_enabled": false,
+    "required_nonpayment_evidence_waived": 0,
     "general_availability_approved": false
   }
 }

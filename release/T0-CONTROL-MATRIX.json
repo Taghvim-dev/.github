@@ -4,8 +4,8 @@
   "product": "Taghvim.dev",
   "contract_version": "2.1.0",
   "current_source": {
-    "engine_main_sha": "61c5b1ebd4b644b351fb4cb4d0cabd89b979c8ad",
-    "landing_main_sha": "f759a5a79121b6741c16814f5a1f833f7a689613",
+    "engine_main_sha": "fae436019dc1ad6c6ac184852db638cccc3ae0a7",
+    "landing_main_sha": "5adf4c6ef1acaa7265ef720bd93ab4c4e4311bfe",
     "shared_policy_sha": "c195c8bfde573b6195bd1b3bd00e3535accc9040",
     "prewrite_source_policy_sha": "f3bc8d18c5c31fd1125dd4da4887c86b9e3f8447"
   },
@@ -216,8 +216,8 @@
       ],
       "source_ci_run": "39691890610",
       "dependent_component_ci": {
-        "engine": "44611804583",
-        "landing": "44607239274"
+        "engine": "44625238735",
+        "landing": "44625572229"
       },
       "policy_main_sha": "f3bc8d18c5c31fd1125dd4da4887c86b9e3f8447",
       "production_remote_receipt": null,
@@ -241,8 +241,8 @@
       "source_ci_run": "39691890610",
       "reviewed_action_main_sha": "f3bc8d18c5c31fd1125dd4da4887c86b9e3f8447",
       "component_source_ci": {
-        "engine": "44611804583",
-        "landing": "44607239274"
+        "engine": "44625238735",
+        "landing": "44625572229"
       },
       "live_evidence": null,
       "expected_workflow_ids": {
@@ -272,8 +272,8 @@
       ],
       "package_contract_version": "2.1.0",
       "dependent_component_ci": {
-        "engine": "44611804583",
-        "landing": "44607239274",
+        "engine": "44625238735",
+        "landing": "44625572229",
         "SDK": "40137472813",
         "CLI": "40138494477",
         "cookbooks": "40137667999"
@@ -297,9 +297,9 @@
         "engine/test/t0-estate-contract.test.mjs",
         "engine/test/t0-platform-admission.test.mjs"
       ],
-      "source_ci_run": "44611804583",
+      "source_ci_run": "44625238735",
       "remote_pr": "Taghvim-dev/engine#211",
-      "controller_main_sha": "61c5b1ebd4b644b351fb4cb4d0cabd89b979c8ad",
+      "controller_main_sha": "fae436019dc1ad6c6ac184852db638cccc3ae0a7",
       "live_evidence": null,
       "required_before_effect": true,
       "mutation_authority": "protected_github_actions_only",
@@ -336,6 +336,29 @@
         "case resolution requires independent evidence",
         "real SDK/widget metering acceptance pending"
       ]
+    },
+    {
+      "id": "T0-GA-NONPAYMENT-017",
+      "area": "GA can exclude only customer money movement, not non-payment capability or metering evidence. T0 shared ingress denies four payment-effect operations and scheduled provider reconciliation pending separate Vandar commercial release.",
+      "state": "LIVE_UNVERIFIED",
+      "requires_live_proof": true,
+      "code": [
+        "engine/contracts/constitution/v1/ga-nonpayment-scope.json",
+        "engine/contracts/constitution/v1/constitution.json",
+        "engine/src/index.js",
+        "engine/scripts/t0-universal-ga-gate.mjs"
+      ],
+      "test": [
+        "engine/test/t0-ga-nonpayment-scope.test.mjs",
+        "engine/test/t0-universal-ga-gate.test.mjs",
+        "engine/test/production-smoke.test.mjs"
+      ],
+      "source_ci_run": "44625238735",
+      "source_pr": "Taghvim-dev/engine#226",
+      "source_sha": "fae436019dc1ad6c6ac184852db638cccc3ae0a7",
+      "live_evidence": null,
+      "ga_claimed": false,
+      "paid_checkout_enabled": false
     }
   ],
   "evidence_rules": {
@@ -913,8 +936,8 @@
   },
   "canonical_estate_current": {
     "authority": "Taghvim-dev/engine/contracts/constitution/v1/estate.json",
-    "release_sha": "61c5b1ebd4b644b351fb4cb4d0cabd89b979c8ad",
-    "source_ci": "44611804583",
+    "release_sha": "fae436019dc1ad6c6ac184852db638cccc3ae0a7",
+    "source_ci": "44625238735",
     "environment_inventory": {
       "workers": 7,
       "databases": 4,
@@ -922,6 +945,15 @@
       "domains": 3
     },
     "live_t0_pre_effect_receipt": null,
+    "ga_approved": false
+  },
+  "nonpayment_ga_scope": {
+    "schema_version": 1,
+    "state": "SOURCE_TESTED_RUNTIME_NO_GO",
+    "source_main_sha": "fae436019dc1ad6c6ac184852db638cccc3ae0a7",
+    "source_ci_run": "44625238735",
+    "paid_checkout_enabled": false,
+    "vandar_release_separate": true,
     "ga_approved": false
   }
 }
