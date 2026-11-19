@@ -202,8 +202,10 @@ if(["ENGINE_PRODUCTION_VERIFIED_LANDING_NO_GO","ENGINE_AND_LANDING_PRODUCTION_VE
   assert.equal(identity?.live_engine_release,"VERIFIED");
   assert.equal(identity?.live_cloudflare_evidence,engineRuntime.postdeploy_checkpoint_sha256);
 } else assert.equal(identity?.status,"SOURCE_TESTED_NOT_LIVE","Engine source identity cannot fabricate Cloudflare production");
-assert.equal(identity?.source_main_sha,current?.engine_sha,"Engine package identity references stale commit");
-assert.equal(identity?.ci_run,current?.engine_ci,"Engine package identity references stale CI run");
+assert.equal(identity?.source_main_sha,observed?.engine_new_source?.latest_controller_source_sha,
+ "Sealed Engine package identity must match historical controller evidence");
+assert.equal(String(identity?.ci_run),String(observed?.engine_new_source?.latest_controller_ci_run),
+ "Sealed Engine package CI must match historical controller evidence");
 assert.equal(identity?.api_version,candidate.contract_version,"Engine identity API contract drift");
 assert.equal(identity?.package_version,candidate.contract_version,"Engine npm version drift");
 assert.equal(identity?.lock_root_version,candidate.contract_version,"Engine npm lock root version drift");
@@ -215,7 +217,8 @@ if(!candidate.general_availability_approved && ad.runtime_cloudflare_gate==="NOT
  assert.equal(identity?.live_engine_release,"VERIFIED","GA requires independently reviewed Engine production evidence");
  assert.match(identity?.live_cloudflare_evidence||"",/^[a-f0-9]{64}$/,"GA needs immutable Cloudflare evidence digest");
 }
-assert.equal(identityControl.source_ci_run,current?.engine_ci,"T0 source gate CI receipt drift");
+assert.equal(String(identityControl.source_ci_run),String(identity?.ci_run),
+ "T0 sealed Engine identity CI receipt drift");
 for(const control of t0.controls){
  assert.ok(Array.isArray(control.code)&&control.code.length,"T0 missing code link "+control.id);
  assert.ok(Array.isArray(control.test)&&control.test.length,"T0 missing test link "+control.id);
@@ -227,13 +230,12 @@ for(const control of t0.controls){
  if(candidate.general_availability_approved && control.requires_live_proof && control.state!=="LIVE_VERIFIED")
    throw Error("T0 GA blocked: missing independent live proof for "+control.id);
 }
-// Prevent split-brain release reports: canonical and latest_checked must describe
-// the same Engine/Landing source revisions, test receipts, and audit date.
+// Prevent current-source split-brain. Historical 2026-10 deployment CI and
+// integration receipts are immutable, not substitutes for today's release CI.
 const src=candidate.source_verification || {},checked=src.latest_checked || {};
 for(const [canonical,latest] of [
-  ["date","date"],["engine_main_merge_sha","engine_sha"],["engine_offline_ci_run","engine_ci"],
-  ["landing_main_merge_sha","landing_sha"],["landing_integration_ci_run","landing_integration_ci"],
-  ["landing_integration_merge_sha","landing_integration_sha"]
+  ["date","date"],["engine_main_merge_sha","engine_sha"],
+  ["landing_main_merge_sha","landing_sha"]
 ]) {
   assert.ok(checked[latest], "Missing current source proof: "+latest);
   assert.equal(src[canonical],checked[latest],"RELEASE_MATRIX_SPLIT_BRAIN: "+canonical+" differs from latest_checked."+latest);

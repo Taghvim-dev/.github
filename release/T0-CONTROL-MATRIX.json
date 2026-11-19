@@ -216,8 +216,8 @@
       ],
       "source_ci_run": "39691890610",
       "dependent_component_ci": {
-        "engine": "40195989813",
-        "landing": "40195727022"
+        "engine": "44534265775",
+        "landing": "44524058398"
       },
       "policy_main_sha": "f3bc8d18c5c31fd1125dd4da4887c86b9e3f8447",
       "production_remote_receipt": null,
@@ -241,8 +241,8 @@
       "source_ci_run": "39691890610",
       "reviewed_action_main_sha": "f3bc8d18c5c31fd1125dd4da4887c86b9e3f8447",
       "component_source_ci": {
-        "engine": "40195989813",
-        "landing": "40195727022"
+        "engine": "44534265775",
+        "landing": "44524058398"
       },
       "live_evidence": null,
       "expected_workflow_ids": {
@@ -272,8 +272,8 @@
       ],
       "package_contract_version": "2.1.0",
       "dependent_component_ci": {
-        "engine": "40195989813",
-        "landing": "40195727022",
+        "engine": "44534265775",
+        "landing": "44524058398",
         "SDK": "40137472813",
         "CLI": "40138494477",
         "cookbooks": "40137667999"
