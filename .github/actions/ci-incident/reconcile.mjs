@@ -15,6 +15,15 @@ export function monitoredRun(repo,name){
  return Array.isArray(allowed)&&allowed.includes(name)&&name!=="t0-ci-incident-reconciler";
 }
 export function currentHeadDeleted(status){return status===404;}
+export function shouldSweepAfterGreenMainRun({eventName,run,repository}={}) {
+ // Current-head CI success is a reconciliation trigger; it is never a reason
+ // to dispatch, deploy, reopen a stale incident, or recurse on our own observer.
+ return eventName==="workflow_run"&&run?.status==="completed"&&
+   run?.conclusion==="success"&&run?.event==="push"&&
+   run?.head_branch==="main"&&run?.head_repository?.full_name===repository&&
+   monitoredRun(repository,run?.name);
+}
+
 export const incidentKey = (workflow, branch) =>
   createHash("sha256").update(String(workflow) + "\0" + branch).digest("hex").slice(0, 20);
 
@@ -204,9 +213,19 @@ export async function sweepStaleIncidents(){
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
-  const task=["schedule","workflow_dispatch"].includes(process.env.GITHUB_EVENT_NAME)?
-    sweepStaleIncidents():
-    reconcile(JSON.parse(readFileSync(process.env.GITHUB_EVENT_PATH,"utf8")));
+  const eventName=process.env.GITHUB_EVENT_NAME;
+  const periodic=["schedule","workflow_dispatch"].includes(eventName);
+  const payload=periodic?null:JSON.parse(readFileSync(process.env.GITHUB_EVENT_PATH,"utf8"));
+  const task=periodic?sweepStaleIncidents():(async()=>{
+    const current=await reconcile(payload);
+    // Reap obsolete issues on a trusted green main push. A daily GitHub cron
+    // is not a sufficient recovery guarantee: it can be delayed indefinitely.
+    // Never sweep on failed/PR/fork/bot events or before normal reconciliation.
+    if(!shouldSweepAfterGreenMainRun({eventName,run:payload.workflow_run,repository:process.env.GITHUB_REPOSITORY}))
+      return current;
+    const swept=await sweepStaleIncidents();
+    return {current,stale_retired:swept.retired,authority:swept.checked};
+  })();
   task.then(status=>console.log("CI_INCIDENT_RECONCILED",JSON.stringify(status)))
     .catch(error=>{console.error("::error::"+String(error.message||error));process.exitCode=1;});
 }

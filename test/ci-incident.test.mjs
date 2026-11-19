@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { classify, incidentKey, monitoredRun, currentHeadDeleted, shouldRetireIncident } from "../.github/actions/ci-incident/reconcile.mjs";
+import { classify, incidentKey, monitoredRun, currentHeadDeleted, shouldRetireIncident, shouldSweepAfterGreenMainRun } from "../.github/actions/ci-incident/reconcile.mjs";
 import CONTROL from "../release/CI-CONTROL-REGISTRY.json" with {type:"json"};
 
 const repo = "Taghvim-dev/engine";
@@ -119,4 +119,30 @@ test("T0 obsolete source adjudication works for every canonical repository",()=>
   assert.equal(shouldRetireIncident({run:target,currentSha:run.head_sha,repository:owner}),false);
   assert.equal(shouldRetireIncident({run:target,currentSha:null,repository:owner}),true);
  }
+});
+
+test("T0 stale ActionBot recovery is triggered by verified current-main CI success, independent of unreliable cron",()=>{
+ const source={...run,conclusion:"success",event:"push",head_branch:"main",status:"completed"};
+ assert.equal(shouldSweepAfterGreenMainRun({eventName:"workflow_run",run:source,repository:repo}),true);
+ for(const bad of [
+  {eventName:"schedule"},
+  {eventName:"workflow_dispatch"},
+  {run:{...source,conclusion:"failure"}},
+  {run:{...source,event:"pull_request"}},
+  {run:{...source,head_branch:"obsolete-feature"}},
+  {run:{...source,head_repository:{full_name:"fork/engine"}}},
+  {run:{...source,name:"t0-ci-incident-reconciler"}},
+  {run:{...source,status:"in_progress"}},
+  {repository:"Taghvim-dev/unmonitored"}
+ ])assert.equal(shouldSweepAfterGreenMainRun({eventName:"workflow_run",run:source,repository:repo,...bad}),false,
+   JSON.stringify(bad));
+});
+test("T0 shared action cleans stale source incidents after successful real main head without recursive CI incidents",async()=>{
+ const {readFileSync}=await import("node:fs");
+ const action=readFileSync(new URL("../.github/actions/ci-incident/reconcile.mjs",import.meta.url),"utf8");
+ assert.match(action,/const current=await reconcile\(payload\)/);
+ assert.match(action,/if\(!shouldSweepAfterGreenMainRun/);
+ assert.match(action,/const swept=await sweepStaleIncidents\(\)/);
+ assert.match(action,/stale_retired:swept.retired/);
+ assert.match(action,/run\?\.event==="push"/);
 });
