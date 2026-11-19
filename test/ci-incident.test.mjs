@@ -107,3 +107,16 @@ test("T0 status reconciler retires stale heads without touching current unresolv
  assert.equal(shouldRetireIncident({run:pr,currentSha:pr.head_sha,openPulls:[{...opened,state:"closed"}],repository:repo}),true);
  assert.equal(shouldRetireIncident({run:{...pr,head_repository:{full_name:"foreign/fork"}},currentSha:null,repository:repo}),false);
 });
+
+test("T0 obsolete source adjudication works for every canonical repository",()=>{
+ for(const name of ["engine","landing","SDK","CLI","cookbooks",".github"]){
+  const owner="Taghvim-dev/"+name;
+  const target={...run,head_repository:{full_name:owner},head_branch:"release-branch"};
+  const open={state:"open",head:{repo:{full_name:owner},ref:"release-branch",sha:run.head_sha}};
+  const pr={...target,event:"pull_request"};
+  assert.equal(shouldRetireIncident({run:pr,currentSha:pr.head_sha,openPulls:[open],repository:owner}),false);
+  assert.equal(shouldRetireIncident({run:pr,currentSha:pr.head_sha,openPulls:[],repository:owner}),true);
+  assert.equal(shouldRetireIncident({run:target,currentSha:run.head_sha,repository:owner}),false);
+  assert.equal(shouldRetireIncident({run:target,currentSha:null,repository:owner}),true);
+ }
+});
