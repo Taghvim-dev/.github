@@ -3,7 +3,7 @@
   "authority": "Taghvim-dev/.github",
   "constitution": "T0 canonical, pre-effect, authenticated-current-source-only, fail-closed",
   "product": "Taghvim.dev",
-  "notification_policy": "one durable incident per workflow+branch; no issue or email for stale/success/skipped; close on recovery",
+  "notification_policy": "one durable actionable incident per workflow+branch, typed root boundary; stale/green PR run events do not consume observer jobs, successful current source is verified during periodic recovery; never treat zero-step runner failure as source failure",
   "monitored_repositories": {
     "Taghvim-dev/engine": [
       "test",
@@ -70,5 +70,34 @@
     "schedule"
   ],
   "trusted_actions_only": true,
-  "production_mutation_authority": false
+  "production_mutation_authority": false,
+  "event_admission": {
+    "version": 1,
+    "mode": "failure_immediate_green_main_reconciliation_and_periodic_recovery",
+    "immediate_incident_outcomes": [
+      "failure",
+      "timed_out",
+      "startup_failure",
+      "action_required"
+    ],
+    "recovery_signal": {
+      "conclusion": "success",
+      "event": "push",
+      "branch": "main"
+    },
+    "sweep_cron": "13 */6 * * *",
+    "no_fork_dispatch": true,
+    "no_untrusted_checkout": true,
+    "no_incident_for": [
+      "success_on_pull_request",
+      "cancelled",
+      "skipped",
+      "neutral",
+      "superseded_source"
+    ],
+    "zero_step_boundary": "PRE_RUNNER_PLATFORM_OR_QUOTA",
+    "green_recovery_requires": "verified_current_sha_same_workflow_same_event_later_success",
+    "github_run_listener_job_gate": "github.event_name != 'workflow_run' ||\n      (github.event.workflow_run.head_repository.full_name == github.repository &&\n       (contains(fromJSON('[\"failure\",\"timed_out\",\"startup_failure\",\"action_required\"]'), github.event.workflow_run.conclusion) ||\n        (github.event.workflow_run.conclusion == 'success' &&\n         github.event.workflow_run.event == 'push' &&\n         github.event.workflow_run.head_branch == 'main')))",
+    "capabilities": "T0 CI only; no deployment, no payment, no GA authorization"
+  }
 }
