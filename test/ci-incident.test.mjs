@@ -173,3 +173,28 @@ test("T0 canonical incident event policy admits failures immediately and green m
  assert.doesNotMatch(workflow,/pull_request_target/);
  assert.doesNotMatch(workflow,/actions\/checkout/);
 });
+
+test("T0 complete observer inventory forbids unmonitored product actions and false GA auth success",async()=>{
+ const fs=await import("node:fs");
+ assert.equal(CONTROL.version,"1.1.0");
+ assert.match(CONTROL.blocked_reconciliation_policy,/BLOCKED_CROSS_REPO_AUTH/);
+ const localWorkflows=fs.readdirSync(new URL("../.github/workflows/",import.meta.url))
+  .filter(x=>x.endsWith(".yml"))
+  .map(x=>fs.readFileSync(new URL("../.github/workflows/"+x,import.meta.url),"utf8")
+      .match(/^name:\s*["']?([^\r\n"']+)/m)?.[1]?.trim())
+  .filter(x=>x!=="t0-ci-incident-reconciler");
+ assert.deepEqual([...CONTROL.monitored_repositories["Taghvim-dev/.github"]].sort(),localWorkflows.sort());
+ const observer=fs.readFileSync(new URL("../.github/workflows/t0-ci-incident.yml",import.meta.url),"utf8");
+ const literal=observer.match(/workflows:\s*(\[[^\n]+\])/);
+ assert.ok(literal,"A missing workflow_run list is not comprehensive monitoring");
+ assert.deepEqual(JSON.parse(literal[1]).sort(),localWorkflows);
+ for(const [repo,names] of Object.entries({
+  "Taghvim-dev/engine":["public-api-release-observation","t0-private-landing-source-readonly-probe",
+   "t0-public-api-readonly-smoke-observation","t0-engine-sandbox-d1-migration",
+   "t0-sandbox-http-readonly-route-diagnostic"],
+  "Taghvim-dev/landing":["t0-public-landing-readonly-smoke-observation"]
+ })){
+  for(const name of names)assert.ok(monitoredRun(repo,name),repo+":"+name);
+  assert.ok(!CONTROL.monitored_repositories[repo].includes("t0-ci-incident-reconciler"));
+ }
+});

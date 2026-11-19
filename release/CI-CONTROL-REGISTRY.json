@@ -1,27 +1,33 @@
 {
-  "version": "1.0.0",
+  "version": "1.1.0",
   "authority": "Taghvim-dev/.github",
   "constitution": "T0 canonical, pre-effect, authenticated-current-source-only, fail-closed",
   "product": "Taghvim.dev",
   "notification_policy": "one durable actionable incident per workflow+branch, typed root boundary; stale/green PR run events do not consume observer jobs, successful current source is verified during periodic recovery; never treat zero-step runner failure as source failure",
   "monitored_repositories": {
     "Taghvim-dev/engine": [
-      "test",
-      "t0-live-readiness",
       "controlled-engine-release",
-      "t0-owner-protected-release-request",
+      "public-api-release-observation",
       "t0-central-landing-cloudflare-release",
-      "t0-engine-sandbox-d1-bootstrap",
       "t0-cloudflare-d1-readonly-probe",
+      "t0-cloudflare-workers-live-readonly-observation",
+      "t0-engine-sandbox-d1-bootstrap",
+      "t0-engine-sandbox-d1-migration",
       "t0-immutable-landing-sandbox-d1-recovery",
-      "t0-cloudflare-workers-live-readonly-observation"
+      "t0-live-readiness",
+      "t0-owner-protected-release-request",
+      "t0-private-landing-source-readonly-probe",
+      "t0-public-api-readonly-smoke-observation",
+      "t0-sandbox-http-readonly-route-diagnostic",
+      "test"
     ],
     "Taghvim-dev/landing": [
-      "landing-verify",
-      "visual-rtl-acceptance",
-      "t0-owner-protected-release-request",
       "controlled-landing-release",
-      "t0-web-sandbox-d1-bootstrap"
+      "landing-verify",
+      "t0-owner-protected-release-request",
+      "t0-public-landing-readonly-smoke-observation",
+      "t0-web-sandbox-d1-bootstrap",
+      "visual-rtl-acceptance"
     ],
     "Taghvim-dev/SDK": [
       "public-sdk-verify"
@@ -99,5 +105,7 @@
     "green_recovery_requires": "verified_current_sha_same_workflow_same_event_later_success",
     "github_run_listener_job_gate": "github.event_name != 'workflow_run' ||\n      (github.event.workflow_run.head_repository.full_name == github.repository &&\n       (contains(fromJSON('[\"failure\",\"timed_out\",\"startup_failure\",\"action_required\"]'), github.event.workflow_run.conclusion) ||\n        (github.event.workflow_run.conclusion == 'success' &&\n         github.event.workflow_run.event == 'push' &&\n         github.event.workflow_run.head_branch == 'main')))",
     "capabilities": "T0 CI only; no deployment, no payment, no GA authorization"
-  }
+  },
+  "coverage_rule": "All actual product CI/diagnostic/release workflow names are listed by canonical policy, except t0-ci-incident-reconciler to avoid recursion. Every workflow_run trigger must match the canonical per-repository names. A CI source change cannot silently exclude a workflow.",
+  "blocked_reconciliation_policy": "WAIT_FOR_PRIVATE_SOURCE_READ_AUTHORITY is BLOCKED_CROSS_REPO_AUTH, never GA or a successful cross-repo source reconciliation."
 }
