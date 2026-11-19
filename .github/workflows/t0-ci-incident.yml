@@ -1,28 +1,28 @@
-# Privileged default-branch-only incident reconciliation. Never check out source from triggering PR.
+# Canonical organisation observer: privileged metadata only, no PR checkout or deployment.
 name: t0-ci-incident-reconciler
 on:
   workflow_run:
-    workflows: ["public-docs-verify", "coordinated-public-release", "t0-public-widget-sdk-reconciler",
-      "d1-applied-ledger-contract", "d1-prefix-contract", "d1-recovery-bookmark-contract",
-      "durable-private-release-registry-contract", "release-checkpoint-contract",
-      "sandbox-origin-ownership-contract", "t0-current-source-admission-contract",
-      "verify-production-environment-contract"]
+    workflows: ["public-docs-verify","coordinated-public-release","t0-public-widget-sdk-reconciler","d1-applied-ledger-contract","d1-prefix-contract","d1-recovery-bookmark-contract","durable-private-release-registry-contract","release-checkpoint-contract","sandbox-origin-ownership-contract","t0-current-source-admission-contract","verify-production-environment-contract"]
     types: [completed]
+  schedule:
+    - cron: '13 2 * * *'
+  workflow_dispatch:
 permissions:
   contents: read
   actions: read
   pull-requests: read
   issues: write
 concurrency:
-  group: t0-ci-incident-${{ github.event.workflow_run.workflow_id }}-${{ github.event.workflow_run.head_branch }}
+  group: t0-ci-incident-${{ github.repository }}
   cancel-in-progress: false
 jobs:
   reconcile:
     if: >-
-      github.event.workflow_run.head_repository.full_name == github.repository &&
-      contains(fromJSON('["success","failure","timed_out","startup_failure","action_required"]'), github.event.workflow_run.conclusion)
+      github.event_name != 'workflow_run' ||
+      (github.event.workflow_run.head_repository.full_name == github.repository &&
+       contains(fromJSON('["success","failure","timed_out","startup_failure","action_required"]'), github.event.workflow_run.conclusion))
     runs-on: ubuntu-24.04
-    timeout-minutes: 5
+    timeout-minutes: 6
     steps:
-      - name: Reconcile only actionable current-source incidents
-        uses: Taghvim-dev/.github/.github/actions/ci-incident@4edbb05904f74117801120903c46d9f232d04ed9
+      - name: Current source/PR incident lifecycle and immutable stale-issue retirement
+        uses: Taghvim-dev/.github/.github/actions/ci-incident@0fb5a6f43e35e0094d12add4d73789e1ad0198da

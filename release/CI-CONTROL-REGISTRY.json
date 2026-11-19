@@ -24,8 +24,7 @@
       "t0-web-sandbox-d1-bootstrap"
     ],
     "Taghvim-dev/SDK": [
-      "public-sdk-verify",
-      "sdk-contract-and-tests"
+      "public-sdk-verify"
     ],
     "Taghvim-dev/CLI": [
       "public-cli-verify"
