@@ -31,7 +31,7 @@ test("advancing only the control plane must never rewrite existing Engine API pr
   x.candidate.post_release_observation_20261023.engine_new_source.sha);
  assert.doesNotThrow(()=>check(x));
  const y=original();y.candidate.post_release_observation_20261023.engine_new_source.latest_controller_ci_run="999999";
- assert.throws(()=>check(y),/New controller CI/);
+ assert.throws(()=>check(y),/Historical controller CI receipt drift/);
  const z=original();z.candidate.post_release_observation_20261023.engine_new_source.latest_controller_source_sha="f".repeat(40);
  assert.throws(()=>check(z),/New controller source/);
 });
