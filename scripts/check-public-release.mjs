@@ -5,6 +5,7 @@ import {readFileSync} from "node:fs";
 import {execFileSync} from "node:child_process";
 import {resolvePins} from "./release-pins.mjs";
 import {verifyRuntimeSourceBoundary} from "./release-runtime-provenance.mjs";
+import {verifySourceCohort} from "./reconcile-source-cohort.mjs";
 import {verifyEngineProductionReceipt} from "./verify-engine-live-receipt.mjs";
 import {verifyLandingProductionReceipt} from "./verify-landing-live-receipt.mjs";
 const candidate=JSON.parse(readFileSync(new URL("../release/PUBLIC-RELEASE-MATRIX.json",import.meta.url)));
@@ -23,6 +24,7 @@ assert.equal(t0Triggers.length,2,"T0 control ledger must trigger both PR and mai
 // Constitutional T=0 release ledger: every requirement must have source, test,
 // verified commit identity and independently demonstrated live admission proof.
 const t0=JSON.parse(readFileSync(new URL("../release/T0-CONTROL-MATRIX.json",import.meta.url)));
+verifySourceCohort(JSON.parse(readFileSync(new URL("../release/CANONICAL-SOURCE-COHORT.json",import.meta.url))),candidate,t0);
 assert.equal(t0.schema_version,1,"T0 control ledger schema drift");
 assert.equal(t0.contract_version,candidate.contract_version,"T0 contract version drift");
 assert.equal(t0.general_availability_approved,candidate.general_availability_approved,"T0 GA split-brain");

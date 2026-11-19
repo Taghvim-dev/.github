@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "kind": "taghvim.t0.canonical_source_cohort",
+  "authority": "Taghvim-dev/.github",
+  "engine": {
+    "sha": "29feedf3bc0433defafd36805c7b1f260560b466",
+    "ci": "44630821898",
+    "workflow_id": 372423484
+  },
+  "landing": {
+    "sha": "287239ce4b5f02432d3cc1d6d28d046d27e6b083",
+    "ci": "44629136875",
+    "workflow_id": 390048334
+  },
+  "source_only": true,
+  "remote_ci_evidence_required": true,
+  "ga_approved": false,
+  "payment_enabled": false
+}
