@@ -41,7 +41,7 @@
     "approved_migrations": false,
     "manual_production_approval": false
   },
-  "owner_action": "Do not declare GA or enable live billing until all prerequisites have evidence and pass their gates.",
+  "owner_action": "Evaluate free GA from authenticated live API/SDK/Widget/onboarding/migration and immutable evidence only. Customer payment is NOT a free GA prerequisite. Defer Vandar billing integration and live charges to a separately approved post-free-GA commercial release; do not claim GA until all free-scope requirements pass.",
   "source_verification": {
     "date": "2026-11-19",
     "phase": "source-integrated-not-deployed",
@@ -1397,5 +1397,6 @@
     "release_contract": "2.1.0",
     "production_promotion_for_new_engine_source": "NOT_DISPATCHED",
     "general_availability_approved": false
-  }
+  },
+  "free_ga_policy_source": "release/FREE-GA-CONSTITUTION.json"
 }
