@@ -4,8 +4,8 @@
   "product": "Taghvim.dev",
   "contract_version": "2.1.0",
   "current_source": {
-    "engine_main_sha": "894ef5c932be7aa559318517184d51abf07705d9",
-    "landing_main_sha": "1995a683164cccbe2f18c12940d039bdf9d51ea2",
+    "engine_main_sha": "9aa1e1dc17cde85cd5144dcdd06fc7888e2d06ae",
+    "landing_main_sha": "4139d0f79afb8adba041bfc894207a4930a810e9",
     "shared_policy_sha": "c195c8bfde573b6195bd1b3bd00e3535accc9040",
     "prewrite_source_policy_sha": "f3bc8d18c5c31fd1125dd4da4887c86b9e3f8447"
   },
@@ -216,8 +216,8 @@
       ],
       "source_ci_run": "39691890610",
       "dependent_component_ci": {
-        "engine": "44564839911",
-        "landing": "44553201753"
+        "engine": "44568015947",
+        "landing": "44567323829"
       },
       "policy_main_sha": "f3bc8d18c5c31fd1125dd4da4887c86b9e3f8447",
       "production_remote_receipt": null,
@@ -241,8 +241,8 @@
       "source_ci_run": "39691890610",
       "reviewed_action_main_sha": "f3bc8d18c5c31fd1125dd4da4887c86b9e3f8447",
       "component_source_ci": {
-        "engine": "44564839911",
-        "landing": "44553201753"
+        "engine": "44568015947",
+        "landing": "44567323829"
       },
       "live_evidence": null,
       "expected_workflow_ids": {
@@ -272,8 +272,8 @@
       ],
       "package_contract_version": "2.1.0",
       "dependent_component_ci": {
-        "engine": "44564839911",
-        "landing": "44553201753",
+        "engine": "44568015947",
+        "landing": "44567323829",
         "SDK": "40137472813",
         "CLI": "40138494477",
         "cookbooks": "40137667999"
@@ -297,9 +297,9 @@
         "engine/test/t0-estate-contract.test.mjs",
         "engine/test/t0-platform-admission.test.mjs"
       ],
-      "source_ci_run": "44564839911",
+      "source_ci_run": "44568015947",
       "remote_pr": "Taghvim-dev/engine#211",
-      "controller_main_sha": "894ef5c932be7aa559318517184d51abf07705d9",
+      "controller_main_sha": "9aa1e1dc17cde85cd5144dcdd06fc7888e2d06ae",
       "live_evidence": null,
       "required_before_effect": true,
       "mutation_authority": "protected_github_actions_only",
@@ -881,8 +881,8 @@
   },
   "canonical_estate_current": {
     "authority": "Taghvim-dev/engine/contracts/constitution/v1/estate.json",
-    "release_sha": "894ef5c932be7aa559318517184d51abf07705d9",
-    "source_ci": "44564839911",
+    "release_sha": "9aa1e1dc17cde85cd5144dcdd06fc7888e2d06ae",
+    "source_ci": "44568015947",
     "environment_inventory": {
       "workers": 7,
       "databases": 4,
