@@ -146,3 +146,43 @@ test("T0 shared action cleans stale source incidents after successful real main 
  assert.match(action,/stale_retired:swept.retired/);
  assert.match(action,/run\?\.event==="push"/);
 });
+
+test("T0 canonical observer covers all tracked organization workflows without cascading on itself",async()=>{
+ const fs=await import("node:fs");
+ const config=JSON.parse(fs.readFileSync(new URL("../release/CI-CONTROL-REGISTRY.json",import.meta.url),"utf8"));
+ assert.equal(config.version,"1.1.0");
+ assert.equal(config.actionbot_codex_policy.unknown_workflow,"deny_observability_coverage_at_ci");
+ const names=fs.readdirSync(new URL("../.github/workflows/",import.meta.url))
+  .filter(p=>p.endsWith(".yml"))
+  .map(p=>fs.readFileSync(new URL("../.github/workflows/"+p,import.meta.url),"utf8")
+    .match(/^name:\\s*["']?([^\\r\\n"']+)/m)?.[1]?.trim());
+ const expected=names.filter(n=>n!=="t0-ci-incident-reconciler");
+ assert.deepEqual([...config.monitored_repositories["Taghvim-dev/.github"]].sort(),expected.sort());
+ const observer=fs.readFileSync(new URL("../.github/workflows/t0-ci-incident.yml",import.meta.url),"utf8");
+ const enabled=observer.match(/workflows:\\s*(\\[[^\\n]+\\])/);
+ assert.ok(enabled,"canonical workflow_run trigger not declared");
+ assert.deepEqual(JSON.parse(enabled[1]).sort(),expected);
+ assert.match(observer,/head_repository.full_name == github.repository/,"foreign PRs must not trigger privileged reconciliation");
+ assert.match(observer,/cancel-in-progress: false/,"do not cancel a missing-failure check");
+});
+test("T0 source-owned CI inventory includes historically ignored diagnostic workflows",()=>{
+ const control=CONTROL.monitored_repositories;
+ for(const [repo,required] of Object.entries({
+  "Taghvim-dev/engine":[
+   "public-api-release-observation",
+   "t0-private-landing-source-readonly-probe",
+   "t0-public-api-readonly-smoke-observation",
+   "t0-engine-sandbox-d1-migration",
+   "t0-sandbox-http-readonly-route-diagnostic",
+   "controlled-engine-release","test"
+  ],
+  "Taghvim-dev/landing":[
+   "t0-public-landing-readonly-smoke-observation","controlled-landing-release",
+   "landing-verify","visual-rtl-acceptance"
+  ]
+ })){
+  assert.equal(new Set(control[repo]).size,control[repo].length);
+  for(const name of required)assert.ok(monitoredRun(repo,name),repo+" : "+name);
+ }
+ assert.match(CONTROL.runtime_proof_rule,/must never produce a GA/);
+});
