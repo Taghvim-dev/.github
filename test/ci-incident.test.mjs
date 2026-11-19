@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { classify, incidentKey, monitoredRun, currentHeadDeleted, shouldRetireIncident, shouldSweepAfterGreenMainRun } from "../.github/actions/ci-incident/reconcile.mjs";
+import { classify, classifyFailurePlane, issueBody, incidentKey, monitoredRun, currentHeadDeleted, shouldRetireIncident, shouldSweepAfterGreenMainRun } from "../.github/actions/ci-incident/reconcile.mjs";
 import CONTROL from "../release/CI-CONTROL-REGISTRY.json" with {type:"json"};
 
 const repo = "Taghvim-dev/engine";
@@ -145,4 +145,47 @@ test("T0 shared action cleans stale source incidents after successful real main 
  assert.match(action,/const swept=await sweepStaleIncidents\(\)/);
  assert.match(action,/stale_retired:swept.retired/);
  assert.match(action,/run\?\.event==="push"/);
+});
+
+
+test("T0 shared incident evidence distinguishes zero-runner infrastructure uncertainty from executed-step failures",()=>{
+ const f={...run,conclusion:"failure"};
+ const zero=classifyFailurePlane({run:f,jobs:[{
+  id:991,status:"completed",conclusion:"failure",runner_name:null,steps:[]
+ }]});
+ assert.equal(zero.plane,"PRE_RUNNER_NO_EXECUTED_STEPS");
+ assert.equal(zero.root_cause_verified,false);
+ assert.deepEqual(zero.job_ids,[991]);
+ const executed=classifyFailurePlane({run:f,jobs:[{
+  id:992,status:"completed",conclusion:"failure",runner_name:"GitHub Actions 24",
+  steps:[{name:"Run npm test",status:"completed",conclusion:"failure"}]
+ }]});
+ assert.equal(executed.plane,"EXECUTED_WORKFLOW_STEP_FAILED");
+ assert.equal(executed.root_cause_verified,false);
+ const runner=classifyFailurePlane({run:f,jobs:[{
+  id:993,status:"completed",conclusion:"failure",runner_name:"GitHub Actions 24",steps:[]
+ }]});
+ assert.equal(runner.plane,"JOB_FAILED_AFTER_RUNNER_ASSIGNED");
+ assert.notEqual(zero.plane,executed.plane);
+});
+test("T0 cannot invent CI, Codex or ActionBot cause on API denial/incomplete job evidence",()=>{
+ const fail={...run,conclusion:"failure"};
+ assert.equal(classifyFailurePlane({run:fail,jobs:null}).plane,"JOB_METADATA_UNAVAILABLE");
+ assert.equal(classifyFailurePlane({run:fail,jobs:[]}).plane,"NO_FAILED_JOB_EVIDENCE");
+ assert.equal(classifyFailurePlane({run:{...fail,conclusion:"startup_failure"},jobs:[]}).plane,"PRE_RUNNER_NO_JOBS");
+ assert.equal(classifyFailurePlane({run:fail,jobs:[{id:2,status:"in_progress",conclusion:null}]}).plane,"JOB_METADATA_INCOMPLETE");
+ assert.equal(classifyFailurePlane({run:fail,jobs:Array(101)}).plane,"JOB_METADATA_INCOMPLETE");
+ assert.equal(classifyFailurePlane({run:{...fail,conclusion:"success"},jobs:[]}).plane,"NOT_ACTIONABLE");
+ assert.equal(classifyFailurePlane({run:fail,jobs:[{
+  id:4,status:"completed",conclusion:"failure",steps:[{status:"completed",conclusion:"skipped"}]
+ }]}).plane,"PRE_RUNNER_NO_EXECUTED_STEPS");
+});
+test("T0 one durable incident key carries source-verified plane, never asserts a confirmed root cause",()=>{
+ const observed=classifyFailurePlane({run,jobs:[{id:5,status:"completed",conclusion:"failure",steps:[]}]});
+ const body=issueBody({key:incidentKey(run.workflow_id,"main"),run,failurePlane:observed});
+ const quote=String.fromCharCode(96);
+ assert.ok(body.includes("Failure plane: "+quote+"PRE_RUNNER_NO_EXECUTED_STEPS"+quote));
+ assert.ok(body.includes("Root cause verified: "+quote+"false"+quote));
+ assert.ok(body.includes("Failed job IDs: "+quote+"5"+quote));
+ assert.equal(body.includes("billing root cause confirmed"),false);
 });
