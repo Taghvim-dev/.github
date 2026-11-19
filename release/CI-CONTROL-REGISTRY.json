@@ -1,27 +1,33 @@
 {
-  "version": "1.0.0",
+  "version": "1.1.0",
   "authority": "Taghvim-dev/.github",
   "constitution": "T0 canonical, pre-effect, authenticated-current-source-only, fail-closed",
   "product": "Taghvim.dev",
   "notification_policy": "one durable incident per workflow+branch; no issue or email for stale/success/skipped; close on recovery",
   "monitored_repositories": {
     "Taghvim-dev/engine": [
-      "test",
-      "t0-live-readiness",
       "controlled-engine-release",
-      "t0-owner-protected-release-request",
+      "public-api-release-observation",
       "t0-central-landing-cloudflare-release",
-      "t0-engine-sandbox-d1-bootstrap",
       "t0-cloudflare-d1-readonly-probe",
+      "t0-cloudflare-workers-live-readonly-observation",
+      "t0-engine-sandbox-d1-bootstrap",
+      "t0-engine-sandbox-d1-migration",
       "t0-immutable-landing-sandbox-d1-recovery",
-      "t0-cloudflare-workers-live-readonly-observation"
+      "t0-live-readiness",
+      "t0-owner-protected-release-request",
+      "t0-private-landing-source-readonly-probe",
+      "t0-public-api-readonly-smoke-observation",
+      "t0-sandbox-http-readonly-route-diagnostic",
+      "test"
     ],
     "Taghvim-dev/landing": [
-      "landing-verify",
-      "visual-rtl-acceptance",
-      "t0-owner-protected-release-request",
       "controlled-landing-release",
-      "t0-web-sandbox-d1-bootstrap"
+      "landing-verify",
+      "t0-owner-protected-release-request",
+      "t0-public-landing-readonly-smoke-observation",
+      "t0-web-sandbox-d1-bootstrap",
+      "visual-rtl-acceptance"
     ],
     "Taghvim-dev/SDK": [
       "public-sdk-verify"
@@ -70,5 +76,14 @@
     "schedule"
   ],
   "trusted_actions_only": true,
-  "production_mutation_authority": false
+  "production_mutation_authority": false,
+  "coverage_rule": "Every extant Taghvim-dev Actions workflow except the incident observer itself must be registered and included in the repository workflow_run trigger; declared exceptions require a canonical reviewed lifecycle record. Do not classify historical PR failures as current main errors.",
+  "runtime_proof_rule": "Workflow success proves source CI only. An internal WAIT_FOR_PRIVATE_SOURCE_READ_AUTHORITY status is a BLOCKED reconciliation and must never produce a GA, sync, release or production claim.",
+  "actionbot_codex_policy": {
+    "agent_pr_treatment": "untrusted_source_until_current_head_ci_review_and_canonical_contract_gates_pass",
+    "dedupe": "workflow_and_branch",
+    "historical_failures": "append_only_not_current_errors",
+    "failure_without_runner": "classify_as_control_plane_or_quota_unknown_until_proved",
+    "unknown_workflow": "deny_observability_coverage_at_ci"
+  }
 }
