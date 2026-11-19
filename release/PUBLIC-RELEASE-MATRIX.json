@@ -45,7 +45,7 @@
   "source_verification": {
     "date": "2026-11-19",
     "phase": "source-integrated-not-deployed",
-    "engine_main_merge_sha": "d5398bbc5a63069a93cf5e5b04e8dc4c912e2cbc",
+    "engine_main_merge_sha": "894ef5c932be7aa559318517184d51abf07705d9",
     "engine_offline_ci_run": "40195989813",
     "engine_live_gate_ci_run": "39439068311",
     "landing_main_merge_sha": "1995a683164cccbe2f18c12940d039bdf9d51ea2",
@@ -149,8 +149,8 @@
     },
     "latest_checked": {
       "date": "2026-11-19",
-      "engine_sha": "d5398bbc5a63069a93cf5e5b04e8dc4c912e2cbc",
-      "engine_ci": "44554722512",
+      "engine_sha": "894ef5c932be7aa559318517184d51abf07705d9",
+      "engine_ci": "44564839911",
       "landing_sha": "1995a683164cccbe2f18c12940d039bdf9d51ea2",
       "landing_ci": "44553201753",
       "shared_release_actions_sha": "c195c8bfde573b6195bd1b3bd00e3535accc9040",
@@ -210,9 +210,9 @@
       "policy_main_sha": "f3bc8d18c5c31fd1125dd4da4887c86b9e3f8447",
       "policy_pr": "Taghvim-dev/.github PR #47",
       "policy_test_run": "39691890610",
-      "engine_main_sha": "d5398bbc5a63069a93cf5e5b04e8dc4c912e2cbc",
-      "engine_reviewed_head": "d5398bbc5a63069a93cf5e5b04e8dc4c912e2cbc",
-      "engine_ci_run": "44554722512",
+      "engine_main_sha": "894ef5c932be7aa559318517184d51abf07705d9",
+      "engine_reviewed_head": "894ef5c932be7aa559318517184d51abf07705d9",
+      "engine_ci_run": "44564839911",
       "landing_main_sha": "1995a683164cccbe2f18c12940d039bdf9d51ea2",
       "landing_reviewed_head": "1995a683164cccbe2f18c12940d039bdf9d51ea2",
       "landing_ci_run": "44553201753",
@@ -809,10 +809,10 @@
     "source_only": true,
     "remote_runtime_attested": false,
     "engine": {
-      "commit": "d5398bbc5a63069a93cf5e5b04e8dc4c912e2cbc",
+      "commit": "894ef5c932be7aa559318517184d51abf07705d9",
       "package": "2.1.0",
       "lock": "2.1.0",
-      "ci": "44554722512"
+      "ci": "44564839911"
     },
     "landing": {
       "commit": "1995a683164cccbe2f18c12940d039bdf9d51ea2",
