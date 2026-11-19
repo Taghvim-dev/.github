@@ -4,7 +4,7 @@
   "product": "Taghvim.dev",
   "contract_version": "2.1.0",
   "current_source": {
-    "engine_main_sha": "d596bd4f573801746aa1ddf73c7a0f04136225e8",
+    "engine_main_sha": "95f9c3ad15ef81796bba454cb40f6f386dfa34b2",
     "landing_main_sha": "4139d0f79afb8adba041bfc894207a4930a810e9",
     "shared_policy_sha": "c195c8bfde573b6195bd1b3bd00e3535accc9040",
     "prewrite_source_policy_sha": "f3bc8d18c5c31fd1125dd4da4887c86b9e3f8447"
@@ -216,7 +216,7 @@
       ],
       "source_ci_run": "39691890610",
       "dependent_component_ci": {
-        "engine": "44600943170",
+        "engine": "44602439934",
         "landing": "44567323829"
       },
       "policy_main_sha": "f3bc8d18c5c31fd1125dd4da4887c86b9e3f8447",
@@ -241,7 +241,7 @@
       "source_ci_run": "39691890610",
       "reviewed_action_main_sha": "f3bc8d18c5c31fd1125dd4da4887c86b9e3f8447",
       "component_source_ci": {
-        "engine": "44600943170",
+        "engine": "44602439934",
         "landing": "44567323829"
       },
       "live_evidence": null,
@@ -272,7 +272,7 @@
       ],
       "package_contract_version": "2.1.0",
       "dependent_component_ci": {
-        "engine": "44600943170",
+        "engine": "44602439934",
         "landing": "44567323829",
         "SDK": "40137472813",
         "CLI": "40138494477",
@@ -297,9 +297,9 @@
         "engine/test/t0-estate-contract.test.mjs",
         "engine/test/t0-platform-admission.test.mjs"
       ],
-      "source_ci_run": "44600943170",
+      "source_ci_run": "44602439934",
       "remote_pr": "Taghvim-dev/engine#211",
-      "controller_main_sha": "d596bd4f573801746aa1ddf73c7a0f04136225e8",
+      "controller_main_sha": "95f9c3ad15ef81796bba454cb40f6f386dfa34b2",
       "live_evidence": null,
       "required_before_effect": true,
       "mutation_authority": "protected_github_actions_only",
@@ -881,8 +881,8 @@
   },
   "canonical_estate_current": {
     "authority": "Taghvim-dev/engine/contracts/constitution/v1/estate.json",
-    "release_sha": "d596bd4f573801746aa1ddf73c7a0f04136225e8",
-    "source_ci": "44600943170",
+    "release_sha": "95f9c3ad15ef81796bba454cb40f6f386dfa34b2",
+    "source_ci": "44602439934",
     "environment_inventory": {
       "workers": 7,
       "databases": 4,
