@@ -24,6 +24,31 @@ export function shouldSweepAfterGreenMainRun({eventName,run,repository}={}) {
    monitoredRun(repository,run?.name);
 }
 
+/** One constitutional root-cause taxonomy across GitHub CI, Codex and ActionBot-triggered runs.
+ * Never call a zero-step GitHub control-plane failure a defect in checked-out code.
+ * GitHub metadata is the only execution evidence accepted here; external Codex
+ * services require independent receipts and may not inherit green CI.
+ */
+export function classifyExecutionBoundary({jobs,conclusion}={}){
+  if(!Array.isArray(jobs)||!jobs.length)return "UNVERIFIED_RUNNER_JOB_INVENTORY";
+  const failed=jobs.filter(x=>["failure","timed_out","startup_failure","action_required"].includes(x.conclusion));
+  if(!failed.length && conclusion!=="success")return "UNVERIFIED_FAILURE_BOUNDARY";
+  if(failed.length && failed.every(x=>
+    !x.runner_name && Array.isArray(x.steps) && x.steps.length===0))
+      return "PRE_RUNNER_PLATFORM_OR_QUOTA";
+  if(failed.length)return "EXECUTED_WORKFLOW_FAILURE";
+  return "SUCCEEDED_NO_INCIDENT";
+}
+
+export function newerCurrentGreenCloses({failed,run,currentSha}={}){
+  return !!failed&&!!run && run.status==="completed"&&run.conclusion==="success" &&
+    run.head_sha===currentSha && failed.head_sha===currentSha &&
+    run.head_branch===failed.head_branch && run.workflow_id===failed.workflow_id &&
+    run.event===failed.event &&
+    (run.run_number>failed.run_number ||
+     (run.run_number===failed.run_number&&(run.run_attempt||1)>(failed.run_attempt||1)));
+}
+
 export const incidentKey = (workflow, branch) =>
   createHash("sha256").update(String(workflow) + "\0" + branch).digest("hex").slice(0, 20);
 
@@ -49,7 +74,7 @@ export function classify({ run, currentSha, recent = [], openPulls = [], reposit
   return "ignore";
 }
 
-export function issueBody({ key, run }) {
+export function issueBody({ key, run, executionBoundary="UNVERIFIED_FAILURE_BOUNDARY" }) {
   const url = "https://github.com/" + process.env.GITHUB_REPOSITORY + "/actions/runs/" + run.id;
   return [
     "<!-- taghvim-ci-incident:" + key + " -->",
@@ -58,6 +83,7 @@ export function issueBody({ key, run }) {
     "Branch: `" + String(run.head_branch).replace(/[`\r\n]/g, "") + "`",
     "Head SHA: `" + String(run.head_sha) + "`",
     "Failure conclusion: `" + String(run.conclusion) + "`",
+    "Root boundary: `" + executionBoundary + "`",
     "Evidence: " + url,
     "",
     "Created only for the latest active source SHA after GitHub Actions completed in failure.",
@@ -152,8 +178,12 @@ export async function reconcile(payload) {
   if (verdict === "ignore") return "ignored";
   const issue = await findIssue(repo, key,{openOnly:verdict==="close"});
   if (verdict === "open") {
+    const jobInventory=await api("/repos/"+repo+"/actions/runs/"+run.id+"/jobs?per_page=100");
+    const executionBoundary=classifyExecutionBoundary({
+      jobs:jobInventory?.jobs,conclusion:run.conclusion
+    });
     if(issue?.state==="open"){
-      const updated=issueBody({key,run});
+      const updated=issueBody({key,run,executionBoundary});
       if(issue.body!==updated){
         const currentIssue=await api("/repos/"+repo+"/issues/"+issue.number);
         if(currentIssue.state!=="open"||currentIssue.body!==issue.body)return "raced_no_mutation";
@@ -163,12 +193,12 @@ export async function reconcile(payload) {
       return "already_open";
     }
     if (issue) {
-      await api("/repos/" + repo + "/issues/" + issue.number, "PATCH", { state: "open", body: issueBody({ key, run }) });
+      await api("/repos/" + repo + "/issues/" + issue.number, "PATCH", { state: "open", body: issueBody({ key, run, executionBoundary }) });
       return "reopened";
     }
     await api("/repos/" + repo + "/issues", "POST", {
       title: "[CI Incident] " + String(run.name || "workflow").slice(0, 70) + " — " + run.head_branch.slice(0, 70),
-      body: issueBody({ key, run })
+      body: issueBody({ key, run, executionBoundary })
     });
     return "opened";
   }
@@ -201,8 +231,18 @@ export async function sweepStaleIncidents(){
    const prs=run.event==="pull_request"?
      await api("/repos/"+repo+"/pulls?state=open&head="+encodeURIComponent("Taghvim-dev:"+run.head_branch)+"&per_page=100"):[];
    if(!Array.isArray(prs))throw Error("CI_INCIDENT_PR_INVENTORY_INVALID");
-   if(shouldRetireIncident({run,currentSha:current?.commit?.sha,openPulls:prs,repository:repo}))
-      plan.push(issue);
+   const obsolete=shouldRetireIncident({run,currentSha:current?.commit?.sha,openPulls:prs,repository:repo});
+   // A green retry on the SAME active PR/main SHA is a source-backed recovery,
+   // even if the green workflow_run notification was coalesced or never observed.
+   let provenGreen=false;
+   if(!obsolete&&current?.commit?.sha===run.head_sha){
+     const ci=await api("/repos/"+repo+"/actions/workflows/"+run.workflow_id+
+       "/runs?branch="+encodeURIComponent(run.head_branch)+"&per_page=30");
+     if(!Array.isArray(ci?.workflow_runs))throw Error("CI_INCIDENT_RECOVERY_RUN_INVENTORY_INVALID");
+     provenGreen=ci.workflow_runs.some(candidate=>
+       newerCurrentGreenCloses({failed:run,run:candidate,currentSha:current.commit.sha}));
+   }
+   if(obsolete||provenGreen)plan.push(issue);
   }
   if(issues.length<100)break;
   if(page===10)throw Error("CI_INCIDENT_REGISTRY_TOO_LARGE");

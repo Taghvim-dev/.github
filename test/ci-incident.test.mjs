@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { classify, incidentKey, monitoredRun, currentHeadDeleted, shouldRetireIncident, shouldSweepAfterGreenMainRun } from "../.github/actions/ci-incident/reconcile.mjs";
+import { classify, incidentKey, monitoredRun, currentHeadDeleted, shouldRetireIncident, shouldSweepAfterGreenMainRun, classifyExecutionBoundary, newerCurrentGreenCloses } from "../.github/actions/ci-incident/reconcile.mjs";
 import CONTROL from "../release/CI-CONTROL-REGISTRY.json" with {type:"json"};
 
 const repo = "Taghvim-dev/engine";
@@ -145,4 +145,31 @@ test("T0 shared action cleans stale source incidents after successful real main 
  assert.match(action,/const swept=await sweepStaleIncidents\(\)/);
  assert.match(action,/stale_retired:swept.retired/);
  assert.match(action,/run\?\.event==="push"/);
+});
+
+test("T0 runner admission failure is never misreported as a code or Codex regression",()=>{
+ const blank={conclusion:"failure",runner_name:null,steps:[]};
+ assert.equal(classifyExecutionBoundary({jobs:[blank],conclusion:"failure"}),"PRE_RUNNER_PLATFORM_OR_QUOTA");
+ assert.equal(classifyExecutionBoundary({jobs:[{...blank,runner_name:"ubuntu-ci",steps:[{name:"npm test"}]}],conclusion:"failure"}),"EXECUTED_WORKFLOW_FAILURE");
+ assert.equal(classifyExecutionBoundary({jobs:[],conclusion:"failure"}),"UNVERIFIED_RUNNER_JOB_INVENTORY");
+ assert.equal(classifyExecutionBoundary({jobs:[{...blank,conclusion:"success"}],conclusion:"success"}),"SUCCEEDED_NO_INCIDENT");
+});
+test("T0 durable recovery must independently prove same current SHA, same event/workflow, newer run",()=>{
+ const failed={...run};
+ const green={...run,id:124,conclusion:"success",run_number:19};
+ assert.equal(newerCurrentGreenCloses({failed,run:green,currentSha:run.head_sha}),true);
+ for(const bad of [{head_sha:"aa".repeat(20)},{head_branch:"other"},{workflow_id:99},{event:"pull_request"},{run_number:17},{status:"in_progress"},{conclusion:"skipped"}])
+   assert.equal(newerCurrentGreenCloses({failed,run:{...green,...bad},currentSha:run.head_sha}),false,JSON.stringify(bad));
+});
+test("T0 canonical incident event policy admits failures immediately and green main recovery only",async()=>{
+ const fs=await import("node:fs");
+ const registry=JSON.parse(fs.readFileSync(new URL("../release/CI-CONTROL-REGISTRY.json",import.meta.url),"utf8"));
+ const workflow=fs.readFileSync(new URL("../.github/workflows/t0-ci-incident.yml",import.meta.url),"utf8");
+ const admission=registry.event_admission;
+ assert.equal(admission.mode,"failure_immediate_green_main_reconciliation_and_periodic_recovery");
+ assert.deepEqual(admission.immediate_incident_outcomes,registry.outcomes.incident);
+ assert.ok(workflow.includes(admission.github_run_listener_job_gate));
+ assert.ok(workflow.includes("cron: '"+admission.sweep_cron+"'"));
+ assert.doesNotMatch(workflow,/pull_request_target/);
+ assert.doesNotMatch(workflow,/actions\/checkout/);
 });

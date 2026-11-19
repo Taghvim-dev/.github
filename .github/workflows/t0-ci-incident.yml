@@ -5,7 +5,7 @@ on:
     workflows: ["public-docs-verify","coordinated-public-release","t0-public-widget-sdk-reconciler","d1-applied-ledger-contract","d1-prefix-contract","d1-recovery-bookmark-contract","durable-private-release-registry-contract","release-checkpoint-contract","sandbox-origin-ownership-contract","t0-current-source-admission-contract","verify-production-environment-contract"]
     types: [completed]
   schedule:
-    - cron: '13 2 * * *'
+    - cron: '13 */6 * * *'
   workflow_dispatch:
 permissions:
   contents: read
@@ -20,7 +20,10 @@ jobs:
     if: >-
       github.event_name != 'workflow_run' ||
       (github.event.workflow_run.head_repository.full_name == github.repository &&
-       contains(fromJSON('["success","failure","timed_out","startup_failure","action_required"]'), github.event.workflow_run.conclusion))
+       (contains(fromJSON('["failure","timed_out","startup_failure","action_required"]'), github.event.workflow_run.conclusion) ||
+        (github.event.workflow_run.conclusion == 'success' &&
+         github.event.workflow_run.event == 'push' &&
+         github.event.workflow_run.head_branch == 'main')))
     runs-on: ubuntu-24.04
     timeout-minutes: 6
     steps:
