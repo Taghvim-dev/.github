@@ -304,6 +304,33 @@
       "required_before_effect": true,
       "mutation_authority": "protected_github_actions_only",
       "ga_claimed": false
+    },
+    {
+      "id": "T0-METER-016",
+      "area": "T0 Metering-First: pre-effect quota, classified pure/write operations, durable uncertainty cases; live schema and environment isolation still GA-blocked",
+      "state": "LIVE_UNVERIFIED",
+      "requires_live_proof": true,
+      "code": [
+        "engine/contracts/constitution/v1/metering-policy.json",
+        "engine/contracts/constitution/v1/constitution.json",
+        "engine/src/index.js",
+        "engine/src/metering/quota.js",
+        "engine/migrations/0014_metering_uncertain_outcomes.sql"
+      ],
+      "test": [
+        "engine/test/t0-metering-first.test.mjs",
+        "engine/test/meter-recovery.test.mjs",
+        "engine/test/e2e.test.mjs"
+      ],
+      "source_ci_run": "44609061501",
+      "reviewed_pr": "Taghvim-dev/engine#220",
+      "reviewed_head": "0082189d3b53fade95228e23e00b903b6ba1870e",
+      "controller_main_sha": "f959c63ef8159bdede21c7640baa0dfc91f31cfc",
+      "live_evidence": null,
+      "production_schema_migration": "0014_metering_uncertain_outcomes.sql",
+      "production_migration_verified": false,
+      "environment_scoped_usage_verified": false,
+      "ga_claimed": false
     }
   ],
   "evidence_rules": {
