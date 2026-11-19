@@ -304,6 +304,38 @@
       "required_before_effect": true,
       "mutation_authority": "protected_github_actions_only",
       "ga_claimed": false
+    },
+    {
+      "id": "T0-METER-016",
+      "area": "Constitutional Metering-First: canonical pricebook weight, tenant/workspace/key environment, atomic pre-effect reservation, persistent event settlement, case-based unknown-outcome recovery and fail-closed D1 readiness; no GA without separate environment and delegated bill-to proofs",
+      "state": "LIVE_UNVERIFIED",
+      "requires_live_proof": true,
+      "code": [
+        "engine/contracts/constitution/v1/constitution.json",
+        "engine/contracts/constitution/v1/metering-policy.json",
+        "engine/src/index.js",
+        "engine/src/metering/quota.js",
+        "engine/migrations/0014_metering_uncertain_outcomes.sql",
+        "engine/src/system/handlers.js"
+      ],
+      "test": [
+        "engine/test/t0-metering-first.test.mjs",
+        "engine/test/meter-recovery.test.mjs",
+        "engine/test/e2e.test.mjs"
+      ],
+      "source_ci_run": "44609061501",
+      "source_pr": "Taghvim-dev/engine#220",
+      "reviewed_main_sha": "f959c63ef8159bdede21c7640baa0dfc91f31cfc",
+      "live_evidence": null,
+      "required_before_effect": true,
+      "ga_claimed": false,
+      "blockers": [
+        "0014 production and sandbox remote ledgers unverified",
+        "test/live quota partition is not independent",
+        "delegated payer attribution unproven",
+        "case resolution requires independent evidence",
+        "real SDK/widget metering acceptance pending"
+      ]
     }
   ],
   "evidence_rules": {
