@@ -9,6 +9,26 @@ import {verifyEngineProductionReceipt} from "./verify-engine-live-receipt.mjs";
 import {verifyLandingProductionReceipt} from "./verify-landing-live-receipt.mjs";
 const candidate=JSON.parse(readFileSync(new URL("../release/PUBLIC-RELEASE-MATRIX.json",import.meta.url)));
 const pinnedCheckouts=resolvePins(candidate);
+
+const freeScope=JSON.parse(readFileSync(new URL("../release/FREE-GA-CONSTITUTION.json",import.meta.url)));
+assert.equal(candidate.free_ga_policy_source,"release/FREE-GA-CONSTITUTION.json","Free GA must have one canonical source authority");
+assert.equal(freeScope.contract_version,candidate.contract_version,"Free GA contract version drift");
+assert.equal(freeScope.release_tracks?.free_ga?.admission,"EVIDENCE_GATED","Free GA must be receipt-gated");
+assert.equal(freeScope.release_tracks?.free_ga?.enabled_before_payment_certification,true,
+ "Customer payment must not block free GA");
+assert.equal(freeScope.release_tracks?.free_ga?.no_automatic_ga_promotion,true,
+ "Free GA cannot be claimed by editing a source-only manifest");
+assert.equal(freeScope.release_tracks?.commercial_billing?.proposed_provider,"Vandar");
+assert.equal(freeScope.release_tracks?.commercial_billing?.activation,"DEFERRED");
+assert.equal(freeScope.release_tracks?.commercial_billing?.must_not_gate_free_ga,true);
+assert.equal(freeScope.release_tracks?.commercial_billing?.live_charges_permitted,false);
+assert.equal(freeScope.universal_full_ga?.required_separately,true);
+const actualFreeGates=Object.keys(candidate.prerequisites||{});
+assert.deepEqual(actualFreeGates.slice().sort(),freeScope.release_tracks.free_ga.must_prove.slice().sort(),
+ "T0 free GA cannot silently gain or lose an evidence-bound prerequisite");
+for(const key of actualFreeGates)assert.ok(!/payment|checkout|billing|vandar|pricebook/i.test(key),
+ "Vandar/commercial checkout cannot be a free GA admission dependency");
+
 const isLive=process.argv.includes("--live");
 // T=0 source-to-CI reachability: a ledger update must execute this exact gate
 // on both pull requests and main-branch pushes, never silently skip validation.
