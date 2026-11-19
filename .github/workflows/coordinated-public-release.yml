@@ -6,6 +6,9 @@ on:
       - "release/PUBLIC-RELEASE-MATRIX.json"
       - "release/T0-CONTROL-MATRIX.json"
       - "release/CI-INCIDENT-ROOT-CAUSES.json"
+      - "release/FREE-GA-CONSTITUTION.json"
+      - "scripts/free-ga-admission.mjs"
+      - "test/free-ga-admission.test.mjs"
       - "scripts/check-public-release.mjs"
       - "scripts/release-runtime-provenance.mjs"
       - "test/release-runtime-provenance.test.mjs"
@@ -27,6 +30,9 @@ on:
       - "release/PUBLIC-RELEASE-MATRIX.json"
       - "release/T0-CONTROL-MATRIX.json"
       - "release/CI-INCIDENT-ROOT-CAUSES.json"
+      - "release/FREE-GA-CONSTITUTION.json"
+      - "scripts/free-ga-admission.mjs"
+      - "test/free-ga-admission.test.mjs"
       - "scripts/check-public-release.mjs"
       - "scripts/release-runtime-provenance.mjs"
       - "test/release-runtime-provenance.test.mjs"
@@ -67,7 +73,7 @@ jobs:
       - name: Resolve exact immutable sibling SHAs from this candidate release matrix
         id: release-pins
         run: |
-          node --test test/release-pins.test.mjs test/reconcile-public-widget.test.mjs
+          node --test test/release-pins.test.mjs test/reconcile-public-widget.test.mjs test/free-ga-admission.test.mjs
           node scripts/release-pins.mjs >> "$GITHUB_OUTPUT"
       - uses: actions/checkout@v5
         with:
