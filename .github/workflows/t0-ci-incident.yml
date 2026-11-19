@@ -28,4 +28,4 @@ jobs:
     timeout-minutes: 6
     steps:
       - name: Current source/PR incident lifecycle and immutable stale-issue retirement
-        uses: Taghvim-dev/.github/.github/actions/ci-incident@af9ac08bd59d0eee2dd627979e3721caafc895ee
+        uses: Taghvim-dev/.github/.github/actions/ci-incident@8567e028da0e092b7728be5a5c1e7d5ac7127a3b
