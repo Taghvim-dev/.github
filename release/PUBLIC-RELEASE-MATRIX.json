@@ -45,7 +45,7 @@
   "source_verification": {
     "date": "2026-11-19",
     "phase": "source-integrated-not-deployed",
-    "engine_main_merge_sha": "95f9c3ad15ef81796bba454cb40f6f386dfa34b2",
+    "engine_main_merge_sha": "f959c63ef8159bdede21c7640baa0dfc91f31cfc",
     "engine_offline_ci_run": "40195989813",
     "engine_live_gate_ci_run": "39439068311",
     "landing_main_merge_sha": "4139d0f79afb8adba041bfc894207a4930a810e9",
@@ -149,8 +149,8 @@
     },
     "latest_checked": {
       "date": "2026-11-19",
-      "engine_sha": "95f9c3ad15ef81796bba454cb40f6f386dfa34b2",
-      "engine_ci": "44602439934",
+      "engine_sha": "f959c63ef8159bdede21c7640baa0dfc91f31cfc",
+      "engine_ci": "44609061501",
       "landing_sha": "4139d0f79afb8adba041bfc894207a4930a810e9",
       "landing_ci": "44567323829",
       "shared_release_actions_sha": "c195c8bfde573b6195bd1b3bd00e3535accc9040",
@@ -210,9 +210,9 @@
       "policy_main_sha": "f3bc8d18c5c31fd1125dd4da4887c86b9e3f8447",
       "policy_pr": "Taghvim-dev/.github PR #47",
       "policy_test_run": "39691890610",
-      "engine_main_sha": "95f9c3ad15ef81796bba454cb40f6f386dfa34b2",
-      "engine_reviewed_head": "95f9c3ad15ef81796bba454cb40f6f386dfa34b2",
-      "engine_ci_run": "44602439934",
+      "engine_main_sha": "f959c63ef8159bdede21c7640baa0dfc91f31cfc",
+      "engine_reviewed_head": "0082189d3b53fade95228e23e00b903b6ba1870e",
+      "engine_ci_run": "44609061501",
       "landing_main_sha": "4139d0f79afb8adba041bfc894207a4930a810e9",
       "landing_reviewed_head": "4139d0f79afb8adba041bfc894207a4930a810e9",
       "landing_ci_run": "44567323829",
@@ -809,10 +809,10 @@
     "source_only": true,
     "remote_runtime_attested": false,
     "engine": {
-      "commit": "95f9c3ad15ef81796bba454cb40f6f386dfa34b2",
+      "commit": "f959c63ef8159bdede21c7640baa0dfc91f31cfc",
       "package": "2.1.0",
       "lock": "2.1.0",
-      "ci": "44602439934"
+      "ci": "44609061501"
     },
     "landing": {
       "commit": "4139d0f79afb8adba041bfc894207a4930a810e9",
