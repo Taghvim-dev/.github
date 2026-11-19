@@ -182,8 +182,8 @@ export async function sweepStaleIncidents(){
   for(const issue of issues){
    if(issue.pull_request||issue.state!=="open")continue;
    const mark=issue.body?.match(/<!-- taghvim-ci-incident:([a-f0-9]{20}) -->/);
-   const link=issue.body?.match(/Evidence: https:\/\/github\.com\/Taghvim-dev\/(engine|landing)\/actions\/runs\/([0-9]+)/);
-   if(!mark||!link||"Taghvim-dev/"+link[1]!==repo)continue;
+   const link=issue.body?.match(/Evidence: (https:\/\/github\.com\/Taghvim-dev\/(?:engine|landing|SDK|CLI|cookbooks|\.github)\/actions\/runs\/([0-9]+))/);
+   if(!mark||!link||link[1]!=="https://github.com/"+repo+"/actions/runs/"+link[2])continue;
    const run=await api("/repos/"+repo+"/actions/runs/"+link[2],"GET",undefined,{allowMissing:true});
    if(!run||run.status!=="completed"||!monitoredRun(repo,run.name)||
        incidentKey(run.workflow_id,run.head_branch)!==mark[1]||
