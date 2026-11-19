@@ -45,7 +45,7 @@
   "source_verification": {
     "date": "2026-11-19",
     "phase": "source-integrated-not-deployed",
-    "engine_main_merge_sha": "6aa416178ad1457eed11de7ceefe47d76dd772fd",
+    "engine_main_merge_sha": "57d49cba74fcd5301ff83316d4c60b42add254bd",
     "engine_offline_ci_run": "40195989813",
     "engine_live_gate_ci_run": "39439068311",
     "landing_main_merge_sha": "5c74a548f181a8c2b6cb70f2a3c13e5f79319d2b",
@@ -149,8 +149,8 @@
     },
     "latest_checked": {
       "date": "2026-11-19",
-      "engine_sha": "6aa416178ad1457eed11de7ceefe47d76dd772fd",
-      "engine_ci": "44534265775",
+      "engine_sha": "57d49cba74fcd5301ff83316d4c60b42add254bd",
+      "engine_ci": "44540282406",
       "landing_sha": "5c74a548f181a8c2b6cb70f2a3c13e5f79319d2b",
       "landing_ci": "44524058398",
       "shared_release_actions_sha": "c195c8bfde573b6195bd1b3bd00e3535accc9040",
@@ -210,9 +210,9 @@
       "policy_main_sha": "f3bc8d18c5c31fd1125dd4da4887c86b9e3f8447",
       "policy_pr": "Taghvim-dev/.github PR #47",
       "policy_test_run": "39691890610",
-      "engine_main_sha": "6aa416178ad1457eed11de7ceefe47d76dd772fd",
-      "engine_reviewed_head": "6aa416178ad1457eed11de7ceefe47d76dd772fd",
-      "engine_ci_run": "44534265775",
+      "engine_main_sha": "57d49cba74fcd5301ff83316d4c60b42add254bd",
+      "engine_reviewed_head": "57d49cba74fcd5301ff83316d4c60b42add254bd",
+      "engine_ci_run": "44540282406",
       "landing_main_sha": "5c74a548f181a8c2b6cb70f2a3c13e5f79319d2b",
       "landing_reviewed_head": "5c74a548f181a8c2b6cb70f2a3c13e5f79319d2b",
       "landing_ci_run": "44524058398",
@@ -809,10 +809,10 @@
     "source_only": true,
     "remote_runtime_attested": false,
     "engine": {
-      "commit": "6aa416178ad1457eed11de7ceefe47d76dd772fd",
+      "commit": "57d49cba74fcd5301ff83316d4c60b42add254bd",
       "package": "2.1.0",
       "lock": "2.1.0",
-      "ci": "44534265775"
+      "ci": "44540282406"
     },
     "landing": {
       "commit": "5c74a548f181a8c2b6cb70f2a3c13e5f79319d2b",
