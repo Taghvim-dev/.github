@@ -45,10 +45,10 @@
   "source_verification": {
     "date": "2026-11-19",
     "phase": "source-integrated-not-deployed",
-    "engine_main_merge_sha": "fae436019dc1ad6c6ac184852db638cccc3ae0a7",
+    "engine_main_merge_sha": "29feedf3bc0433defafd36805c7b1f260560b466",
     "engine_offline_ci_run": "40195989813",
     "engine_live_gate_ci_run": "39439068311",
-    "landing_main_merge_sha": "5adf4c6ef1acaa7265ef720bd93ab4c4e4311bfe",
+    "landing_main_merge_sha": "287239ce4b5f02432d3cc1d6d28d046d27e6b083",
     "landing_integration_merge_sha": "e380b5f3553b98faf35adeccd9f6a25440a778a4",
     "landing_integration_ci_run": "39774645927",
     "landing_rtl_ci_run": "40133550240",
@@ -149,10 +149,10 @@
     },
     "latest_checked": {
       "date": "2026-11-19",
-      "engine_sha": "fae436019dc1ad6c6ac184852db638cccc3ae0a7",
-      "engine_ci": "44625238735",
-      "landing_sha": "5adf4c6ef1acaa7265ef720bd93ab4c4e4311bfe",
-      "landing_ci": "44625572229",
+      "engine_sha": "29feedf3bc0433defafd36805c7b1f260560b466",
+      "engine_ci": "44630821898",
+      "landing_sha": "287239ce4b5f02432d3cc1d6d28d046d27e6b083",
+      "landing_ci": "44629136875",
       "shared_release_actions_sha": "c195c8bfde573b6195bd1b3bd00e3535accc9040",
       "vendored_engine_files_matched": 11,
       "sandbox_to_production_status": "NO_GO",
@@ -210,12 +210,12 @@
       "policy_main_sha": "f3bc8d18c5c31fd1125dd4da4887c86b9e3f8447",
       "policy_pr": "Taghvim-dev/.github PR #47",
       "policy_test_run": "39691890610",
-      "engine_main_sha": "fae436019dc1ad6c6ac184852db638cccc3ae0a7",
-      "engine_reviewed_head": "fae436019dc1ad6c6ac184852db638cccc3ae0a7",
-      "engine_ci_run": "44625238735",
-      "landing_main_sha": "5adf4c6ef1acaa7265ef720bd93ab4c4e4311bfe",
-      "landing_reviewed_head": "5adf4c6ef1acaa7265ef720bd93ab4c4e4311bfe",
-      "landing_ci_run": "44625572229",
+      "engine_main_sha": "29feedf3bc0433defafd36805c7b1f260560b466",
+      "engine_reviewed_head": "29feedf3bc0433defafd36805c7b1f260560b466",
+      "engine_ci_run": "44630821898",
+      "landing_main_sha": "287239ce4b5f02432d3cc1d6d28d046d27e6b083",
+      "landing_reviewed_head": "287239ce4b5f02432d3cc1d6d28d046d27e6b083",
+      "landing_ci_run": "44629136875",
       "admission_scope": "MUTATION_BLOCKING_SOURCE_ONLY",
       "runtime_cloudflare_gate": "ENGINE_AND_LANDING_PRODUCTION_VERIFIED_EARLY_ACCESS_NO_GA",
       "cross_repo_immutable_ref": true,
@@ -809,16 +809,16 @@
     "source_only": true,
     "remote_runtime_attested": false,
     "engine": {
-      "commit": "fae436019dc1ad6c6ac184852db638cccc3ae0a7",
+      "commit": "29feedf3bc0433defafd36805c7b1f260560b466",
       "package": "2.1.0",
       "lock": "2.1.0",
-      "ci": "44625238735"
+      "ci": "44630821898"
     },
     "landing": {
-      "commit": "5adf4c6ef1acaa7265ef720bd93ab4c4e4311bfe",
+      "commit": "287239ce4b5f02432d3cc1d6d28d046d27e6b083",
       "package": "2.1.0",
       "lock": "2.1.0",
-      "ci": "44625572229"
+      "ci": "44629136875"
     },
     "SDK": {
       "commit": "3abed87ca07544ce307e9fe16b491302ad078e3a",
