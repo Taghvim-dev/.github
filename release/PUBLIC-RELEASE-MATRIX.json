@@ -43,12 +43,12 @@
   },
   "owner_action": "Do not declare GA or enable live billing until all prerequisites have evidence and pass their gates.",
   "source_verification": {
-    "date": "2026-10-25",
+    "date": "2026-11-19",
     "phase": "source-integrated-not-deployed",
-    "engine_main_merge_sha": "6e449a729069f327a73a24865b6995412529ee98",
+    "engine_main_merge_sha": "6aa416178ad1457eed11de7ceefe47d76dd772fd",
     "engine_offline_ci_run": "40195989813",
     "engine_live_gate_ci_run": "39439068311",
-    "landing_main_merge_sha": "ba9209f5832a531b6955041729423796629c25c7",
+    "landing_main_merge_sha": "5c74a548f181a8c2b6cb70f2a3c13e5f79319d2b",
     "landing_integration_merge_sha": "e380b5f3553b98faf35adeccd9f6a25440a778a4",
     "landing_integration_ci_run": "39774645927",
     "landing_rtl_ci_run": "40133550240",
@@ -148,11 +148,11 @@
       "note": "GitHub repository environment settings cannot be read/managed by current connector. Actual deploy job independently verifies via GitHub API; no production action authorized yet."
     },
     "latest_checked": {
-      "date": "2026-10-25",
-      "engine_sha": "6e449a729069f327a73a24865b6995412529ee98",
-      "engine_ci": "40195989813",
-      "landing_sha": "ba9209f5832a531b6955041729423796629c25c7",
-      "landing_ci": "40195727022",
+      "date": "2026-11-19",
+      "engine_sha": "6aa416178ad1457eed11de7ceefe47d76dd772fd",
+      "engine_ci": "44534265775",
+      "landing_sha": "5c74a548f181a8c2b6cb70f2a3c13e5f79319d2b",
+      "landing_ci": "44524058398",
       "shared_release_actions_sha": "c195c8bfde573b6195bd1b3bd00e3535accc9040",
       "vendored_engine_files_matched": 11,
       "sandbox_to_production_status": "NO_GO",
@@ -210,12 +210,12 @@
       "policy_main_sha": "f3bc8d18c5c31fd1125dd4da4887c86b9e3f8447",
       "policy_pr": "Taghvim-dev/.github PR #47",
       "policy_test_run": "39691890610",
-      "engine_main_sha": "6e449a729069f327a73a24865b6995412529ee98",
-      "engine_reviewed_head": "6e449a729069f327a73a24865b6995412529ee98",
-      "engine_ci_run": "40195989813",
-      "landing_main_sha": "ba9209f5832a531b6955041729423796629c25c7",
-      "landing_reviewed_head": "ba9209f5832a531b6955041729423796629c25c7",
-      "landing_ci_run": "40195727022",
+      "engine_main_sha": "6aa416178ad1457eed11de7ceefe47d76dd772fd",
+      "engine_reviewed_head": "6aa416178ad1457eed11de7ceefe47d76dd772fd",
+      "engine_ci_run": "44534265775",
+      "landing_main_sha": "5c74a548f181a8c2b6cb70f2a3c13e5f79319d2b",
+      "landing_reviewed_head": "5c74a548f181a8c2b6cb70f2a3c13e5f79319d2b",
+      "landing_ci_run": "44524058398",
       "admission_scope": "MUTATION_BLOCKING_SOURCE_ONLY",
       "runtime_cloudflare_gate": "ENGINE_AND_LANDING_PRODUCTION_VERIFIED_EARLY_ACCESS_NO_GA",
       "cross_repo_immutable_ref": true,
@@ -809,16 +809,16 @@
     "source_only": true,
     "remote_runtime_attested": false,
     "engine": {
-      "commit": "6e449a729069f327a73a24865b6995412529ee98",
+      "commit": "6aa416178ad1457eed11de7ceefe47d76dd772fd",
       "package": "2.1.0",
       "lock": "2.1.0",
-      "ci": "40195989813"
+      "ci": "44534265775"
     },
     "landing": {
-      "commit": "ba9209f5832a531b6955041729423796629c25c7",
+      "commit": "5c74a548f181a8c2b6cb70f2a3c13e5f79319d2b",
       "package": "2.1.0",
       "lock": "2.1.0",
-      "ci": "40195727022"
+      "ci": "44524058398"
     },
     "SDK": {
       "commit": "3abed87ca07544ce307e9fe16b491302ad078e3a",

@@ -61,7 +61,12 @@ test("current main controller embeds the exact released-candidate Landing Git tr
   assert.equal(e.push_production_job, "skipped");
   assert.equal(o.remote_new_migrations_status, "ENGINE_0010_AND_LANDING_0004_REMOTE_VERIFIED");
   assert.equal(o.both_product_components_live,true);
-  assert.equal(o.engine_new_source.latest_controller_source_sha,pub.source_verification.latest_checked.engine_sha);
+  // Historical October source proof is immutable; November HEAD is a separate authority.
+  assert.equal(o.engine_new_source.latest_controller_source_sha,
+   pub.source_verification.engine_package_contract_identity.source_main_sha);
+  assert.equal(String(o.engine_new_source.latest_controller_ci_run),
+   String(pub.source_verification.engine_package_contract_identity.ci_run));
+  assert.equal(pub.source_verification.latest_checked.engine_sha,t0.current_source.engine_main_sha);
   assert.equal(o.current_source_not_yet_deployed_scope.startsWith("LATEST_ENGINE_MAIN_CONTROLLER_CHANGE"),true);
   assert.equal(o.production_promotion_authorized, false);
   assert.equal(o.current_source_not_yet_deployed, true);

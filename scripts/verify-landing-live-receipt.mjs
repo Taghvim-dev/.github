@@ -25,9 +25,15 @@ export function verifyLandingProductionReceipt({observed,candidate}) {
   "Actual owner-authorized Landing release controller must remain immutable");
  assert.match(candidate?.source_verification?.latest_checked?.engine_sha||"",/^[a-f0-9]{40}$/,
   "Current Controller source SHA missing");
+ // The October Landing release binds an October controller proof. A new Engine
+ // source is admitted through the current release matrix, not this immutable receipt.
+ const sealedSource=candidate?.source_verification?.engine_package_contract_identity;
  assert.equal(observed?.engine_new_source?.latest_controller_source_sha,
-  candidate.source_verification.latest_checked.engine_sha,
-  "Current controller CI source must be tracked separately from deployed Landing controller");
+  sealedSource?.source_main_sha,
+  "Historical Engine controller source receipt drift");
+ assert.equal(String(observed?.engine_new_source?.latest_controller_ci_run),
+  String(sealedSource?.ci_run),
+  "Historical Engine controller CI receipt drift");
  assert.equal(live?.source_sha,sha,"Landing live source SHA mismatch");
  assert.equal(live?.source_tree,tree,"Landing live Git tree mismatch");
  assert.equal(live?.workflow_run_id,39988778625,"Landing actual Cloudflare workflow run mismatch");

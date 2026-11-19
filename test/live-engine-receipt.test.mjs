@@ -31,9 +31,9 @@ test("advancing only the control plane must never rewrite existing Engine API pr
   x.candidate.post_release_observation_20261023.engine_new_source.sha);
  assert.doesNotThrow(()=>check(x));
  const y=original();y.candidate.post_release_observation_20261023.engine_new_source.latest_controller_ci_run="999999";
- assert.throws(()=>check(y),/New controller CI/);
+ assert.throws(()=>check(y),/Historical controller CI receipt drift/);
  const z=original();z.candidate.post_release_observation_20261023.engine_new_source.latest_controller_source_sha="f".repeat(40);
- assert.throws(()=>check(z),/New controller source/);
+ assert.throws(()=>check(z),/Historical controller source receipt drift/);
 });
 test("production D1 identity, applied migration, ledger and pinned registry are checked",()=>{
  for(const [key,value] of [["d1_database_name","other-database"],["d1_database_id","11111111-1111-1111-1111-111111111111"],["migration_applied","0009_previous.sql"],["d1_migrations","9/9"]]){

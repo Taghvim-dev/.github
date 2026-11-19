@@ -21,8 +21,14 @@ export function verifyEngineProductionReceipt({observed,t0,candidate}) {
   assert.equal(checked.engine_sha,admission?.engine_main_sha,"Current controller/admission SHA drift");
   assert.equal(checked.engine_ci,admission?.engine_ci_run,"Current controller/CI drift");
   assert.equal(engine.ci_run,"39977313854","Deployed Engine must retain its tested release-source CI");
-  assert.equal(engine.latest_controller_source_sha,checked.engine_sha,"New controller source not independently tracked");
-  assert.equal(engine.latest_controller_ci_run,checked.engine_ci,"New controller CI not independently tracked");
+  // WORM: a sealed October source observation must NEVER be rewritten each time
+  // the live admission ledger advances. The separate current source is checked
+  // above against the T0 matrix and admission SHA/CI instead.
+  const sealedSource=candidate?.source_verification?.engine_package_contract_identity;
+  assert.equal(engine.latest_controller_source_sha,sealedSource?.source_main_sha,
+    "Historical controller source receipt drift");
+  assert.equal(String(engine.latest_controller_ci_run),String(sealedSource?.ci_run),
+    "Historical controller CI receipt drift");
   assert.equal(engine.controller_only_change_not_api_worker,true,"Controller changes must not inherit API deployment proof");
   assert.equal(live?.controller_commit,engine.sha,"Live controller SHA must match tested Engine source");
   assert.equal(live?.production_run_id,39981975548,"Recorded authenticated Engine production run mismatch");
