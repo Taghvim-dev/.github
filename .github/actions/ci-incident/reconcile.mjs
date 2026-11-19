@@ -27,6 +27,33 @@ export function shouldSweepAfterGreenMainRun({eventName,run,repository}={}) {
 export const incidentKey = (workflow, branch) =>
   createHash("sha256").update(String(workflow) + "\0" + branch).digest("hex").slice(0, 20);
 
+/**
+ * Canonical GitHub/Codex/ActionBot incident evidence plane. A failed run
+ * does not by itself establish a code error, billing cap or provider outage.
+ * All observations come from trusted current-run GitHub job metadata.
+ */
+export function classifyFailurePlane({run,jobs}={}){
+ const base={schema:"taghvim.ci.failure-plane.v1",
+  root_cause_verified:false,source:"github_actions_job_metadata",job_ids:[]};
+ if(!BAD.has(run?.conclusion))return {...base,plane:"NOT_ACTIONABLE"};
+ if(!Array.isArray(jobs))return {...base,plane:"JOB_METADATA_UNAVAILABLE"};
+ if(jobs.length>100||jobs.some(j=>j?.status!=="completed"))
+  return {...base,plane:"JOB_METADATA_INCOMPLETE"};
+ const failed=jobs.filter(j=>BAD.has(j?.conclusion));
+ const ids=failed.map(j=>j.id).filter(i=>Number.isSafeInteger(i)&&i>0);
+ if(ids.length!==failed.length)return {...base,plane:"JOB_METADATA_INCOMPLETE"};
+ const evidence={...base,job_ids:ids};
+ if(!failed.length)return {...evidence,plane:run.conclusion==="startup_failure"&&jobs.length===0
+   ?"PRE_RUNNER_NO_JOBS":"NO_FAILED_JOB_EVIDENCE"};
+ const runner=failed.some(j=>typeof j.runner_name==="string"&&!!j.runner_name.trim());
+ const executed=failed.some(j=>Array.isArray(j.steps)&&j.steps.some(step=>
+  step&&["completed","in_progress"].includes(step.status)&&step.conclusion!=="skipped"));
+ if(!runner&&!executed)return {...evidence,plane:"PRE_RUNNER_NO_EXECUTED_STEPS"};
+ if(executed)return {...evidence,plane:"EXECUTED_WORKFLOW_STEP_FAILED"};
+ return {...evidence,plane:"JOB_FAILED_AFTER_RUNNER_ASSIGNED"};
+}
+
+
 export function classify({ run, currentSha, recent = [], openPulls = [], repository }) {
   if (!run || run.status !== "completed" || !["push", "pull_request", "workflow_dispatch", "issue_comment", "schedule"].includes(run.event)) return "ignore";
   if (!Number.isInteger(run.workflow_id) || !run.head_branch || !run.head_sha ||
@@ -49,7 +76,7 @@ export function classify({ run, currentSha, recent = [], openPulls = [], reposit
   return "ignore";
 }
 
-export function issueBody({ key, run }) {
+export function issueBody({ key, run, failurePlane }) {
   const url = "https://github.com/" + process.env.GITHUB_REPOSITORY + "/actions/runs/" + run.id;
   return [
     "<!-- taghvim-ci-incident:" + key + " -->",
@@ -58,6 +85,9 @@ export function issueBody({ key, run }) {
     "Branch: `" + String(run.head_branch).replace(/[`\r\n]/g, "") + "`",
     "Head SHA: `" + String(run.head_sha) + "`",
     "Failure conclusion: `" + String(run.conclusion) + "`",
+    "Failure plane: `" + String(failurePlane?.plane||"JOB_METADATA_UNAVAILABLE") + "`",
+    "Root cause verified: `false` (do not infer quota, source defect, or outage)",
+    "Failed job IDs: `" + (failurePlane?.job_ids||[]).join(",") + "`",
     "Evidence: " + url,
     "",
     "Created only for the latest active source SHA after GitHub Actions completed in failure.",
@@ -152,8 +182,20 @@ export async function reconcile(payload) {
   if (verdict === "ignore") return "ignored";
   const issue = await findIssue(repo, key,{openOnly:verdict==="close"});
   if (verdict === "open") {
+    // Never fetch or log arbitrary PR code, runner logs, or secret values.
+    // This read is eligible only after exact live branch/CI identity checks.
+    let failurePlane;
+    try{
+      const observed=await api("/repos/"+repo+"/actions/runs/"+run.id+"/jobs?per_page=100");
+      failurePlane=classifyFailurePlane({run,jobs:observed?.jobs});
+      if((observed?.total_count||0)>100)
+        failurePlane=classifyFailurePlane({run,jobs:Array(101)});
+    }catch(error){
+      failurePlane=classifyFailurePlane({run,jobs:null});
+      console.error("CI_INCIDENT_METADATA_UNAVAILABLE",String(error?.message||error));
+    }
     if(issue?.state==="open"){
-      const updated=issueBody({key,run});
+      const updated=issueBody({key,run,failurePlane});
       if(issue.body!==updated){
         const currentIssue=await api("/repos/"+repo+"/issues/"+issue.number);
         if(currentIssue.state!=="open"||currentIssue.body!==issue.body)return "raced_no_mutation";
@@ -163,12 +205,12 @@ export async function reconcile(payload) {
       return "already_open";
     }
     if (issue) {
-      await api("/repos/" + repo + "/issues/" + issue.number, "PATCH", { state: "open", body: issueBody({ key, run }) });
+      await api("/repos/" + repo + "/issues/" + issue.number, "PATCH", { state: "open", body: issueBody({ key, run, failurePlane }) });
       return "reopened";
     }
     await api("/repos/" + repo + "/issues", "POST", {
       title: "[CI Incident] " + String(run.name || "workflow").slice(0, 70) + " — " + run.head_branch.slice(0, 70),
-      body: issueBody({ key, run })
+      body: issueBody({ key, run, failurePlane })
     });
     return "opened";
   }
