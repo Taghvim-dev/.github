@@ -4,7 +4,7 @@
   "product": "Taghvim.dev",
   "contract_version": "2.1.0",
   "current_source": {
-    "engine_main_sha": "d5398bbc5a63069a93cf5e5b04e8dc4c912e2cbc",
+    "engine_main_sha": "894ef5c932be7aa559318517184d51abf07705d9",
     "landing_main_sha": "1995a683164cccbe2f18c12940d039bdf9d51ea2",
     "shared_policy_sha": "c195c8bfde573b6195bd1b3bd00e3535accc9040",
     "prewrite_source_policy_sha": "f3bc8d18c5c31fd1125dd4da4887c86b9e3f8447"
@@ -280,6 +280,30 @@
       },
       "source_ci_run": "40002313088",
       "live_evidence": null
+    },
+    {
+      "id": "T0-ESTATE-015",
+      "area": "constitutional contract-first entire Taghvim GitHub/Cloudflare/Workers/D1/Queue/DLQ/service bindings estate; Sandbox and Production pre-effect reconciliation in Engine and Landing",
+      "state": "LIVE_UNVERIFIED",
+      "requires_live_proof": true,
+      "code": [
+        "engine/contracts/constitution/v1/estate.json",
+        "engine/scripts/t0-estate-contract.mjs",
+        "engine/scripts/t0-platform-admission.mjs",
+        "engine/.github/workflows/production-release.yml",
+        "engine/.github/workflows/t0-central-landing-cloudflare-release.yml"
+      ],
+      "test": [
+        "engine/test/t0-estate-contract.test.mjs",
+        "engine/test/t0-platform-admission.test.mjs"
+      ],
+      "source_ci_run": "44564839911",
+      "remote_pr": "Taghvim-dev/engine#211",
+      "controller_main_sha": "894ef5c932be7aa559318517184d51abf07705d9",
+      "live_evidence": null,
+      "required_before_effect": true,
+      "mutation_authority": "protected_github_actions_only",
+      "ga_claimed": false
     }
   ],
   "evidence_rules": {
@@ -854,5 +878,18 @@
     "release_contract": "2.1.0",
     "production_promotion_for_new_engine_source": "NOT_DISPATCHED",
     "general_availability_approved": false
+  },
+  "canonical_estate_current": {
+    "authority": "Taghvim-dev/engine/contracts/constitution/v1/estate.json",
+    "release_sha": "894ef5c932be7aa559318517184d51abf07705d9",
+    "source_ci": "44564839911",
+    "environment_inventory": {
+      "workers": 7,
+      "databases": 4,
+      "queues_and_dlq": 4,
+      "domains": 3
+    },
+    "live_t0_pre_effect_receipt": null,
+    "ga_approved": false
   }
 }
