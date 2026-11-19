@@ -19,7 +19,9 @@
     "Taghvim-dev/landing": [
       "landing-verify",
       "visual-rtl-acceptance",
-      "t0-owner-protected-release-request"
+      "t0-owner-protected-release-request",
+      "controlled-landing-release",
+      "t0-web-sandbox-d1-bootstrap"
     ],
     "Taghvim-dev/SDK": [
       "public-sdk-verify",
