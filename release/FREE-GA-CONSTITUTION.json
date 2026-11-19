@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "product": "Taghvim.dev",
+  "contract_version": "2.1.0",
+  "release_tracks": {
+    "free_ga": {
+      "admission": "EVIDENCE_GATED",
+      "source_of_truth": "release/PUBLIC-RELEASE-MATRIX.json",
+      "enabled_before_payment_certification": true,
+      "must_prove": [
+        "published_contract_sync",
+        "verified_public_signup",
+        "authorized_sandbox_key_e2e",
+        "tenant_isolation_e2e",
+        "metering_reconciliation",
+        "approved_migrations",
+        "manual_production_approval"
+      ],
+      "independent_runtime_proofs": [
+        "live_public_api_openapi_parity",
+        "authenticated_test_key_to_sdk_e2e",
+        "widget_gateway_tenant_isolation",
+        "calendar_semantic_reconciliation",
+        "live_sandbox_and_production_smoke",
+        "durable_github_release_evidence"
+      ],
+      "no_automatic_ga_promotion": true
+    },
+    "commercial_billing": {
+      "activation": "DEFERRED",
+      "proposed_provider": "Vandar",
+      "implementation_phase": "POST_FREE_GA",
+      "must_not_gate_free_ga": true,
+      "fail_closed_without_approved_pricebook_and_vandar_certification": true,
+      "live_charges_permitted": false
+    }
+  },
+  "universal_full_ga": {
+    "scope": "full_universal_calendar_publication_and_portability",
+    "required_separately": true,
+    "source": "Taghvim-dev/engine/contracts/constitution/v1/constitution.json",
+    "cannot_be_inferred_from_free_ga": true
+  },
+  "invariants": [
+    "T0_CONTRACT_FIRST",
+    "T0_DENY_BEFORE_EFFECT",
+    "T0_NO_FALSE_RELEASE_CLAIMS",
+    "T0_NO_PAYMENT_DEPENDENCY_FOR_FREE_GA",
+    "T0_RECEIPTS_BEFORE_CLAIMS",
+    "T0_NO_CUSTOMER_PAYMENT_WITHOUT_SEPARATE_COMMERCIAL_ADMISSION"
+  ]
+}
