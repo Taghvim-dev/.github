@@ -9,11 +9,13 @@ on:
     paths-ignore:
       - "release/PUBLIC-RELEASE-MATRIX.json"
       - "release/T0-CONTROL-MATRIX.json"
+      - "release/FREE-GA-CONSTITUTION.json"
   push:
     branches: [main]
     paths-ignore:
       - "release/PUBLIC-RELEASE-MATRIX.json"
       - "release/T0-CONTROL-MATRIX.json"
+      - "release/FREE-GA-CONSTITUTION.json"
 
 permissions:
   contents: read
@@ -55,6 +57,8 @@ jobs:
           node --test examples/javascript/client.test.mjs
       - name: Trusted workflow incident reconciliation contracts
         run: node --test test/ci-incident.test.mjs
+      - name: T0 Free GA payment-independent canonical admission
+        run: node --test test/free-ga-admission.test.mjs
       - name: Verify fail-closed npm audit retry contracts
         run: node --test test/npm-audit.test.mjs
       - name: T0 owner-release authentication and protected-dispatch invariants
