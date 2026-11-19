@@ -45,7 +45,7 @@
   "source_verification": {
     "date": "2026-11-19",
     "phase": "source-integrated-not-deployed",
-    "engine_main_merge_sha": "c5f413bf530e5bde163c681c88c189189cb184ec",
+    "engine_main_merge_sha": "f959c63ef8159bdede21c7640baa0dfc91f31cfc",
     "engine_offline_ci_run": "40195989813",
     "engine_live_gate_ci_run": "39439068311",
     "landing_main_merge_sha": "f759a5a79121b6741c16814f5a1f833f7a689613",
@@ -149,8 +149,8 @@
     },
     "latest_checked": {
       "date": "2026-11-19",
-      "engine_sha": "c5f413bf530e5bde163c681c88c189189cb184ec",
-      "engine_ci": "44608700943",
+      "engine_sha": "f959c63ef8159bdede21c7640baa0dfc91f31cfc",
+      "engine_ci": "44609061501",
       "landing_sha": "f759a5a79121b6741c16814f5a1f833f7a689613",
       "landing_ci": "44607239274",
       "shared_release_actions_sha": "c195c8bfde573b6195bd1b3bd00e3535accc9040",
@@ -210,9 +210,9 @@
       "policy_main_sha": "f3bc8d18c5c31fd1125dd4da4887c86b9e3f8447",
       "policy_pr": "Taghvim-dev/.github PR #47",
       "policy_test_run": "39691890610",
-      "engine_main_sha": "c5f413bf530e5bde163c681c88c189189cb184ec",
-      "engine_reviewed_head": "7e74ee2d853a726762a2a1f14c8545f2e57b5610",
-      "engine_ci_run": "44608700943",
+      "engine_main_sha": "f959c63ef8159bdede21c7640baa0dfc91f31cfc",
+      "engine_reviewed_head": "0082189d3b53fade95228e23e00b903b6ba1870e",
+      "engine_ci_run": "44609061501",
       "landing_main_sha": "f759a5a79121b6741c16814f5a1f833f7a689613",
       "landing_reviewed_head": "db8268f31fcf714fab13fcf0f176fcda6261e81a",
       "landing_ci_run": "44607239274",
@@ -809,10 +809,10 @@
     "source_only": true,
     "remote_runtime_attested": false,
     "engine": {
-      "commit": "c5f413bf530e5bde163c681c88c189189cb184ec",
+      "commit": "f959c63ef8159bdede21c7640baa0dfc91f31cfc",
       "package": "2.1.0",
       "lock": "2.1.0",
-      "ci": "44608700943"
+      "ci": "44609061501"
     },
     "landing": {
       "commit": "f759a5a79121b6741c16814f5a1f833f7a689613",
@@ -1397,5 +1397,25 @@
     "release_contract": "2.1.0",
     "production_promotion_for_new_engine_source": "NOT_DISPATCHED",
     "general_availability_approved": false
+  },
+  "metering_first_source_20261119": {
+    "state": "SOURCE_TESTED_RUNTIME_UNVERIFIED",
+    "authority": "Taghvim-dev/engine",
+    "source_pr": "Taghvim-dev/engine#220",
+    "merged_main_sha": "f959c63ef8159bdede21c7640baa0dfc91f31cfc",
+    "source_ci_run": "44609061501",
+    "workflow": "test",
+    "runner_results": {
+      "ubuntu-24.04": "success",
+      "ubuntu-26.04": "success"
+    },
+    "d1_required_migration": "0014_metering_uncertain_outcomes.sql",
+    "d1_remote_production_applied": false,
+    "d1_remote_sandbox_applied": false,
+    "canonical_meter_policy": "contracts/constitution/v1/metering-policy.json",
+    "unmetered_authenticated_mutations_pending": 13,
+    "sandbox_to_production": "NO_GO",
+    "ga_approved": false,
+    "note": "A successful source CI and PR merge are NOT Cloudflare D1/Worker deployment or GA receipts."
   }
 }
