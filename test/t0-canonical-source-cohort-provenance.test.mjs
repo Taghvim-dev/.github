@@ -49,3 +49,32 @@ test("T0 source cohort workflow discovers every cohort-contract test in both PR 
  assert.match(workflow,/node --test test\/\*source-cohort\*\.test\.mjs/,"Release gate must execute all cohort tests, never only a historical fixture");
  assert.ok(!workflow.includes('node --test test/canonical-source-cohort.test.mjs'),"A fixed path can silently skip future T0 tests");
 });
+
+// Every advertised public client belongs to ONE canonical release cohort.
+test("T0 universal Engine/Landing/SDK/CLI/Cookbooks source identity is single authority",()=>{
+ const projected=projectSourceCohort(cohort,release,controls);
+ assert.deepEqual(projected.release,release);
+ assert.deepEqual(projected.controls,controls);
+ for(const name of ["SDK","CLI","cookbooks"]){
+  const row=release.repositories.find(x=>x.name===name);
+  assert.equal(row.commit,cohort[name].sha);
+  assert.equal(row.ci_run,cohort[name].ci);
+  assert.equal(release.package_identity[name].commit,cohort[name].sha);
+  assert.equal(controls.controls.find(x=>x.id==="T0-PACKAGES-014").dependent_component_ci[name],cohort[name].ci);
+ }
+ assert.equal(cohort.cookbooks.sdk_source_commit,cohort.SDK.sha);
+ assert.equal(release.package_identity.cookbooks.sdk_source_commit,cohort.SDK.sha);
+ const ops=load("contracts/operation-index.json");
+ assert.equal(cohort.public_contract.openapi_git_blob_sha,ops.openApiGitBlobSHA);
+ assert.equal(cohort.public_contract.operation_count,ops.operations.length);
+});
+test("T0 universal cohort rejects any individual SDK, CLI, Cookbook or public index split brain",()=>{
+ for(const name of ["SDK","CLI","cookbooks"]){
+  const bad=copy(cohort);bad[name].sha="f".repeat(40);
+  assert.throws(()=>verifySourceCohort(bad,release,controls),/T0_COHORT_BLOCKED/);
+ }
+ const split=copy(cohort);split.cookbooks.sdk_source_commit="f".repeat(40);
+ assert.throws(()=>verifySourceCohort(split,release,controls),/T0_COHORT_BLOCKED/);
+ const badIndex=copy(cohort);badIndex.public_contract.operation_count++;
+ assert.throws(()=>verifySourceCohort(badIndex,release,controls),/T0_COHORT_BLOCKED/);
+});

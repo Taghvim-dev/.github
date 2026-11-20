@@ -1,7 +1,7 @@
 /** Trusted main-only T0 SDK + Cookbook release reconciler. No Cloudflare credentials. */
 import {Buffer} from "node:buffer";
 import {fileURLToPath} from "node:url";
-import {verifySourceCohort} from "./reconcile-source-cohort.mjs";
+import {verifySourceCohort,projectSourceCohort} from "./reconcile-source-cohort.mjs";
 const ROOT="Taghvim-dev/.github",BRANCH_PREFIX="bot/t0-public-widget-reconcile-",API="https://api.github.com";
 const SHA=/^[a-f0-9]{40}$/;
 const fail=s=>{throw Error("T0_PUBLIC_WIDGET_RECONCILE_BLOCKED: "+s);};
@@ -149,7 +149,7 @@ export function canResetOrFastForwardBotBranch(compare){
    !Number.isInteger(compare.ahead_by)||compare.ahead_by<0||compare.ahead_by>3||
    !Array.isArray(compare.files)||!Array.isArray(compare.commits))return null;
  if(compare.files.some(f=>!["release/PUBLIC-RELEASE-MATRIX.json","release/T0-CONTROL-MATRIX.json",
-   "contracts/operation-index.json"].includes(f.filename)))return null;
+   "contracts/operation-index.json","release/CANONICAL-SOURCE-COHORT.json"].includes(f.filename)))return null;
  if(compare.ahead_by===0)return "fast_forward";
  if(compare.commits.length!==compare.ahead_by||!compare.commits.every(c=>
     (c.commit?.message?.startsWith("reconcile(t0): public SDK and Cookbook reviewed source candidate") ||
@@ -202,7 +202,23 @@ export async function reconcilePublicWidget(){
  const indexDrift=JSON.stringify(centralIndex.data)!==JSON.stringify(indexes[0]);
  if(plan.status!=="PR_REQUIRED"&&plan.status!=="CURRENT")
   return {status:plan.status,writes:0,ga_approved:false};
- if(plan.status==="CURRENT"&&!indexDrift)
+ // Source is the authority. All three package records, all dependent mirrors
+ // and the operation-index reference must reconcile in ONE Git commit.
+ const nextSource=structuredClone(cohort.data);
+ for(const [name,sha,run] of [["SDK",sdk,sdkCi],["CLI",cli,cliCi],
+   ["cookbooks",cookbooks,cookbooksCi]]){
+  nextSource[name].sha=sha;nextSource[name].ci=String(run);
+ }
+ nextSource.cookbooks.sdk_source_commit=sdk;
+ nextSource.public_contract={
+  contract_version:canonical.data.contract_version,
+  openapi_git_blob_sha:indexes[0].openApiGitBlobSHA,
+  operation_count:indexes[0].operations.length
+ };
+ const projected=projectSourceCohort(nextSource,
+  plan.registry??canonical.data,plan.controls??control.data);
+ const cohortDrift=JSON.stringify(nextSource)!==JSON.stringify(cohort.data);
+ if(plan.status==="CURRENT"&&!indexDrift&&!cohortDrift)
   return {status:"CURRENT_PUBLIC_COMPONENTS_ONLY",writes:0,ga_approved:false,
     private_head_verified:false};
  // A source candidate is a Git side effect. Without independently fresh
@@ -249,8 +265,9 @@ export async function reconcilePublicWidget(){
  const base=await gh("/repos/"+ROOT+"/git/commits/"+root);
  if(!SHA.test(base?.tree?.sha||""))fail("unattested current main Git tree");
  const files=[
-   ["release/PUBLIC-RELEASE-MATRIX.json",plan.registry??canonical.data],
-   ["release/T0-CONTROL-MATRIX.json",plan.controls??control.data],
+   ["release/CANONICAL-SOURCE-COHORT.json",nextSource],
+   ["release/PUBLIC-RELEASE-MATRIX.json",projected.release],
+   ["release/T0-CONTROL-MATRIX.json",projected.controls],
    ...(indexDrift?[["contracts/operation-index.json",indexes[0]]]:[])
  ];
  const tree=await gh("/repos/"+ROOT+"/git/trees","POST",{

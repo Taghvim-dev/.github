@@ -47,6 +47,44 @@ export function projectSourceCohort(source,release,controls){
    if(x.component_source_ci?.[n])x.component_source_ci[n]=item.ci;
   }
  }
+ // One universal source authority for every product surface. SDK, CLI and
+ // Cookbooks are no longer permitted to write their own independent current
+ // source register while the Engine/Landing cohort remains stale.
+ const component=["SDK","CLI","cookbooks"];
+ const widget=s.widget_sdk_api_integration_20261023;
+ const post=r.post_release_observation_20261023;
+ const ctrlPost=t.post_release_observation_20261023;
+ const packages=t.controls.find(row=>row.id==="T0-PACKAGES-014")?.dependent_component_ci;
+ if(!widget||!post||!ctrlPost||!packages)block("missing universal package source projections");
+ for(const name of component){
+  const entry=source[name];
+  if(!sha.test(entry?.sha||"")||!ci.test(String(entry?.ci||"")))
+   block("missing canonical "+name+" SHA/CI");
+  const matches=r.repositories.filter(x=>x.name===name);
+  if(matches.length!==1||!r.package_identity?.[name])
+   block("orphan or duplicate universal package "+name);
+  matches[0].commit=entry.sha;matches[0].ci_run=entry.ci;
+  r.package_identity[name].commit=entry.sha;r.package_identity[name].ci=entry.ci;
+  packages[name]=entry.ci;
+  const prefix=name==="cookbooks"?"cookbooks":name.toLowerCase();
+  const key=prefix+"_current_source_commit",ciKey=prefix+"_current_main_ci_run";
+  if(!(key in post)||!(key in ctrlPost)||!(ciKey in post)||!(ciKey in ctrlPost))
+   block("source projection missing "+name);
+  post[key]=entry.sha;post[ciKey]=entry.ci;
+  ctrlPost[key]=entry.sha;ctrlPost[ciKey]=entry.ci;
+ }
+ if(source.cookbooks.sdk_source_commit!==source.SDK.sha)
+  block("Cookbooks source cannot reference a divergent SDK");
+ r.package_identity.cookbooks.sdk_source_commit=source.SDK.sha;
+ widget.sdk_main_sha=source.SDK.sha;widget.sdk_main_ci_run=source.SDK.ci;
+ widget.cookbook_main_sha=source.cookbooks.sha;
+ widget.cookbook_main_ci_run=source.cookbooks.ci;
+ const pub=source.public_contract;
+ if(pub?.contract_version!==r.contract_version||!sha.test(pub?.openapi_git_blob_sha||"")||
+    !Number.isSafeInteger(pub?.operation_count)||pub.operation_count<1)
+  block("missing universal public operation authority");
+ r.openapi_source_git_blob_sha=pub.openapi_git_blob_sha;
+ r.required_public_operation_count=pub.operation_count;
  if(s.t0_cross_repo_source_admission?.post_facto_ga_authorization!==false||
  s.t0_cross_repo_source_admission?.admission_scope!=="MUTATION_BLOCKING_SOURCE_ONLY")
  block("post-facto authority forbidden");

@@ -6,16 +6,36 @@
     "sha": "2cc96b36cdab28c61a6620c8974f0b2d83bdac8c",
     "ci": "44823831903",
     "workflow_id": 372423484,
-    "reviewed_sha": "cbc4385be0267ad20f574a4f17c36a416caaf86c"
+    "reviewed_sha": "cbc4385be0267ad20f574a4f17c36a416caaf86c",
+    "main_ci": "44824540127"
   },
   "landing": {
     "sha": "1f2bed752ccd6dcd8f24d59c94a183fbda653e84",
     "ci": "44823841167",
     "workflow_id": 390048334,
-    "reviewed_sha": "ad3f347f3b3058478940e35415ed1b1530a590b8"
+    "reviewed_sha": "ad3f347f3b3058478940e35415ed1b1530a590b8",
+    "main_ci": "44824379591"
   },
   "source_only": true,
   "remote_ci_evidence_required": true,
   "ga_approved": false,
-  "payment_enabled": false
+  "payment_enabled": false,
+  "SDK": {
+    "sha": "bbba18ac5b5416b3df8d9ff553483392d684d07e",
+    "ci": "44823926645"
+  },
+  "CLI": {
+    "sha": "40df61d6c5d5c8a38511372c755f1ad6f9b57e3d",
+    "ci": "44823936708"
+  },
+  "cookbooks": {
+    "sha": "a0cd82f949473f50c131fe57ca34db6f851fe95f",
+    "ci": "44824774038",
+    "sdk_source_commit": "bbba18ac5b5416b3df8d9ff553483392d684d07e"
+  },
+  "public_contract": {
+    "contract_version": "2.1.0",
+    "openapi_git_blob_sha": "2a895c456c633f7a325c49152bd6f251bc8108a1",
+    "operation_count": 56
+  }
 }
