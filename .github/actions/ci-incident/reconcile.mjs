@@ -5,7 +5,6 @@
  * The GitHub token has issues:write and actions:read, not deployment access.
  */
 import { createHash } from "node:crypto";
-import { readFileSync } from "node:fs";
 import { pathToFileURL } from "node:url";
 import CONTROL from "../../../release/CI-CONTROL-REGISTRY.json" with {type:"json"};
 
@@ -15,14 +14,6 @@ export function monitoredRun(repo,name){
  return Array.isArray(allowed)&&allowed.includes(name)&&name!=="t0-ci-incident-reconciler";
 }
 export function currentHeadDeleted(status){return status===404;}
-export function shouldSweepAfterGreenMainRun({eventName,run,repository}={}) {
- // Current-head CI success is a reconciliation trigger; it is never a reason
- // to dispatch, deploy, reopen a stale incident, or recurse on our own observer.
- return eventName==="workflow_run"&&run?.status==="completed"&&
-   run?.conclusion==="success"&&run?.event==="push"&&
-   run?.head_branch==="main"&&run?.head_repository?.full_name===repository&&
-   monitoredRun(repository,run?.name);
-}
 
 /** One constitutional root-cause taxonomy across GitHub CI, Codex and ActionBot-triggered runs.
  * Never call a zero-step GitHub control-plane failure a defect in checked-out code.
@@ -60,8 +51,10 @@ export function classify({ run, currentSha, recent = [], openPulls = [], reposit
   if (run.event === "pull_request" && !openPulls.some(pr =>
       pr.state === "open" && pr.head?.repo?.full_name === repository &&
       pr.head?.ref === run.head_branch && pr.head?.sha === currentSha)) return "ignore";
+  // Only a real success, never a skipped/neutral run, can close a failure.
   const relevant = recent.filter(x => x.head_sha === currentSha &&
-    x.head_branch === run.head_branch && x.event === run.event);
+    x.head_branch === run.head_branch && x.event === run.event &&
+    ["success",...BAD].includes(x.conclusion));
   // Do not publish a stale failure, even if its event arrives after a newer successful run.
   const newest = relevant.reduce((best, x) =>
     !best || x.run_number > best.run_number ||
@@ -252,20 +245,108 @@ export async function sweepStaleIncidents(){
  return {checked:"current_source_and_real_pr",retired:outcomes.filter(x=>x.result==="retired").length,outcomes};
 }
 
-if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
-  const eventName=process.env.GITHUB_EVENT_NAME;
-  const periodic=["schedule","workflow_dispatch"].includes(eventName);
-  const payload=periodic?null:JSON.parse(readFileSync(process.env.GITHUB_EVENT_PATH,"utf8"));
-  const task=periodic?sweepStaleIncidents():(async()=>{
-    const current=await reconcile(payload);
-    // Reap obsolete issues on a trusted green main push. A daily GitHub cron
-    // is not a sufficient recovery guarantee: it can be delayed indefinitely.
-    // Never sweep on failed/PR/fork/bot events or before normal reconciliation.
-    if(!shouldSweepAfterGreenMainRun({eventName,run:payload.workflow_run,repository:process.env.GITHUB_REPOSITORY}))
-      return current;
-    const swept=await sweepStaleIncidents();
-    return {current,stale_retired:swept.retired,authority:swept.checked};
-  })();
-  task.then(status=>console.log("CI_INCIDENT_RECONCILED",JSON.stringify(status)))
-    .catch(error=>{console.error("::error::"+String(error.message||error));process.exitCode=1;});
+
+/** Single deterministic T0 admission. Trust only the latest conclusive CI
+ * result on exact current main or open same-repo PR SHA. No fork checkout,
+ * no post-facto success, no workflow_run listener fanout. */
+export function planCurrentHeadRuns({runs=[],mainSha,openPulls=[],repository}={}){
+ if(!/^[a-f0-9]{40}$/.test(mainSha||"")||!Array.isArray(runs)||
+    !Array.isArray(openPulls)||!Object.hasOwn(CONTROL.monitored_repositories,repository||""))
+  throw Error("CI_INCIDENT_CURRENT_HEAD_INVENTORY_INVALID");
+ const heads=new Map([["main",mainSha]]);
+ for(const pr of openPulls){
+  if(pr?.state!=="open"||pr.head?.repo?.full_name!==repository||
+     !pr.head?.ref||!/^[a-f0-9]{40}$/.test(pr.head.sha||""))continue;
+  if(pr.head.ref==="main")continue;
+  if(heads.has(pr.head.ref)&&heads.get(pr.head.ref)!==pr.head.sha)
+   throw Error("CI_INCIDENT_AMBIGUOUS_PR_HEAD");
+  heads.set(pr.head.ref,pr.head.sha);
+ }
+ const decisions=new Map();
+ for(const r of runs){
+  if(!r||r.status!=="completed"||!["success",...BAD].includes(r.conclusion)||
+     !monitoredRun(repository,r.name)||!Number.isInteger(r.workflow_id)||
+     r.head_repository?.full_name!==repository||
+     !["push","pull_request","workflow_dispatch","issue_comment","schedule"].includes(r.event)||
+     heads.get(r.head_branch)!==r.head_sha)continue;
+  if(r.head_branch==="main"&&r.event==="pull_request")continue;
+  if(r.head_branch!=="main"&&r.event!=="pull_request")continue;
+  const key=r.workflow_id+"|"+r.head_branch+"|"+r.event,prev=decisions.get(key);
+  if(!prev||r.run_number>prev.run_number||
+     (r.run_number===prev.run_number&&(r.run_attempt||1)>(prev.run_attempt||1)))
+   decisions.set(key,r);
+ }
+ // Different trigger types share the same durable workflow+branch incident
+ // identity. Do NOT publish event-level open/close decisions sequentially:
+ // an older workflow_dispatch success must never close an unresolved schedule
+ // failure on the same source. Aggregate all conclusive event heads FIRST.
+ const groups=new Map();
+ for(const row of decisions.values()){
+  const id=row.workflow_id+"|"+row.head_branch;
+  const group=groups.get(id)||{failures:[],successes:[]};
+  (BAD.has(row.conclusion)?group.failures:group.successes).push(row);
+  groups.set(id,group);
+ }
+ const latest=rows=>rows.reduce((best,row)=>!best||
+   row.run_number>best.run_number||
+   (row.run_number===best.run_number&&(row.run_attempt||1)>(best.run_attempt||1))
+    ?row:best,null);
+ const result=[];
+ for(const group of groups.values()){
+  // A valid newer success already replaced a failure of the SAME event in
+  // decisions. Any remaining failure in another event is still unresolved.
+  const selected=latest(group.failures)||latest(group.successes);
+  if(selected)result.push(selected);
+ }
+ return result.sort((x,y)=>x.name.localeCompare(y.name)||
+   x.head_branch.localeCompare(y.head_branch));
+}
+/** Pre-effect: complete bounded GitHub metadata snapshot before any issue write.
+ * Each write remains CAS-protected by the existing canonical incident ledger. */
+export async function reconcileCurrentHeads(){
+ const repo=process.env.GITHUB_REPOSITORY;
+ if(!Object.hasOwn(CONTROL.monitored_repositories,repo||""))throw Error("CI_INCIDENT_REPO_SCOPE");
+ const main=await api("/repos/"+repo+"/branches/main"),mainSha=main?.commit?.sha;
+ if(!/^[a-f0-9]{40}$/.test(mainSha||""))throw Error("CI_INCIDENT_MAIN_HEAD_UNVERIFIED");
+ const prs=await api("/repos/"+repo+"/pulls?state=open&per_page=100");
+ if(!Array.isArray(prs)||prs.length===100)throw Error("CI_INCIDENT_PR_INVENTORY_TRUNCATED");
+ // GitHub supports an exact head_sha filter on the workflow-runs API. A
+ // repository-wide history scan can saturate a page cap forever, even if
+ // today's source is healthy. Query ONLY currently authoritative SHA heads.
+ const allowedHeads=[mainSha,...new Set(prs.filter(pr=>pr.state==="open"&&
+   pr.head?.repo?.full_name===repo&&/^[a-f0-9]{40}$/.test(pr.head?.sha||""))
+    .map(pr=>pr.head.sha).filter(sha=>sha!==mainSha))];
+ const rows=[],pages=CONTROL.event_admission.max_run_pages;
+ if(!Number.isInteger(pages)||pages<1||pages>10)throw Error("CI_INCIDENT_SCAN_BUDGET_UNVERIFIED");
+ for(const sha of allowedHeads){
+  const segment=[];
+  for(let page=1;page<=pages;page++){
+   const x=await api("/repos/"+repo+"/actions/runs?head_sha="+sha+"&per_page=100&page="+page);
+   if(!Array.isArray(x?.workflow_runs)||!Number.isInteger(x.total_count))
+    throw Error("CI_INCIDENT_RUN_INVENTORY_INVALID");
+   // Fail closed before any mutation if GitHub ignores the filter or if
+   // the currently active SHA truly exceeds the bounded complete scan.
+   if(x.workflow_runs.some(run=>run.head_sha!==sha))
+    throw Error("CI_INCIDENT_SHA_FILTER_UNTRUSTED");
+   segment.push(...x.workflow_runs);
+   if(x.total_count<=segment.length)break;
+   if(page===pages)throw Error("CI_INCIDENT_CURRENT_SHA_RUNS_TRUNCATED");
+  }
+  rows.push(...segment);
+ }
+ const plan=planCurrentHeadRuns({runs:rows,mainSha,openPulls:prs,repository:repo});
+ const decisions=[];
+ for(const run of plan)decisions.push({run:run.id,workflow:run.name,
+  disposition:await reconcile({workflow_run:run})});
+ const swept=await sweepStaleIncidents();
+ return {status:"T0_CURRENT_HEAD_RECONCILED",head:mainSha,
+  observed:rows.length,decisions,stale_retired:swept.retired,
+  production_mutations:0,ga_approved:false};
+}
+if(process.argv[1] && import.meta.url===pathToFileURL(process.argv[1]).href){
+ if(!["schedule","workflow_dispatch"].includes(process.env.GITHUB_EVENT_NAME)){
+  console.error("::error::CI_INCIDENT_EVENT_NOT_AUTHORIZED");process.exitCode=1;
+ }else reconcileCurrentHeads()
+  .then(x=>console.log("CI_INCIDENT_RECONCILED",JSON.stringify(x)))
+  .catch(e=>{console.error("::error::"+String(e.message||e));process.exitCode=1;});
 }

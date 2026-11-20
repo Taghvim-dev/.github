@@ -1,9 +1,9 @@
 {
-  "version": "1.1.0",
+  "version": "1.2.0",
   "authority": "Taghvim-dev/.github",
   "constitution": "T0 canonical, pre-effect, authenticated-current-source-only, fail-closed",
   "product": "Taghvim.dev",
-  "notification_policy": "one durable actionable incident per workflow+branch, typed root boundary; stale/green PR run events do not consume observer jobs, successful current source is verified during periodic recovery; never treat zero-step runner failure as source failure",
+  "notification_policy": "Blue-green pre-effect incident reconciler: source-ready current-SHA polling is reviewed before moving the six legacy event adapters; no observability blackout; current committed adapters remain on SHA-pinned legacy action until cutover, then remove the workflow_run fanout.",
   "monitored_repositories": {
     "Taghvim-dev/engine": [
       "controlled-engine-release",
@@ -78,34 +78,31 @@
   "trusted_actions_only": true,
   "production_mutation_authority": false,
   "event_admission": {
-    "version": 1,
-    "mode": "failure_immediate_green_main_reconciliation_and_periodic_recovery",
-    "immediate_incident_outcomes": [
+    "version": 2,
+    "mode": "schedule_poll_current_main_and_open_pr_heads",
+    "poll_incident_outcomes": [
       "failure",
       "timed_out",
       "startup_failure",
       "action_required"
     ],
-    "recovery_signal": {
-      "conclusion": "success",
-      "event": "push",
-      "branch": "main"
-    },
-    "sweep_cron": "13 */6 * * *",
+    "sweep_cron": "13 */3 * * *",
+    "max_run_pages": 10,
     "no_fork_dispatch": true,
     "no_untrusted_checkout": true,
     "no_incident_for": [
-      "success_on_pull_request",
-      "cancelled",
       "skipped",
+      "cancelled",
       "neutral",
-      "superseded_source"
+      "superseded_source",
+      "closed_pr",
+      "foreign_repo"
     ],
     "zero_step_boundary": "PRE_RUNNER_PLATFORM_OR_QUOTA",
-    "green_recovery_requires": "verified_current_sha_same_workflow_same_event_later_success",
-    "github_run_listener_job_gate": "github.event_name != 'workflow_run' ||\n      (github.event.workflow_run.head_repository.full_name == github.repository &&\n       (contains(fromJSON('[\"failure\",\"timed_out\",\"startup_failure\",\"action_required\"]'), github.event.workflow_run.conclusion) ||\n        (github.event.workflow_run.conclusion == 'success' &&\n         github.event.workflow_run.event == 'push' &&\n         github.event.workflow_run.head_branch == 'main')))",
-    "capabilities": "T0 CI only; no deployment, no payment, no GA authorization"
+    "green_recovery_requires": "same_current_SHA_workflow_event_branch_newer_success",
+    "capabilities": "T0 CI incident tracking only; no deployment, billing, GA or permission escalation",
+    "rollout_state": "SOURCE_PREPARED_LEGACY_ADAPTER_RUNNING"
   },
-  "coverage_rule": "All actual product CI/diagnostic/release workflow names are listed by canonical policy, except t0-ci-incident-reconciler to avoid recursion. Every workflow_run trigger must match the canonical per-repository names. A CI source change cannot silently exclude a workflow.",
+  "coverage_rule": "Each monitored repository currently retains SHA-pinned per-completion observer until a reviewed polling action ships on .github/main. Then all six thin adapters switch to SHA-pinned scheduled current-head scanning, no untrusted checkout and no deployment privilege. Cutover is fail-closed and receipt-bound.",
   "blocked_reconciliation_policy": "WAIT_FOR_PRIVATE_SOURCE_READ_AUTHORITY is BLOCKED_CROSS_REPO_AUTH, never GA or a successful cross-repo source reconciliation."
 }
