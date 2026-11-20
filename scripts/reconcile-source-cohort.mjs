@@ -42,6 +42,12 @@ export function projectSourceCohort(source,release,controls){
   if(!r.package_identity?.[n])block("missing product identity "+n);
   r.package_identity[n].commit=item.sha;r.package_identity[n].ci=item.ci;
   t.current_source[n+"_main_sha"]=item.sha;
+  // One reviewed PR head and its exact-source CI are the control authority.
+  // Never let old control-matrix projections survive a new cohort SHA.
+  if(n==="engine"){
+   t.current_source.engine_pr_head_sha=reviewed;
+   t.current_source.engine_source_ci_run=item.ci;
+  }
   for(const x of t.controls){
    if(x.dependent_component_ci?.[n])x.dependent_component_ci[n]=item.ci;
    if(x.component_source_ci?.[n])x.component_source_ci[n]=item.ci;

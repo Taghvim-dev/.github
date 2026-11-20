@@ -22,6 +22,8 @@ test("T0 canonical cohort binds exact squash-main SHA and independently tested P
   ["T0-CI-BOUND-013","component_source_ci"],
   ["T0-PACKAGES-014","dependent_component_ci"]
  ])assert.equal(controls.controls.find(x=>x.id===id)[field].engine,cohort.engine.ci);
+ assert.equal(controls.current_source.engine_pr_head_sha,cohort.engine.reviewed_sha);
+ assert.equal(controls.current_source.engine_source_ci_run,cohort.engine.ci);
  assert.equal(release.package_identity.engine.commit,cohort.engine.sha);
  assert.equal(release.package_identity.engine.ci,cohort.engine.ci);
  assert.equal(release.general_availability_approved,false);
@@ -33,6 +35,11 @@ test("T0 one-source cohort rejects tampered main, CI, reviewed SHA, or derived p
   const bad=copy(cohort);
   bad.engine[field]=field==="ci"?"1234":"f".repeat(40);
   assert.throws(()=>verifySourceCohort(bad,release,controls),/T0_COHORT_BLOCKED/);
+ }
+ for(const field of ["engine_pr_head_sha","engine_source_ci_run"]){
+  const tampered=copy(controls);
+  tampered.current_source[field]=field==="engine_pr_head_sha"?"f".repeat(40):"777";
+  assert.throws(()=>verifySourceCohort(cohort,release,tampered),/T0_COHORT_BLOCKED/);
  }
  const badControls=copy(controls);
  badControls.controls.find(x=>x.id==="T0-PACKAGES-014").dependent_component_ci.engine="321";
