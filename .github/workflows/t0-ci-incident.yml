@@ -1,11 +1,8 @@
-# Canonical organisation observer: privileged metadata only, no PR checkout or deployment.
+# Canonical source-head incident observer: no workflow_run cascades, no PR checkout or deployment.
 name: t0-ci-incident-reconciler
 on:
-  workflow_run:
-    workflows: ["public-docs-verify","coordinated-public-release","t0-public-widget-sdk-reconciler","d1-applied-ledger-contract","d1-prefix-contract","d1-recovery-bookmark-contract","durable-private-release-registry-contract","release-checkpoint-contract","sandbox-origin-ownership-contract","t0-current-source-admission-contract","verify-production-environment-contract"]
-    types: [completed]
   schedule:
-    - cron: '13 */6 * * *'
+    - cron: '13 */3 * * *'
   workflow_dispatch:
 permissions:
   contents: read
@@ -17,13 +14,7 @@ concurrency:
   cancel-in-progress: false
 jobs:
   reconcile:
-    if: >-
-      github.event_name != 'workflow_run' ||
-      (github.event.workflow_run.head_repository.full_name == github.repository &&
-       (contains(fromJSON('["failure","timed_out","startup_failure","action_required"]'), github.event.workflow_run.conclusion) ||
-        (github.event.workflow_run.conclusion == 'success' &&
-         github.event.workflow_run.event == 'push' &&
-         github.event.workflow_run.head_branch == 'main')))
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-24.04
     timeout-minutes: 6
     steps:

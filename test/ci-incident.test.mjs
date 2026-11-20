@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { classify, incidentKey, monitoredRun, currentHeadDeleted, shouldRetireIncident, shouldSweepAfterGreenMainRun, classifyExecutionBoundary, newerCurrentGreenCloses } from "../.github/actions/ci-incident/reconcile.mjs";
+import { classify, incidentKey, monitoredRun, currentHeadDeleted, shouldRetireIncident, planCurrentHeadRuns, classifyExecutionBoundary, newerCurrentGreenCloses } from "../.github/actions/ci-incident/reconcile.mjs";
 import CONTROL from "../release/CI-CONTROL-REGISTRY.json" with {type:"json"};
 
 const repo = "Taghvim-dev/engine";
@@ -121,32 +121,30 @@ test("T0 obsolete source adjudication works for every canonical repository",()=>
  }
 });
 
-test("T0 stale ActionBot recovery is triggered by verified current-main CI success, independent of unreliable cron",()=>{
- const source={...run,conclusion:"success",event:"push",head_branch:"main",status:"completed"};
- assert.equal(shouldSweepAfterGreenMainRun({eventName:"workflow_run",run:source,repository:repo}),true);
- for(const bad of [
-  {eventName:"schedule"},
-  {eventName:"workflow_dispatch"},
-  {run:{...source,conclusion:"failure"}},
-  {run:{...source,event:"pull_request"}},
-  {run:{...source,head_branch:"obsolete-feature"}},
-  {run:{...source,head_repository:{full_name:"fork/engine"}}},
-  {run:{...source,name:"t0-ci-incident-reconciler"}},
-  {run:{...source,status:"in_progress"}},
-  {repository:"Taghvim-dev/unmonitored"}
- ])assert.equal(shouldSweepAfterGreenMainRun({eventName:"workflow_run",run:source,repository:repo,...bad}),false,
-   JSON.stringify(bad));
+test("T0 current-head planner deduplicates only real latest main and open-PR outcomes",()=>{
+ const source={...run,run_number:21},recovered={...source,id:124,run_number:22,conclusion:"success"};
+ const pr={state:"open",head:{ref:"feature",sha:"bb".repeat(20),repo:{full_name:repo}}};
+ const prRun={...source,id:125,head_branch:"feature",head_sha:pr.head.sha,event:"pull_request",run_number:20};
+ const planned=planCurrentHeadRuns({runs:[source,recovered,{...recovered,id:126,run_number:23,conclusion:"skipped"},prRun,
+  {...source,name:"t0-ci-incident-reconciler",run_number:100},
+  {...source,head_repository:{full_name:"attacker/repo"}}],mainSha:run.head_sha,openPulls:[pr],repository:repo});
+ assert.deepEqual(planned.map(x=>x.id).sort(),[124,125]);
+ assert.throws(()=>planCurrentHeadRuns({mainSha:"main",runs:[],repository:repo}),/CURRENT_HEAD_INVENTORY_INVALID/);
+ const other={state:"open",head:{...pr.head,sha:"cc".repeat(20)}};
+ assert.throws(()=>planCurrentHeadRuns({mainSha:run.head_sha,runs:[],openPulls:[pr,other],repository:repo}),/AMBIGUOUS_PR_HEAD/);
 });
-test("T0 shared action cleans stale source incidents after successful real main head without recursive CI incidents",async()=>{
+test("T0 skipped notification never masks an actual same-SHA failure",()=>{
+ assert.equal(classify({...base(),recent:[run,{...run,id:124,run_number:19,conclusion:"skipped"}]}),"open");
+});
+test("T0 all issue writes follow a bounded complete current-SHA snapshot",async()=>{
  const {readFileSync}=await import("node:fs");
- const action=readFileSync(new URL("../.github/actions/ci-incident/reconcile.mjs",import.meta.url),"utf8");
- assert.match(action,/const current=await reconcile\(payload\)/);
- assert.match(action,/if\(!shouldSweepAfterGreenMainRun/);
- assert.match(action,/const swept=await sweepStaleIncidents\(\)/);
- assert.match(action,/stale_retired:swept.retired/);
- assert.match(action,/run\?\.event==="push"/);
+ const s=readFileSync(new URL("../.github/actions/ci-incident/reconcile.mjs",import.meta.url),"utf8");
+ assert.match(s,/const plan=planCurrentHeadRuns/);
+ assert.ok(s.indexOf("const plan=planCurrentHeadRuns")<s.indexOf("for(const run of plan)"));
+ assert.match(s,/CI_INCIDENT_RUN_INVENTORY_TRUNCATED/);
+ assert.match(s,/CI_INCIDENT_PR_INVENTORY_TRUNCATED/);
+ assert.match(s,/T0_CURRENT_HEAD_RECONCILED/);
 });
-
 test("T0 runner admission failure is never misreported as a code or Codex regression",()=>{
  const blank={conclusion:"failure",runner_name:null,steps:[]};
  assert.equal(classifyExecutionBoundary({jobs:[blank],conclusion:"failure"}),"PRE_RUNNER_PLATFORM_OR_QUOTA");
@@ -161,22 +159,19 @@ test("T0 durable recovery must independently prove same current SHA, same event/
  for(const bad of [{head_sha:"aa".repeat(20)},{head_branch:"other"},{workflow_id:99},{event:"pull_request"},{run_number:17},{status:"in_progress"},{conclusion:"skipped"}])
    assert.equal(newerCurrentGreenCloses({failed,run:{...green,...bad},currentSha:run.head_sha}),false,JSON.stringify(bad));
 });
-test("T0 canonical incident event policy admits failures immediately and green main recovery only",async()=>{
- const fs=await import("node:fs");
- const registry=JSON.parse(fs.readFileSync(new URL("../release/CI-CONTROL-REGISTRY.json",import.meta.url),"utf8"));
- const workflow=fs.readFileSync(new URL("../.github/workflows/t0-ci-incident.yml",import.meta.url),"utf8");
- const admission=registry.event_admission;
- assert.equal(admission.mode,"failure_immediate_green_main_reconciliation_and_periodic_recovery");
- assert.deepEqual(admission.immediate_incident_outcomes,registry.outcomes.incident);
- assert.ok(workflow.includes(admission.github_run_listener_job_gate));
- assert.ok(workflow.includes("cron: '"+admission.sweep_cron+"'"));
- assert.doesNotMatch(workflow,/pull_request_target/);
- assert.doesNotMatch(workflow,/actions\/checkout/);
+test("T0 observer scans current source on schedule without recursive job fanout",async()=>{
+ const {readFileSync}=await import("node:fs");
+ const reg=JSON.parse(readFileSync(new URL("../release/CI-CONTROL-REGISTRY.json",import.meta.url),"utf8"));
+ const workflow=readFileSync(new URL("../.github/workflows/t0-ci-incident.yml",import.meta.url),"utf8");
+ assert.equal(reg.event_admission.mode,"schedule_poll_current_main_and_open_pr_heads");
+ assert.deepEqual(reg.event_admission.poll_incident_outcomes,reg.outcomes.incident);
+ assert.ok(workflow.includes("cron: '"+reg.event_admission.sweep_cron+"'"));
+ assert.doesNotMatch(workflow,/workflow_run:|pull_request_target:|actions\/checkout/);
+ assert.match(workflow,/workflow_dispatch:/);
 });
-
 test("T0 complete observer inventory forbids unmonitored product actions and false GA auth success",async()=>{
  const fs=await import("node:fs");
- assert.equal(CONTROL.version,"1.1.0");
+ assert.equal(CONTROL.version,"1.2.0");
  assert.match(CONTROL.blocked_reconciliation_policy,/BLOCKED_CROSS_REPO_AUTH/);
  const localWorkflows=fs.readdirSync(new URL("../.github/workflows/",import.meta.url))
   .filter(x=>x.endsWith(".yml"))
@@ -185,9 +180,10 @@ test("T0 complete observer inventory forbids unmonitored product actions and fal
   .filter(x=>x!=="t0-ci-incident-reconciler");
  assert.deepEqual([...CONTROL.monitored_repositories["Taghvim-dev/.github"]].sort(),localWorkflows.sort());
  const observer=fs.readFileSync(new URL("../.github/workflows/t0-ci-incident.yml",import.meta.url),"utf8");
- const literal=observer.match(/workflows:\s*(\[[^\n]+\])/);
- assert.ok(literal,"A missing workflow_run list is not comprehensive monitoring");
- assert.deepEqual(JSON.parse(literal[1]).sort(),localWorkflows);
+ assert.doesNotMatch(observer,/workflow_run:/);
+ assert.match(observer,/schedule:/);
+ assert.match(observer,/workflow_dispatch:/);
+ assert.ok(!CONTROL.monitored_repositories["Taghvim-dev/.github"].includes("t0-ci-incident-reconciler"));
  for(const [repo,names] of Object.entries({
   "Taghvim-dev/engine":["public-api-release-observation","t0-private-landing-source-readonly-probe",
    "t0-public-api-readonly-smoke-observation","t0-engine-sandbox-d1-migration",
