@@ -144,6 +144,7 @@ test("T0 all issue writes follow a bounded complete current-SHA snapshot",async(
  assert.match(s,/CI_INCIDENT_RUN_INVENTORY_TRUNCATED/);
  assert.match(s,/CI_INCIDENT_PR_INVENTORY_TRUNCATED/);
  assert.match(s,/T0_CURRENT_HEAD_RECONCILED/);
+ assert.doesNotMatch(s,/shouldSweepAfterGreenMainRun/);
 });
 test("T0 runner admission failure is never misreported as a code or Codex regression",()=>{
  const blank={conclusion:"failure",runner_name:null,steps:[]};

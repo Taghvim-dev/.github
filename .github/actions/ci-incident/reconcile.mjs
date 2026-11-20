@@ -5,7 +5,6 @@
  * The GitHub token has issues:write and actions:read, not deployment access.
  */
 import { createHash } from "node:crypto";
-import { readFileSync } from "node:fs";
 import { pathToFileURL } from "node:url";
 import CONTROL from "../../../release/CI-CONTROL-REGISTRY.json" with {type:"json"};
 
@@ -15,14 +14,6 @@ export function monitoredRun(repo,name){
  return Array.isArray(allowed)&&allowed.includes(name)&&name!=="t0-ci-incident-reconciler";
 }
 export function currentHeadDeleted(status){return status===404;}
-export function shouldSweepAfterGreenMainRun({eventName,run,repository}={}) {
- // Current-head CI success is a reconciliation trigger; it is never a reason
- // to dispatch, deploy, reopen a stale incident, or recurse on our own observer.
- return eventName==="workflow_run"&&run?.status==="completed"&&
-   run?.conclusion==="success"&&run?.event==="push"&&
-   run?.head_branch==="main"&&run?.head_repository?.full_name===repository&&
-   monitoredRun(repository,run?.name);
-}
 
 /** One constitutional root-cause taxonomy across GitHub CI, Codex and ActionBot-triggered runs.
  * Never call a zero-step GitHub control-plane failure a defect in checked-out code.
