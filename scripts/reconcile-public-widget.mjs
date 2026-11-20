@@ -152,7 +152,8 @@ export function canResetOrFastForwardBotBranch(compare){
  if(compare.ahead_by===0)return "fast_forward";
  if(compare.commits.length!==compare.ahead_by||!compare.commits.every(c=>
     (c.commit?.message?.startsWith("reconcile(t0): public SDK and Cookbook reviewed source candidate") ||
-     c.commit?.message?.startsWith("reconcile(t0): atomic SDK and Cookbook source evidence")) &&
+     (c.commit?.message?.startsWith("reconcile(t0): atomic SDK and Cookbook source evidence") ||
+     c.commit?.message?.startsWith("reconcile(t0): atomic SDK CLI Cookbook canonical source evidence"))) &&
     ["github-actions[bot]","github-actions"].includes(c.author?.login)))return null;
  return "bot_branch_reset";
 }
