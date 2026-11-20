@@ -1,6 +1,15 @@
 # No Cloudflare credential, PR checkout, or automatic Production mutation.
 name: t0-public-widget-sdk-reconciler
 on:
+  push:
+    branches: [main]
+    paths:
+      - 'release/CANONICAL-SOURCE-COHORT.json'
+      - 'release/PUBLIC-RELEASE-MATRIX.json'
+      - 'release/T0-CONTROL-MATRIX.json'
+      - 'scripts/reconcile-public-widget.mjs'
+      - 'scripts/reconcile-source-cohort.mjs'
+      - '.github/workflows/t0-public-widget-sdk-reconciler.yml'
   schedule:
     - cron: '23 */6 * * *'
   workflow_dispatch:

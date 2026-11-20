@@ -191,4 +191,8 @@ test("source transport never needs a second long-lived private token or Cloudfla
  assert.ok(script.includes('const allowed=["Taghvim-dev/.github","Taghvim-dev/SDK","Taghvim-dev/cookbooks"]'));
  assert.ok(!workflow.includes("TAGHVIM_PRIVATE_SOURCE_READ_TOKEN"));
  assert.ok(!workflow.includes("CLOUDFLARE_API_TOKEN"));
+ assert.ok(workflow.includes("  push:"));
+ assert.ok(workflow.includes("    branches: [main]"));
+ assert.ok(workflow.includes("'release/CANONICAL-SOURCE-COHORT.json'"));
+
 });
