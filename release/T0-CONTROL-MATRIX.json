@@ -277,9 +277,9 @@
       "dependent_component_ci": {
         "engine": "44816979908",
         "landing": "44629136875",
-        "SDK": "40137472813",
+        "SDK": "44615176228",
         "CLI": "40138494477",
-        "cookbooks": "40137667999"
+        "cookbooks": "44819876141"
       },
       "source_ci_run": "40002313088",
       "live_evidence": null
@@ -559,11 +559,11 @@
     "release_ledger_source_pins_still_require_independent_re_review": true,
     "both_product_components_live": true,
     "current_source_not_yet_deployed_scope": "LATEST_ENGINE_MAIN_CONTROLLER_CHANGE_NOT_YET_CLOUDFLARE_RELEASED; Engine Worker 7a519224 success 40194105707; latest Landing ba9209f5 UTF-8 source not yet promoted. 316530ea source independently deployed run 40195165078.",
-    "sdk_current_source_commit": "3abed87ca07544ce307e9fe16b491302ad078e3a",
-    "cookbooks_current_source_commit": "ad658591dda1bdbc991821d1f699df6fc37a9d7d",
-    "cookbooks_current_main_ci_run": "40137667999",
+    "sdk_current_source_commit": "c27596439f31c3bc1c3d076f9f581c2e8337a1c2",
+    "cookbooks_current_source_commit": "f101b787f0e31dd01ab26a0c60414ec7400bf5bf",
+    "cookbooks_current_main_ci_run": "44819876141",
     "sdk_publication_status": "source_preview; npm_PyPI_not_published; real_python_sdk_cloudflare_sandbox_retest_required",
-    "sdk_current_main_ci_run": "40137472813",
+    "sdk_current_main_ci_run": "44615176228",
     "cli_current_source_commit": "db683729a6a80a74018c3faf272f3be4d8e02b1a",
     "cli_current_main_ci_run": "40138494477",
     "workerd_runtime_and_widget_sandbox_evidence": {
