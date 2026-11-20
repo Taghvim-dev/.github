@@ -148,7 +148,8 @@ export function canResetOrFastForwardBotBranch(compare){
  if(!compare||!["ahead","behind","diverged","identical"].includes(compare.status)||
    !Number.isInteger(compare.ahead_by)||compare.ahead_by<0||compare.ahead_by>3||
    !Array.isArray(compare.files)||!Array.isArray(compare.commits))return null;
- if(compare.files.some(f=>!["release/PUBLIC-RELEASE-MATRIX.json","release/T0-CONTROL-MATRIX.json"].includes(f.filename)))return null;
+ if(compare.files.some(f=>!["release/PUBLIC-RELEASE-MATRIX.json","release/T0-CONTROL-MATRIX.json",
+   "contracts/operation-index.json"].includes(f.filename)))return null;
  if(compare.ahead_by===0)return "fast_forward";
  if(compare.commits.length!==compare.ahead_by||!compare.commits.every(c=>
     (c.commit?.message?.startsWith("reconcile(t0): public SDK and Cookbook reviewed source candidate") ||
@@ -167,7 +168,7 @@ export async function reconcilePublicWidget(){
  ]);
  const branch=BRANCH_PREFIX+root.slice(0,12);
  const [sdkCi,cliCi,cookbooksCi,cookbookSource,canonical,control,cohort,
-   sdkIndex,cliIndex,cookbookIndex]=await Promise.all([
+   sdkIndex,cliIndex,cookbookIndex,centralIndex]=await Promise.all([
   successfulMainCI("Taghvim-dev/SDK",sdk,"public-sdk-verify"),
   successfulMainCI("Taghvim-dev/CLI",cli,"public-cli-verify"),
   successfulMainCI("Taghvim-dev/cookbooks",cookbooks,"public-cookbooks-verify"),
@@ -177,7 +178,8 @@ export async function reconcilePublicWidget(){
   content(ROOT,"release/CANONICAL-SOURCE-COHORT.json",root),
   content("Taghvim-dev/SDK","contracts/operation-index.json",sdk),
   content("Taghvim-dev/CLI","contracts/operation-index.json",cli),
-  content("Taghvim-dev/cookbooks","contracts/operation-index.json",cookbooks)
+  content("Taghvim-dev/cookbooks","contracts/operation-index.json",cookbooks),
+  content(ROOT,"contracts/operation-index.json",root)
  ]);
  const authority=attestPrivateSourceCohort(cohort.data,canonical.data,control.data);
  const {engine,landing}=authority;
@@ -194,9 +196,15 @@ export async function reconcilePublicWidget(){
   contractBlob:indexes[0].openApiGitBlobSHA,
   publicOps:indexes[0].operations.length
  });
- if(plan.status!=="PR_REQUIRED")
-  return {status:plan.status==="CURRENT"?"CURRENT_PUBLIC_COMPONENTS_ONLY":plan.status,
-    writes:0,ga_approved:false,private_head_verified:false};
+ // The central public operation index is a THIRD projection of the same
+ // canonical source. A contract migration must update all projections
+ // in one versioned, reviewable Git tree rather than generating guaranteed red CI.
+ const indexDrift=JSON.stringify(centralIndex.data)!==JSON.stringify(indexes[0]);
+ if(plan.status!=="PR_REQUIRED"&&plan.status!=="CURRENT")
+  return {status:plan.status,writes:0,ga_approved:false};
+ if(plan.status==="CURRENT"&&!indexDrift)
+  return {status:"CURRENT_PUBLIC_COMPONENTS_ONLY",writes:0,ga_approved:false,
+    private_head_verified:false};
  // A source candidate is a Git side effect. Without independently fresh
  // private main refs, the pre-effect gate must deny *before* a branch/PR write.
  if(!process.env.TAGHVIM_PRIVATE_SOURCE_READ_TOKEN)
@@ -236,12 +244,14 @@ export async function reconcilePublicWidget(){
   }
   botFile=canonical;
  }
- // Produce both constitutional registries in ONE commit. No half-valid intermediate push.
+ // Produce all canonical current-source projections in ONE commit.
+ // Exact source-index drift gets a third file, never a half-valid main.
  const base=await gh("/repos/"+ROOT+"/git/commits/"+root);
  if(!SHA.test(base?.tree?.sha||""))fail("unattested current main Git tree");
  const files=[
-   ["release/PUBLIC-RELEASE-MATRIX.json",plan.registry],
-   ["release/T0-CONTROL-MATRIX.json",plan.controls]
+   ["release/PUBLIC-RELEASE-MATRIX.json",plan.registry??canonical.data],
+   ["release/T0-CONTROL-MATRIX.json",plan.controls??control.data],
+   ...(indexDrift?[["contracts/operation-index.json",indexes[0]]]:[])
  ];
  const tree=await gh("/repos/"+ROOT+"/git/trees","POST",{
    base_tree:base.tree.sha,
@@ -273,7 +283,8 @@ export async function reconcilePublicWidget(){
    "), Cookbooks "+cookbooks+" (verified main CI "+cookbooksCi+
    "), exact matching public OpenAPI blob; independently fresh Engine and Landing private main refs. NO_GA, no Cloudflare write."
  });
- return {status:"CREATED_REVIEWABLE_SOURCE_PR",pr:pr.number,branch_reused:!!exact.length,git_commits:1,files:2,sdk,cli,cookbooks};
+ return {status:"CREATED_REVIEWABLE_SOURCE_PR",pr:pr.number,branch_reused:!!exact.length,
+  git_commits:1,files:files.length,index_reconciled:indexDrift,sdk,cli,cookbooks};
 }
 if(process.argv[1]===fileURLToPath(import.meta.url))
  reconcilePublicWidget().then(x=>console.log("T0_PUBLIC_WIDGET_RECONCILE",JSON.stringify(x)))

@@ -98,6 +98,12 @@ test("interrupted bot branch may only contain two expected matrix files",()=>{
    commits:[bot,bot]}),"bot_branch_reset");
  assert.equal(canResetOrFastForwardBotBranch({status:"ahead",ahead_by:1,
    files:[{filename:".github/workflows/unsafe.yml"}],commits:[bot]}),null);
+ assert.equal(canResetOrFastForwardBotBranch({status:"ahead",ahead_by:1,
+   files:[{filename:"release/PUBLIC-RELEASE-MATRIX.json"},
+    {filename:"release/T0-CONTROL-MATRIX.json"},
+    {filename:"contracts/operation-index.json"}],
+   commits:[{...bot,commit:{message:"reconcile(t0): atomic SDK CLI Cookbook canonical source evidence"}}]}),
+  "bot_branch_reset");
 });
 
 test("one commit contains both release matrices",async()=>{
@@ -107,6 +113,11 @@ test("one commit contains both release matrices",async()=>{
  assert.ok(src.includes('parents:[root]'));
  assert.ok(src.includes('plan.registry'));
  assert.ok(src.includes('plan.controls'));
+ assert.ok(src.includes('["contracts/operation-index.json",indexes[0]]'));
+ assert.ok(src.includes('const indexDrift=JSON.stringify(centralIndex.data)!==JSON.stringify(indexes[0])'));
+ assert.ok(src.indexOf("if(!process.env.TAGHVIM_PRIVATE_SOURCE_READ_TOKEN)")<
+  src.indexOf("const files=["),"private head freshness must predate any atomic source tree write");
+
 });
 
 test("CURRENT is decided from both ledgers, not only primary SDK/Cookbook source pins",()=>{
