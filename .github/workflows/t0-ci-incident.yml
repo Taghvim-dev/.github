@@ -1,4 +1,5 @@
-# Canonical T0 scheduled current-head observer: no recursive workflow_run fanout.
+# Canonical T0 current-main/open-PR polling adapter; no workflow_run cascade.
+# One SHA-pinned action, immutable GitHub source evidence and event-driven stale-issue retirement.
 name: t0-ci-incident-reconciler
 on:
   schedule:
@@ -18,5 +19,5 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 6
     steps:
-      - name: Current source/PR incident lifecycle and immutable stale-issue retirement
+      - name: Reconcile current-head failures and retire superseded incident issues
         uses: Taghvim-dev/.github/.github/actions/ci-incident@b13c7fcdc14c7747b727c7ee2b66f8ef9dbf0f3b

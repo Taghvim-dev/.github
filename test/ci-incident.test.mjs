@@ -174,17 +174,24 @@ test("T0 durable recovery must independently prove same current SHA, same event/
  for(const bad of [{head_sha:"aa".repeat(20)},{head_branch:"other"},{workflow_id:99},{event:"pull_request"},{run_number:17},{status:"in_progress"},{conclusion:"skipped"}])
    assert.equal(newerCurrentGreenCloses({failed,run:{...green,...bad},currentSha:run.head_sha}),false,JSON.stringify(bad));
 });
-test("T0 reviewed shared action controls scheduled main-branch observer with no recursive fanout",async()=>{
- const fs=await import("node:fs");
- const reg=JSON.parse(fs.readFileSync(new URL("../release/CI-CONTROL-REGISTRY.json",import.meta.url),"utf8"));
- const workflow=fs.readFileSync(new URL("../.github/workflows/t0-ci-incident.yml",import.meta.url),"utf8");
+test("T0 six-repository polling cutover is SHA-bound, source-complete and nonrecursive",async()=>{
+ const {readFileSync}=await import("node:fs");
+ const reg=JSON.parse(readFileSync(new URL("../release/CI-CONTROL-REGISTRY.json",import.meta.url),"utf8"));
+ const wf=readFileSync(new URL("../.github/workflows/t0-ci-incident.yml",import.meta.url),"utf8");
+ const proof=JSON.parse(readFileSync(new URL("../release/CI-OBSERVER-CUTOVER.json",import.meta.url),"utf8"));
  assert.equal(reg.event_admission.mode,"schedule_poll_current_main_and_open_pr_heads");
+ assert.equal(reg.event_admission.rollout_state,"SCHEDULED_CANONICAL_ALL_SIX");
  assert.deepEqual(reg.event_admission.poll_incident_outcomes,reg.outcomes.incident);
- assert.ok(workflow.includes("cron: '"+reg.event_admission.sweep_cron+"'"));
- assert.doesNotMatch(workflow,/workflow_run:|pull_request_target:|actions\/checkout/);
- assert.match(workflow,/workflow_dispatch:/);
- assert.match(workflow,/if: github.ref == 'refs\/heads\/main'/);
- assert.match(workflow,/ci-incident@b13c7fcdc14c7747b727c7ee2b66f8ef9dbf0f3b/);
+ assert.ok(wf.includes("cron: '13 */3 * * *'"));
+ for(const forbidden of ["workflow_run:","pull_request_target:","actions/checkout"])assert.ok(!wf.includes(forbidden));
+ assert.match(wf,/workflow_dispatch:/);
+ assert.match(wf,/ci-incident@b13c7fcdc14c7747b727c7ee2b66f8ef9dbf0f3b/);
+ assert.equal(proof.controller_sha,reg.event_admission.all_repo_adapters_sha);
+ assert.equal(proof.adapters.length,6);
+ assert.deepEqual(proof.adapters.map(x=>x.repository).sort(),Object.keys(reg.monitored_repositories).sort());
+ assert.ok(proof.adapters.every(x=>x.trigger==="schedule_or_owner_dispatch_only"&&x.pin===proof.controller_sha));
+ assert.equal(proof.ga_authorized,false);
+ assert.equal(proof.production_mutation_authority,false);
 });
 test("T0 complete observer inventory forbids unmonitored product actions and false GA auth success",async()=>{
  const fs=await import("node:fs");
@@ -200,8 +207,7 @@ test("T0 complete observer inventory forbids unmonitored product actions and fal
  assert.doesNotMatch(observer,/workflow_run:/);
  assert.match(observer,/schedule:/);
  assert.match(observer,/workflow_dispatch:/);
- // The versioned shared action retains its immutable source-preparation receipt.
- assert.equal(CONTROL.event_admission.rollout_state,"SOURCE_PREPARED_LEGACY_ADAPTER_RUNNING");
+ assert.equal(CONTROL.event_admission.rollout_state,"SCHEDULED_CANONICAL_ALL_SIX");
  assert.ok(!CONTROL.monitored_repositories["Taghvim-dev/.github"].includes("t0-ci-incident-reconciler"));
  for(const [repo,names] of Object.entries({
   "Taghvim-dev/engine":["public-api-release-observation","t0-private-landing-source-readonly-probe",
