@@ -27,12 +27,17 @@ export function projectSourceCohort(source,release,controls){
  block("missing canonical projections");
  for(const n of ["engine","landing"]){
   const item=source[n];
-  if(!sha.test(item?.sha||"")||!ci.test(String(item?.ci||""))||
+  // Squash-main source SHA and the independently reviewed/tested PR head are
+  // different authorities. A canonical cohort must bind BOTH, never pretend a
+  // PR CI run executed on a new squash commit or rewrite the real CI head.
+  const reviewed=item?.reviewed_sha||item?.sha;
+  if(!sha.test(reviewed||"")||
+     !sha.test(item?.sha||"")||!ci.test(String(item?.ci||""))||
   item.workflow_id!==(n==="engine"?372423484:390048334))block("missing immutable "+n+" CI authority");
   s[n+"_main_merge_sha"]=item.sha;
   s.latest_checked[n+"_sha"]=item.sha;s.latest_checked[n+"_ci"]=item.ci;
   s.t0_cross_repo_source_admission[n+"_main_sha"]=item.sha;
-  s.t0_cross_repo_source_admission[n+"_reviewed_head"]=item.sha;
+  s.t0_cross_repo_source_admission[n+"_reviewed_head"]=reviewed;
   s.t0_cross_repo_source_admission[n+"_ci_run"]=item.ci;
   if(!r.package_identity?.[n])block("missing product identity "+n);
   r.package_identity[n].commit=item.sha;r.package_identity[n].ci=item.ci;
