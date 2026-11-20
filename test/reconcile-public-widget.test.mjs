@@ -158,10 +158,6 @@ test("central reviewed Cohort replaces an unprovisioned private-source token wit
  assert.equal(attested.landing,cohort.landing.sha);
  assert.equal(attested.ga_approved,false);
  assert.equal(attested.private_refs_read,false);
- const moved=attestPrivateSourceCohort(cohort,release,controls,
-  {engine:"c".repeat(40),landing:cohort.landing.sha});
- assert.equal(moved.status,"BLOCKED_PRIVATE_SOURCE_MOVED");
- assert.equal(moved.writes,0);
 });
 
 test("forged, unreviewed or stale cross-repo private Cohort always fails BEFORE a PR",async()=>{
@@ -191,6 +187,8 @@ test("source transport never needs a second long-lived private token or Cloudfla
  assert.match(script,/content\(ROOT,"release\/CANONICAL-SOURCE-COHORT\.json",root\)/);
  assert.ok(!script.includes("headPrivate("));
  assert.ok(!script.includes("WAIT_FOR_PRIVATE_SOURCE_READ_AUTHORITY"));
+ assert.ok(!script.includes("TAGHVIM_PRIVATE_SOURCE_READ_TOKEN"));
+ assert.ok(script.includes('const allowed=["Taghvim-dev/.github","Taghvim-dev/SDK","Taghvim-dev/cookbooks"]'));
  assert.ok(!workflow.includes("TAGHVIM_PRIVATE_SOURCE_READ_TOKEN"));
  assert.ok(!workflow.includes("CLOUDFLARE_API_TOKEN"));
 });

@@ -74,11 +74,13 @@ export function sourcesAreConsistent(matrix,controls,engine,landing){
 }
 
 async function gh(path,method="GET",body){
- const privateSource=path==="/repos/Taghvim-dev/engine" ||
-   path.startsWith("/repos/Taghvim-dev/engine/") ||
-   path==="/repos/Taghvim-dev/landing" ||
-   path.startsWith("/repos/Taghvim-dev/landing/");
- const token=privateSource?process.env.TAGHVIM_PRIVATE_SOURCE_READ_TOKEN:process.env.GITHUB_TOKEN;
+ // This public controller is ONLY authorized to read the canonical Cohort
+ // and the two public client repositories. Private Engine/Landing are not
+ // transitive REST dependencies, and no second credential is permitted.
+ const allowed=["Taghvim-dev/.github","Taghvim-dev/SDK","Taghvim-dev/cookbooks"];
+ if(!allowed.some(repo=>path.startsWith("/repos/"+repo+"/")))
+  fail("unscoped source repository denied");
+ const token=process.env.GITHUB_TOKEN;
  if(!token)fail("missing job-scoped token");
  const r=await fetch(API+path,{method,redirect:"error",cache:"no-store",
   headers:{accept:"application/vnd.github+json",authorization:"Bearer "+token,
@@ -99,16 +101,14 @@ async function head(repo){
  * deployment, or attests the privately deployed runtime. A stale candidate
  * must fail the normal protected current-source CI before any side effect.
  */
-export function attestPrivateSourceCohort(source,release,controls,observedPrivate=null){
+export function attestPrivateSourceCohort(source,release,controls){
  try{verifySourceCohort(source,release,controls);}
  catch(e){fail("canonical cohort projection drift: "+e.message);}
  const engine=source.engine.sha,landing=source.landing.sha;
- if(observedPrivate&&(observedPrivate.engine!==engine||observedPrivate.landing!==landing))
-  return {status:"BLOCKED_PRIVATE_SOURCE_MOVED",writes:0,ga_approved:false};
  if(!sourcesAreConsistent(release,controls,engine,landing))
   fail("current Engine/Landing source is not canonical");
  return {status:"ATTESTED_CANONICAL_COHORT",engine,landing,writes:0,
-  ga_approved:false,private_refs_read:!!observedPrivate,
+  ga_approved:false,private_refs_read:false,
   authority:"release/CANONICAL-SOURCE-COHORT.json"};
 }
 async function content(repo,path,sha){
