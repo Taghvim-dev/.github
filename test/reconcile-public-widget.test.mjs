@@ -1,6 +1,6 @@
 import {test} from "node:test";
 import assert from "node:assert/strict";
-import {buildCandidate,buildCoupledCandidate,sourcesAreConsistent,canResetOrFastForwardBotBranch,privateSourceAccessDenied} from "../scripts/reconcile-public-widget.mjs";
+import {buildCandidate,buildCoupledCandidate,sourcesAreConsistent,canResetOrFastForwardBotBranch,attestPrivateSourceCohort} from "../scripts/reconcile-public-widget.mjs";
 const a="a".repeat(40), b="b".repeat(40),c="c".repeat(40);
 function matrix(){return {
  state:"PREVIEW",general_availability_approved:false,contract_version:"2.1.0",
@@ -146,29 +146,51 @@ test("SDK cookbook source mismatch blocks all coupled ledger mutation even when 
  assert.equal(p.controls,null);
 });
 
-test("scheduled public reconciler never treats missing private-source read authority as CI failure or verified GA",async()=>{
+test("central reviewed Cohort replaces an unprovisioned private-source token without bypassing T0",async()=>{
+ const {readFileSync}=await import("node:fs");
+ const read=p=>JSON.parse(readFileSync(new URL("../"+p,import.meta.url),"utf8"));
+ const cohort=read("release/CANONICAL-SOURCE-COHORT.json");
+ const release=read("release/PUBLIC-RELEASE-MATRIX.json");
+ const controls=read("release/T0-CONTROL-MATRIX.json");
+ const attested=attestPrivateSourceCohort(cohort,release,controls);
+ assert.equal(attested.status,"ATTESTED_CANONICAL_COHORT");
+ assert.equal(attested.engine,cohort.engine.sha);
+ assert.equal(attested.landing,cohort.landing.sha);
+ assert.equal(attested.ga_approved,false);
+ assert.equal(attested.private_refs_read,false);
+ const moved=attestPrivateSourceCohort(cohort,release,controls,
+  {engine:"c".repeat(40),landing:cohort.landing.sha});
+ assert.equal(moved.status,"BLOCKED_PRIVATE_SOURCE_MOVED");
+ assert.equal(moved.writes,0);
+});
+
+test("forged, unreviewed or stale cross-repo private Cohort always fails BEFORE a PR",async()=>{
+ const {readFileSync}=await import("node:fs");
+ const read=p=>JSON.parse(readFileSync(new URL("../"+p,import.meta.url),"utf8"));
+ const cohort=read("release/CANONICAL-SOURCE-COHORT.json");
+ const release=read("release/PUBLIC-RELEASE-MATRIX.json");
+ const controls=read("release/T0-CONTROL-MATRIX.json");
+ const copy=x=>structuredClone(x);
+ for(const kind of ["sha","ci","reviewed_sha"]){
+  const bad=copy(cohort);bad.engine[kind]=kind==="ci"?"999":"f".repeat(40);
+  assert.throws(()=>attestPrivateSourceCohort(bad,release,controls),/T0_PUBLIC_WIDGET_RECONCILE_BLOCKED/);
+ }
+ const badRelease=copy(release);badRelease.source_verification.latest_checked.engine_sha="f".repeat(40);
+ assert.throws(()=>attestPrivateSourceCohort(cohort,badRelease,controls),/T0_PUBLIC_WIDGET_RECONCILE_BLOCKED/);
+ const badControls=copy(controls);badControls.controls.find(x=>x.id==="T0-PACKAGES-014").dependent_component_ci.engine="0";
+ assert.throws(()=>attestPrivateSourceCohort(cohort,release,badControls),/T0_PUBLIC_WIDGET_RECONCILE_BLOCKED/);
+ const fraudulentGA=copy(cohort);fraudulentGA.ga_approved=true;
+ assert.throws(()=>attestPrivateSourceCohort(fraudulentGA,release,controls),/T0_PUBLIC_WIDGET_RECONCILE_BLOCKED/);
+});
+
+test("source transport never needs a second long-lived private token or Cloudflare secret",async()=>{
  const {readFileSync}=await import("node:fs");
  const script=readFileSync(new URL("../scripts/reconcile-public-widget.mjs",import.meta.url),"utf8");
  const workflow=readFileSync(new URL("../.github/workflows/t0-public-widget-sdk-reconciler.yml",import.meta.url),"utf8");
- assert.ok(script.includes('status:"WAIT_FOR_PRIVATE_SOURCE_READ_AUTHORITY",writes:0,read_private:false,ga_approved:false'));
- assert.ok(script.includes("process.env.TAGHVIM_PRIVATE_SOURCE_READ_TOKEN"));
- assert.ok(workflow.includes("TAGHVIM_PRIVATE_SOURCE_READ_TOKEN: ${{ secrets.TAGHVIM_PRIVATE_SOURCE_READ_TOKEN }}"));
- assert.equal(false,workflow.includes("CLOUDFLARE_API_TOKEN"));
-});
-
-test("only inaccessible scoped PRIVATE source main-ref 404 produces blocked checkpoint",()=>{
- for(const repo of ["Taghvim-dev/engine","Taghvim-dev/landing"]){
-  const msg="T0_PUBLIC_WIDGET_RECONCILE_BLOCKED: GitHub API 404 at /repos/"+repo+"/git/ref/heads/main";
-  assert.equal(privateSourceAccessDenied(new Error(msg),repo),true);
-  assert.equal(privateSourceAccessDenied(new Error("GitHub API 403"),repo),false);
-  assert.equal(privateSourceAccessDenied(new Error(msg),"Taghvim-dev/SDK"),false);
-  assert.equal(privateSourceAccessDenied(new Error("T0_PUBLIC_WIDGET_RECONCILE_BLOCKED: GitHub API 404 at /repos/Taghvim-dev/SDK/git/ref/heads/main"),repo),false);
- }
-});
-test("no mutable release candidate or false GA when scoped private source cannot be read",async()=>{
- const {readFileSync}=await import("node:fs");
- const source=readFileSync(new URL("../scripts/reconcile-public-widget.mjs",import.meta.url),"utf8");
- assert.ok(source.includes('return {status:"WAIT_FOR_PRIVATE_SOURCE_ACCESS",writes:0,ga_approved:false'));
- assert.ok(source.indexOf('WAIT_FOR_PRIVATE_SOURCE_ACCESS')<source.indexOf('buildCoupledCandidate(canonical.data,control.data'));
- assert.ok(source.includes('headPrivate("Taghvim-dev/engine"),headPrivate("Taghvim-dev/landing")'));
+ assert.match(script,/attestPrivateSourceCohort\(cohort\.data,canonical\.data,control\.data\)/);
+ assert.match(script,/content\(ROOT,"release\/CANONICAL-SOURCE-COHORT\.json",root\)/);
+ assert.ok(!script.includes("headPrivate("));
+ assert.ok(!script.includes("WAIT_FOR_PRIVATE_SOURCE_READ_AUTHORITY"));
+ assert.ok(!workflow.includes("TAGHVIM_PRIVATE_SOURCE_READ_TOKEN"));
+ assert.ok(!workflow.includes("CLOUDFLARE_API_TOKEN"));
 });
