@@ -1,25 +1,39 @@
 /** Trusted main-only T0 SDK + Cookbook release reconciler. No Cloudflare credentials. */
 import {Buffer} from "node:buffer";
 import {fileURLToPath} from "node:url";
+import {verifySourceCohort} from "./reconcile-source-cohort.mjs";
 const ROOT="Taghvim-dev/.github",BRANCH_PREFIX="bot/t0-public-widget-reconcile-",API="https://api.github.com";
 const SHA=/^[a-f0-9]{40}$/;
 const fail=s=>{throw Error("T0_PUBLIC_WIDGET_RECONCILE_BLOCKED: "+s);};
-export function buildCandidate(matrix,{sdk,sdkCi,cookbooks,cookbooksCi,cookbooksSdkPin}){
+export function buildCandidate(matrix,args){
+ const {sdk,sdkCi,cookbooks,cookbooksCi,cookbooksSdkPin,
+  cli,cliCi,contractBlob,publicOps}=args;
  if(matrix?.state!=="PREVIEW"||matrix?.general_availability_approved!==false||
    matrix?.contract_version!=="2.1.0"||!matrix.package_identity||
    !Array.isArray(matrix.repositories)||matrix.repositories.length!==3)fail("unexpected canonical lifecycle");
- if(![sdk,cookbooks,cookbooksSdkPin].every(x=>typeof x==="string"&&SHA.test(x))||
-   ![sdkCi,cookbooksCi].every(x=>Number.isSafeInteger(x)&&x>0))fail("invalid source or CI receipt");
+ const currentCLI=matrix.repositories.find(x=>x.name==="CLI");
+ const currentCi=currentCLI?.ci_run;
+ const resolvedCLI=cli??currentCLI?.commit, resolvedCliCi=cliCi??Number(currentCi);
+ if(![sdk,resolvedCLI,cookbooks,cookbooksSdkPin].every(x=>typeof x==="string"&&SHA.test(x))||
+   ![sdkCi,resolvedCliCi,cookbooksCi].every(x=>Number.isSafeInteger(x)&&x>0))
+  fail("missing reviewed source or CI receipt");
+ if(contractBlob!==undefined&&!SHA.test(contractBlob))fail("untyped canonical OpenAPI blob");
+ if(publicOps!==undefined&&(!Number.isSafeInteger(publicOps)||publicOps<1))
+  fail("invalid canonical public operation count");
  if(cookbooksSdkPin!==sdk)return {status:"BLOCKED_CROSS_REPO_SOURCE_DRIFT",candidate:null};
  const candidate=structuredClone(matrix);
- for(const [name,sha,run] of [["SDK",sdk,sdkCi],["cookbooks",cookbooks,cookbooksCi]]){
-  const a=candidate.repositories.filter(x=>x.name===name);
-  if(a.length!==1||!candidate.package_identity[name])fail("missing or duplicate package "+name);
-  a[0].commit=sha;a[0].ci_run=String(run);
+ for(const [name,sha,run] of [["SDK",sdk,sdkCi],["CLI",resolvedCLI,resolvedCliCi],
+    ["cookbooks",cookbooks,cookbooksCi]]){
+  const rows=candidate.repositories.filter(x=>x.name===name);
+  if(rows.length!==1||!candidate.package_identity[name])
+   fail("missing or duplicate canonical package "+name);
+  rows[0].commit=sha;rows[0].ci_run=String(run);
   candidate.package_identity[name].commit=sha;
   candidate.package_identity[name].ci=String(run);
  }
  candidate.package_identity.cookbooks.sdk_source_commit=sdk;
+ if(contractBlob!==undefined)candidate.openapi_source_git_blob_sha=contractBlob;
+ if(publicOps!==undefined)candidate.required_public_operation_count=publicOps;
  if(JSON.stringify(candidate)===JSON.stringify(matrix))return {status:"CURRENT",candidate:null};
  return {status:"PR_REQUIRED",candidate};
 }
@@ -42,8 +56,11 @@ export function buildCoupledCandidate(matrix,controls,args){
  if(!widget||!post||!ci||!ctrlPost||controls.general_availability_approved!==false||
     controls.contract_version!=="2.1.0")fail("missing synchronized current-source evidence in both ledgers");
  const {sdk,sdkCi,cookbooks,cookbooksCi}=args;
+ const cli=args.cli??result.repositories.find(x=>x.name==="CLI")?.commit;
+ const cliCi=args.cliCi??Number(result.repositories.find(x=>x.name==="CLI")?.ci_run);
  const replacements={
    sdk_current_source_commit:sdk,sdk_current_main_ci_run:String(sdkCi),
+   cli_current_source_commit:cli,cli_current_main_ci_run:String(cliCi),
    cookbooks_current_source_commit:cookbooks,cookbooks_current_main_ci_run:String(cookbooksCi)
  };
  for(const [k,v] of Object.entries(replacements)){
@@ -55,7 +72,7 @@ export function buildCoupledCandidate(matrix,controls,args){
  const cc=structuredClone(controls);
  for(const [k,v] of Object.entries(replacements))cc.post_release_observation_20261023[k]=v;
  const dep=cc.controls.find(x=>x.id==="T0-PACKAGES-014").dependent_component_ci;
- dep.SDK=String(sdkCi);dep.cookbooks=String(cookbooksCi);
+ dep.SDK=String(sdkCi);dep.CLI=String(cliCi);dep.cookbooks=String(cookbooksCi);
  // Historical live D1, deployed Source SHAs, and GA must never change here.
  if(result.general_availability_approved!==false||cc.general_availability_approved!==false)
    fail("reconciler cannot grant GA or mutate runtime state");
@@ -73,12 +90,17 @@ export function sourcesAreConsistent(matrix,controls,engine,landing){
 }
 
 async function gh(path,method="GET",body){
- const privateSource=path==="/repos/Taghvim-dev/engine" ||
-   path.startsWith("/repos/Taghvim-dev/engine/") ||
-   path==="/repos/Taghvim-dev/landing" ||
-   path.startsWith("/repos/Taghvim-dev/landing/");
- const token=privateSource?process.env.TAGHVIM_PRIVATE_SOURCE_READ_TOKEN:process.env.GITHUB_TOKEN;
- if(!token)fail("missing job-scoped token");
+ // Canonical read scope: all three PUBLIC repositories and the central
+ // project. Private HEAD freshness requires a distinct read-only credential,
+ // never a GITHUB_TOKEN fallback. No private mutation API is permitted.
+ const publicRepos=["Taghvim-dev/.github","Taghvim-dev/SDK","Taghvim-dev/CLI","Taghvim-dev/cookbooks"];
+ const privateRepos=["Taghvim-dev/engine","Taghvim-dev/landing"];
+ const publicRead=publicRepos.some(repo=>path.startsWith("/repos/"+repo+"/"));
+ const privateRead=privateRepos.some(repo=>path==="/repos/"+repo+"/git/ref/heads/main");
+ if(!publicRead&&!privateRead)fail("unscoped repository or operation denied");
+ if(privateRead&&(method!=="GET"||body!==undefined))fail("private source must be read-only HEAD");
+ const token=privateRead?process.env.TAGHVIM_PRIVATE_SOURCE_READ_TOKEN:process.env.GITHUB_TOKEN;
+ if(!token)fail(privateRead?"PRIVATE_HEAD_READ_AUTHORITY_MISSING":"missing job-scoped token");
  const r=await fetch(API+path,{method,redirect:"error",cache:"no-store",
   headers:{accept:"application/vnd.github+json",authorization:"Bearer "+token,
    "x-github-api-version":"2022-11-28",...(body===undefined?{}:{"content-type":"application/json"})},
@@ -91,17 +113,21 @@ async function head(repo){
  if(x.ref!=="refs/heads/main"||x.object?.type!=="commit"||!SHA.test(x.object.sha))fail("nonimmutable main "+repo);
  return x.object.sha;
 }
-/** Public workflow-scoped GITHUB_TOKEN cannot attest private Engine/Landing.
- * An exact private-ref 404 means blocked/no writes; never fabricates source
- * identity, never authorizes GA or suppresses any other error.
+/** Canonical Cohort proves internally consistent declared authority, NOT
+ * independently fresh private HEADs. Every candidate-changing PR requires
+ * both actual private main refs to be read and matched *before* branch writes.
+ * With no private read authority, only a read-only public CURRENT result is
+ * permitted; a source change is held as BLOCKED, never false-green GA.
  */
-export function privateSourceAccessDenied(error,repo){
- if(!["Taghvim-dev/engine","Taghvim-dev/landing"].includes(repo))return false;
- return error?.message==="T0_PUBLIC_WIDGET_RECONCILE_BLOCKED: GitHub API 404 at /repos/"+repo+"/git/ref/heads/main";
-}
-async function headPrivate(repo){
- try{return await head(repo);}
- catch(e){if(privateSourceAccessDenied(e,repo))return null;throw e;}
+export function attestPrivateSourceCohort(source,release,controls){
+ try{verifySourceCohort(source,release,controls);}
+ catch(e){fail("canonical cohort projection drift: "+e.message);}
+ const engine=source.engine.sha,landing=source.landing.sha;
+ if(!sourcesAreConsistent(release,controls,engine,landing))
+  fail("current Engine/Landing source is not canonical");
+ return {status:"COHORT_PROJECTION_ONLY_NOT_PRIVATE_HEAD_VERIFIED",engine,landing,writes:0,
+  ga_approved:false,private_refs_read:false,
+  authority:"release/CANONICAL-SOURCE-COHORT.json"};
 }
 async function content(repo,path,sha){
  const x=await gh("/repos/"+repo+"/contents/"+path+"?ref="+sha);
@@ -122,45 +148,76 @@ export function canResetOrFastForwardBotBranch(compare){
  if(!compare||!["ahead","behind","diverged","identical"].includes(compare.status)||
    !Number.isInteger(compare.ahead_by)||compare.ahead_by<0||compare.ahead_by>3||
    !Array.isArray(compare.files)||!Array.isArray(compare.commits))return null;
- if(compare.files.some(f=>!["release/PUBLIC-RELEASE-MATRIX.json","release/T0-CONTROL-MATRIX.json"].includes(f.filename)))return null;
+ if(compare.files.some(f=>!["release/PUBLIC-RELEASE-MATRIX.json","release/T0-CONTROL-MATRIX.json",
+   "contracts/operation-index.json"].includes(f.filename)))return null;
  if(compare.ahead_by===0)return "fast_forward";
  if(compare.commits.length!==compare.ahead_by||!compare.commits.every(c=>
     (c.commit?.message?.startsWith("reconcile(t0): public SDK and Cookbook reviewed source candidate") ||
-     c.commit?.message?.startsWith("reconcile(t0): atomic SDK and Cookbook source evidence")) &&
+     (c.commit?.message?.startsWith("reconcile(t0): atomic SDK and Cookbook source evidence") ||
+     c.commit?.message?.startsWith("reconcile(t0): atomic SDK CLI Cookbook canonical source evidence"))) &&
     ["github-actions[bot]","github-actions"].includes(c.author?.login)))return null;
  return "bot_branch_reset";
 }
 export async function reconcilePublicWidget(){
  if(process.env.GITHUB_REPOSITORY!==ROOT||process.env.GITHUB_REF!=="refs/heads/main")fail("not trusted main controller");
- // Private Engine and Landing MUST NOT be queried with this public repository's
- // limited GITHUB_TOKEN. Missing explicit private read authority is expected and
- // should be represented as a fail-closed WAIT status, never a recurring 404.
- if(!process.env.TAGHVIM_PRIVATE_SOURCE_READ_TOKEN)
-   return {status:"WAIT_FOR_PRIVATE_SOURCE_READ_AUTHORITY",writes:0,read_private:false,ga_approved:false};
-
- const [sdk,cookbooks,root]=await Promise.all([head("Taghvim-dev/SDK"),head("Taghvim-dev/cookbooks"),head(ROOT)]);
- // Root-scoped branch avoids drift from an orphan created against older main.
+ // The central Cohort binds declared source SHA/CI, but no public token
+ // alone may certify current private Engine/Landing HEAD freshness.
+ const [sdk,cli,cookbooks,root]=await Promise.all([
+  head("Taghvim-dev/SDK"),head("Taghvim-dev/CLI"),
+  head("Taghvim-dev/cookbooks"),head(ROOT)
+ ]);
  const branch=BRANCH_PREFIX+root.slice(0,12);
- const [sdkCi,cookbooksCi,cookbookSource,canonical,control,engine,landing]=await Promise.all([
+ const [sdkCi,cliCi,cookbooksCi,cookbookSource,canonical,control,cohort,
+   sdkIndex,cliIndex,cookbookIndex,centralIndex]=await Promise.all([
   successfulMainCI("Taghvim-dev/SDK",sdk,"public-sdk-verify"),
+  successfulMainCI("Taghvim-dev/CLI",cli,"public-cli-verify"),
   successfulMainCI("Taghvim-dev/cookbooks",cookbooks,"public-cookbooks-verify"),
   content("Taghvim-dev/cookbooks","release/SDK-SOURCE.json",cookbooks),
   content(ROOT,"release/PUBLIC-RELEASE-MATRIX.json",root),
   content(ROOT,"release/T0-CONTROL-MATRIX.json",root),
-  headPrivate("Taghvim-dev/engine"),headPrivate("Taghvim-dev/landing")
+  content(ROOT,"release/CANONICAL-SOURCE-COHORT.json",root),
+  content("Taghvim-dev/SDK","contracts/operation-index.json",sdk),
+  content("Taghvim-dev/CLI","contracts/operation-index.json",cli),
+  content("Taghvim-dev/cookbooks","contracts/operation-index.json",cookbooks),
+  content(ROOT,"contracts/operation-index.json",root)
  ]);
- if(!engine||!landing)return {status:"WAIT_FOR_PRIVATE_SOURCE_ACCESS",writes:0,ga_approved:false,
-  reason:"PUBLIC_GITHUB_TOKEN_CANNOT_ATTEST_PRIVATE_ENGINE_LANDING; OWNER_SCOPED_ACCESS_REQUIRED"};
- if(!sdkCi||!cookbooksCi)return {status:"WAIT_FOR_PUBLIC_MAIN_CI",writes:0};
- // An Engine/Landing code merge demands its own reviewed source attestation first.
- // Creating a public-only PR with stale engine/landing pins causes guaranteed red CI.
- if(!sourcesAreConsistent(canonical.data,control.data,engine,landing))
-   return {status:"WAIT_FOR_ENGINE_LANDING_SOURCE_ATTESTATION",writes:0};
- const plan=buildCoupledCandidate(canonical.data,control.data,
-   {sdk,sdkCi,cookbooks,cookbooksCi,cookbooksSdkPin:cookbookSource.data?.commit});
- if(plan.status!=="PR_REQUIRED")return {status:plan.status,writes:0};
- const [sdkNow,cookbookNow,engineNow,landingNow,rootNow]=await Promise.all([head("Taghvim-dev/SDK"),head("Taghvim-dev/cookbooks"),headPrivate("Taghvim-dev/engine"),headPrivate("Taghvim-dev/landing"),head(ROOT)]);
- if(!engineNow||!landingNow||sdkNow!==sdk||cookbookNow!==cookbooks||engineNow!==engine||landingNow!==landing||rootNow!==root)return {status:"RACED_WITH_NEW_SOURCE",writes:0};
+ const authority=attestPrivateSourceCohort(cohort.data,canonical.data,control.data);
+ const {engine,landing}=authority;
+ if(!sdkCi||!cliCi||!cookbooksCi)
+  return {status:"WAIT_FOR_PUBLIC_MAIN_CI",writes:0,ga_approved:false};
+ const indexes=[sdkIndex.data,cliIndex.data,cookbookIndex.data];
+ if(!indexes.every(x=>x.contractVersion===canonical.data.contract_version &&
+   SHA.test(x.openApiGitBlobSHA||"")&&Array.isArray(x.operations))||
+   !indexes.every(x=>JSON.stringify(x)===JSON.stringify(indexes[0])))
+  return {status:"BLOCKED_PUBLIC_CONTRACT_DRIFT",writes:0,ga_approved:false};
+ const plan=buildCoupledCandidate(canonical.data,control.data,{
+  sdk,sdkCi,cli,cliCi,cookbooks,cookbooksCi,
+  cookbooksSdkPin:cookbookSource.data?.commit,
+  contractBlob:indexes[0].openApiGitBlobSHA,
+  publicOps:indexes[0].operations.length
+ });
+ // The central public operation index is a THIRD projection of the same
+ // canonical source. A contract migration must update all projections
+ // in one versioned, reviewable Git tree rather than generating guaranteed red CI.
+ const indexDrift=JSON.stringify(centralIndex.data)!==JSON.stringify(indexes[0]);
+ if(plan.status!=="PR_REQUIRED"&&plan.status!=="CURRENT")
+  return {status:plan.status,writes:0,ga_approved:false};
+ if(plan.status==="CURRENT"&&!indexDrift)
+  return {status:"CURRENT_PUBLIC_COMPONENTS_ONLY",writes:0,ga_approved:false,
+    private_head_verified:false};
+ // A source candidate is a Git side effect. Without independently fresh
+ // private main refs, the pre-effect gate must deny *before* a branch/PR write.
+ if(!process.env.TAGHVIM_PRIVATE_SOURCE_READ_TOKEN)
+  return {status:"BLOCKED_PRIVATE_HEAD_READ_AUTHORITY",writes:0,ga_approved:false};
+ const [engineNow,landingNow,sdkNow,cliNow,cookbookNow,rootNow]=await Promise.all([
+  head("Taghvim-dev/engine"),head("Taghvim-dev/landing"),
+  head("Taghvim-dev/SDK"),head("Taghvim-dev/CLI"),
+  head("Taghvim-dev/cookbooks"),head(ROOT)
+ ]);
+ if(engineNow!==engine||landingNow!==landing)
+  return {status:"BLOCKED_PRIVATE_HEAD_DRIFT",writes:0,ga_approved:false};
+ if(sdkNow!==sdk||cliNow!==cli||cookbookNow!==cookbooks||rootNow!==root)
+  return {status:"RACED_WITH_NEW_SOURCE",writes:0,ga_approved:false};
  const pulls=await gh("/repos/"+ROOT+"/pulls?state=open&head="+encodeURIComponent("Taghvim-dev:"+branch));
  if(!Array.isArray(pulls))fail("PR inventory unavailable");
  if(pulls.length)return {status:"REVIEW_PENDING_EXISTING_PR",pr:pulls[0].number,writes:0};
@@ -187,12 +244,14 @@ export async function reconcilePublicWidget(){
   }
   botFile=canonical;
  }
- // Produce both constitutional registries in ONE commit. No half-valid intermediate push.
+ // Produce all canonical current-source projections in ONE commit.
+ // Exact source-index drift gets a third file, never a half-valid main.
  const base=await gh("/repos/"+ROOT+"/git/commits/"+root);
  if(!SHA.test(base?.tree?.sha||""))fail("unattested current main Git tree");
  const files=[
-   ["release/PUBLIC-RELEASE-MATRIX.json",plan.registry],
-   ["release/T0-CONTROL-MATRIX.json",plan.controls]
+   ["release/PUBLIC-RELEASE-MATRIX.json",plan.registry??canonical.data],
+   ["release/T0-CONTROL-MATRIX.json",plan.controls??control.data],
+   ...(indexDrift?[["contracts/operation-index.json",indexes[0]]]:[])
  ];
  const tree=await gh("/repos/"+ROOT+"/git/trees","POST",{
    base_tree:base.tree.sha,
@@ -202,27 +261,30 @@ export async function reconcilePublicWidget(){
  });
  if(!SHA.test(tree?.sha||""))fail("invalid coordinated release source tree");
  const proposed=await gh("/repos/"+ROOT+"/git/commits","POST",{
-   message:"reconcile(t0): atomic SDK and Cookbook source evidence",
+   message:"reconcile(t0): atomic SDK CLI Cookbook canonical source evidence",
    tree:tree.sha,parents:[root]
  });
  if(!SHA.test(proposed?.sha||""))fail("coordinated release commit creation failed");
- const [sdkStill,cookbookStill,engineStill,landingStill,rootStill]=await Promise.all([
-   head("Taghvim-dev/SDK"),head("Taghvim-dev/cookbooks"),headPrivate("Taghvim-dev/engine"),
-   headPrivate("Taghvim-dev/landing"),head(ROOT)
+ const [engineStill,landingStill,sdkStill,cliStill,cookbookStill,rootStill]=await Promise.all([
+   head("Taghvim-dev/engine"),head("Taghvim-dev/landing"),
+   head("Taghvim-dev/SDK"),head("Taghvim-dev/CLI"),
+   head("Taghvim-dev/cookbooks"),head(ROOT)
  ]);
- if(sdkStill!==sdk||cookbookStill!==cookbooks||engineStill!==engine||
-    landingStill!==landing||rootStill!==root)
-   return {status:"RACED_BEFORE_ATOMIC_PR",writes:0};
+ if(engineStill!==engine||landingStill!==landing||
+    sdkStill!==sdk||cliStill!==cli||cookbookStill!==cookbooks||rootStill!==root)
+   return {status:"RACED_BEFORE_ATOMIC_PR",writes:0,ga_approved:false};
  await gh("/repos/"+ROOT+"/git/refs/heads/"+branch,"PATCH",{sha:proposed.sha,force:false});
  // The request is only reviewable source; it never deploys or changes GA.
  const pr=await gh("/repos/"+ROOT+"/pulls","POST",{
-  title:"reconcile(T0): public SDK and Cookbook SHA-pinned source",
+  title:"reconcile(T0): public SDK CLI Cookbook SHA-pinned source",
   head:branch,base:"main",draft:false,
-  body:"Source-only coordinated release candidate. SDK "+sdk+" (successful main CI "+sdkCi+
-   "), Cookbooks "+cookbooks+" (successful main CI "+cookbooksCi+
-   "), exact pinned SDK source. NO_GA, no Cloudflare writes. Independent PR review, central CI and protected Sandbox→Production remain mandatory."
+  body:"Source-only coordinated release candidate. SDK "+sdk+" (verified main CI "+sdkCi+
+   "), CLI "+cli+" (verified main CI "+cliCi+
+   "), Cookbooks "+cookbooks+" (verified main CI "+cookbooksCi+
+   "), exact matching public OpenAPI blob; independently fresh Engine and Landing private main refs. NO_GA, no Cloudflare write."
  });
- return {status:"CREATED_REVIEWABLE_SOURCE_PR",pr:pr.number,branch_reused:!!exact.length,git_commits:1,files:2,sdk,cookbooks};
+ return {status:"CREATED_REVIEWABLE_SOURCE_PR",pr:pr.number,branch_reused:!!exact.length,
+  git_commits:1,files:files.length,index_reconciled:indexDrift,sdk,cli,cookbooks};
 }
 if(process.argv[1]===fileURLToPath(import.meta.url))
  reconcilePublicWidget().then(x=>console.log("T0_PUBLIC_WIDGET_RECONCILE",JSON.stringify(x)))

@@ -93,7 +93,12 @@ test("latest independent Cloudflare Worker production receipts are durable, scop
  assert.equal(both.status,"DEPLOYED_EARLY_ACCESS_NO_GA");
  assert.equal(both.contract_version,"2.1.0");
  assert.equal(both.canonical_operation_count,47);
- assert.equal(both.openapi_git_blob_sha,pub.openapi_source_git_blob_sha);
+ // A sealed October deployment must retain its own source blob, even
+ // after a later canonical SDK/CLI/Cookbook operation-index migration.
+ // Joining historical runtime and current source hashes is post-facto drift.
+ assert.equal(both.openapi_git_blob_sha,"9e918c1f60db6984f2dffd9095aa6f4c361973af");
+ assert.match(pub.openapi_source_git_blob_sha,/^[a-f0-9]{40}$/);
+
  assert.equal(both.engine.deployed_source_sha,"30ecef261a25979fec23e26fd86ddc258c250671");
  // A sealed deployment receipt MUST NOT drift whenever a newer main is reviewed.
  // Deployment-time controller/landing identities are historical immutable evidence;

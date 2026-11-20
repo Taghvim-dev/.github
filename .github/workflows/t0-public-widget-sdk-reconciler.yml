@@ -1,6 +1,15 @@
 # No Cloudflare credential, PR checkout, or automatic Production mutation.
 name: t0-public-widget-sdk-reconciler
 on:
+  push:
+    branches: [main]
+    paths:
+      - 'release/CANONICAL-SOURCE-COHORT.json'
+      - 'release/PUBLIC-RELEASE-MATRIX.json'
+      - 'release/T0-CONTROL-MATRIX.json'
+      - 'scripts/reconcile-public-widget.mjs'
+      - 'scripts/reconcile-source-cohort.mjs'
+      - '.github/workflows/t0-public-widget-sdk-reconciler.yml'
   schedule:
     - cron: '23 */6 * * *'
   workflow_dispatch:
@@ -28,7 +37,8 @@ jobs:
       - name: Reconcile exact current public main SHAs only after successful release CI
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # Optional fine-grained READ-ONLY authority for the two private
-          # source repos. Never store Cloudflare tokens in this public CI.
+          # A Cohort proves snapshot consistency only. Fresh private HEAD
+          # checks are required before creating ANY public source PR.
+          # Scoped read-only Engine/Landing GitHub App token; not for deploy.
           TAGHVIM_PRIVATE_SOURCE_READ_TOKEN: ${{ secrets.TAGHVIM_PRIVATE_SOURCE_READ_TOKEN }}
         run: node scripts/reconcile-public-widget.mjs

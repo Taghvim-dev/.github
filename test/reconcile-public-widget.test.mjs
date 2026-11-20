@@ -1,6 +1,6 @@
 import {test} from "node:test";
 import assert from "node:assert/strict";
-import {buildCandidate,buildCoupledCandidate,sourcesAreConsistent,canResetOrFastForwardBotBranch,privateSourceAccessDenied} from "../scripts/reconcile-public-widget.mjs";
+import {buildCandidate,buildCoupledCandidate,sourcesAreConsistent,canResetOrFastForwardBotBranch,attestPrivateSourceCohort} from "../scripts/reconcile-public-widget.mjs";
 const a="a".repeat(40), b="b".repeat(40),c="c".repeat(40);
 function matrix(){return {
  state:"PREVIEW",general_availability_approved:false,contract_version:"2.1.0",
@@ -48,12 +48,13 @@ function fullLedger(){
  widget_sdk_api_integration_20261023:{sdk_main_sha:a,sdk_main_ci_run:"11",cookbook_main_sha:b,cookbook_main_ci_run:"12"}};
  m.post_release_observation_20261023={
    sdk_current_source_commit:a,sdk_current_main_ci_run:"11",
+   cli_current_source_commit:c,cli_current_main_ci_run:"14",
    cookbooks_current_source_commit:b,cookbooks_current_main_ci_run:"12",
    engine_production:{source_sha:"immutable_remote_original"}
  };
  const ctrl={contract_version:"2.1.0",general_availability_approved:false,
    current_source:{engine_main_sha:a,landing_main_sha:b},
-   controls:[{id:"T0-PACKAGES-014",dependent_component_ci:{engine:"88",landing:"99",SDK:"11",cookbooks:"12"}}],
+   controls:[{id:"T0-PACKAGES-014",dependent_component_ci:{engine:"88",landing:"99",SDK:"11",CLI:"14",cookbooks:"12"}}],
    post_release_observation_20261023:structuredClone(m.post_release_observation_20261023)
  };
  return {m,ctrl};
@@ -97,6 +98,12 @@ test("interrupted bot branch may only contain two expected matrix files",()=>{
    commits:[bot,bot]}),"bot_branch_reset");
  assert.equal(canResetOrFastForwardBotBranch({status:"ahead",ahead_by:1,
    files:[{filename:".github/workflows/unsafe.yml"}],commits:[bot]}),null);
+ assert.equal(canResetOrFastForwardBotBranch({status:"ahead",ahead_by:1,
+   files:[{filename:"release/PUBLIC-RELEASE-MATRIX.json"},
+    {filename:"release/T0-CONTROL-MATRIX.json"},
+    {filename:"contracts/operation-index.json"}],
+   commits:[{...bot,commit:{message:"reconcile(t0): atomic SDK CLI Cookbook canonical source evidence"}}]}),
+  "bot_branch_reset");
 });
 
 test("one commit contains both release matrices",async()=>{
@@ -106,6 +113,11 @@ test("one commit contains both release matrices",async()=>{
  assert.ok(src.includes('parents:[root]'));
  assert.ok(src.includes('plan.registry'));
  assert.ok(src.includes('plan.controls'));
+ assert.ok(src.includes('["contracts/operation-index.json",indexes[0]]'));
+ assert.ok(src.includes('const indexDrift=JSON.stringify(centralIndex.data)!==JSON.stringify(indexes[0])'));
+ assert.ok(src.indexOf("if(!process.env.TAGHVIM_PRIVATE_SOURCE_READ_TOKEN)")<
+  src.indexOf("const files=["),"private head freshness must predate any atomic source tree write");
+
 });
 
 test("CURRENT is decided from both ledgers, not only primary SDK/Cookbook source pins",()=>{
@@ -146,29 +158,73 @@ test("SDK cookbook source mismatch blocks all coupled ledger mutation even when 
  assert.equal(p.controls,null);
 });
 
-test("scheduled public reconciler never treats missing private-source read authority as CI failure or verified GA",async()=>{
+test("central reviewed Cohort replaces an unprovisioned private-source token without bypassing T0",async()=>{
+ const {readFileSync}=await import("node:fs");
+ const read=p=>JSON.parse(readFileSync(new URL("../"+p,import.meta.url),"utf8"));
+ const cohort=read("release/CANONICAL-SOURCE-COHORT.json");
+ const release=read("release/PUBLIC-RELEASE-MATRIX.json");
+ const controls=read("release/T0-CONTROL-MATRIX.json");
+ const attested=attestPrivateSourceCohort(cohort,release,controls);
+ assert.equal(attested.status,"COHORT_PROJECTION_ONLY_NOT_PRIVATE_HEAD_VERIFIED");
+ assert.equal(attested.engine,cohort.engine.sha);
+ assert.equal(attested.landing,cohort.landing.sha);
+ assert.equal(attested.ga_approved,false);
+ assert.equal(attested.private_refs_read,false);
+});
+
+test("forged, unreviewed or stale cross-repo private Cohort always fails BEFORE a PR",async()=>{
+ const {readFileSync}=await import("node:fs");
+ const read=p=>JSON.parse(readFileSync(new URL("../"+p,import.meta.url),"utf8"));
+ const cohort=read("release/CANONICAL-SOURCE-COHORT.json");
+ const release=read("release/PUBLIC-RELEASE-MATRIX.json");
+ const controls=read("release/T0-CONTROL-MATRIX.json");
+ const copy=x=>structuredClone(x);
+ for(const kind of ["sha","ci","reviewed_sha"]){
+  const bad=copy(cohort);bad.engine[kind]=kind==="ci"?"999":"f".repeat(40);
+  assert.throws(()=>attestPrivateSourceCohort(bad,release,controls),/T0_PUBLIC_WIDGET_RECONCILE_BLOCKED/);
+ }
+ const badRelease=copy(release);badRelease.source_verification.latest_checked.engine_sha="f".repeat(40);
+ assert.throws(()=>attestPrivateSourceCohort(cohort,badRelease,controls),/T0_PUBLIC_WIDGET_RECONCILE_BLOCKED/);
+ const badControls=copy(controls);badControls.controls.find(x=>x.id==="T0-PACKAGES-014").dependent_component_ci.engine="0";
+ assert.throws(()=>attestPrivateSourceCohort(cohort,release,badControls),/T0_PUBLIC_WIDGET_RECONCILE_BLOCKED/);
+ const fraudulentGA=copy(cohort);fraudulentGA.ga_approved=true;
+ assert.throws(()=>attestPrivateSourceCohort(fraudulentGA,release,controls),/T0_PUBLIC_WIDGET_RECONCILE_BLOCKED/);
+});
+
+test("T0 cannot create a source PR without fresh private HEADs and matching SDK CLI Cookbook indices",async()=>{
  const {readFileSync}=await import("node:fs");
  const script=readFileSync(new URL("../scripts/reconcile-public-widget.mjs",import.meta.url),"utf8");
  const workflow=readFileSync(new URL("../.github/workflows/t0-public-widget-sdk-reconciler.yml",import.meta.url),"utf8");
- assert.ok(script.includes('status:"WAIT_FOR_PRIVATE_SOURCE_READ_AUTHORITY",writes:0,read_private:false,ga_approved:false'));
- assert.ok(script.includes("process.env.TAGHVIM_PRIVATE_SOURCE_READ_TOKEN"));
- assert.ok(workflow.includes("TAGHVIM_PRIVATE_SOURCE_READ_TOKEN: ${{ secrets.TAGHVIM_PRIVATE_SOURCE_READ_TOKEN }}"));
- assert.equal(false,workflow.includes("CLOUDFLARE_API_TOKEN"));
+ assert.match(script,/BLOCKED_PRIVATE_HEAD_READ_AUTHORITY/);
+ assert.match(script,/BLOCKED_PRIVATE_HEAD_DRIFT/);
+ assert.match(script,/BLOCKED_PUBLIC_CONTRACT_DRIFT/);
+ assert.ok(script.indexOf("if(!process.env.TAGHVIM_PRIVATE_SOURCE_READ_TOKEN)")<
+  script.indexOf("const pulls=await gh("),"private HEAD gate must predate any PR or branch write");
+ assert.match(script,/head\("Taghvim-dev\/engine"\),head\("Taghvim-dev\/landing"\)/);
+ assert.match(script,/head\("Taghvim-dev\/SDK"\),head\("Taghvim-dev\/CLI"\)/);
+ assert.match(script,/content\("Taghvim-dev\/CLI","contracts\/operation-index.json",cli\)/);
+ assert.ok(script.includes('const publicRepos=["Taghvim-dev/.github","Taghvim-dev/SDK","Taghvim-dev/CLI","Taghvim-dev/cookbooks"]'));
+ assert.ok(workflow.includes("TAGHVIM_PRIVATE_SOURCE_READ_TOKEN:"));
+ assert.ok(!workflow.includes("CLOUDFLARE_API_TOKEN"));
+ assert.ok(workflow.includes("  push:"));
 });
-
-test("only inaccessible scoped PRIVATE source main-ref 404 produces blocked checkpoint",()=>{
- for(const repo of ["Taghvim-dev/engine","Taghvim-dev/landing"]){
-  const msg="T0_PUBLIC_WIDGET_RECONCILE_BLOCKED: GitHub API 404 at /repos/"+repo+"/git/ref/heads/main";
-  assert.equal(privateSourceAccessDenied(new Error(msg),repo),true);
-  assert.equal(privateSourceAccessDenied(new Error("GitHub API 403"),repo),false);
-  assert.equal(privateSourceAccessDenied(new Error(msg),"Taghvim-dev/SDK"),false);
-  assert.equal(privateSourceAccessDenied(new Error("T0_PUBLIC_WIDGET_RECONCILE_BLOCKED: GitHub API 404 at /repos/Taghvim-dev/SDK/git/ref/heads/main"),repo),false);
- }
-});
-test("no mutable release candidate or false GA when scoped private source cannot be read",async()=>{
- const {readFileSync}=await import("node:fs");
- const source=readFileSync(new URL("../scripts/reconcile-public-widget.mjs",import.meta.url),"utf8");
- assert.ok(source.includes('return {status:"WAIT_FOR_PRIVATE_SOURCE_ACCESS",writes:0,ga_approved:false'));
- assert.ok(source.indexOf('WAIT_FOR_PRIVATE_SOURCE_ACCESS')<source.indexOf('buildCoupledCandidate(canonical.data,control.data'));
- assert.ok(source.includes('headPrivate("Taghvim-dev/engine"),headPrivate("Taghvim-dev/landing")'));
+test("CLI and source OpenAPI contract drift reconcile atomically without touching private historical receipts",()=>{
+ const {m,ctrl}=fullLedger();
+ m.openapi_source_git_blob_sha="a".repeat(40);
+ m.required_public_operation_count=47;
+ const p=buildCoupledCandidate(m,ctrl,{
+  sdk:a,sdkCi:11,cli:c,cliCi:55,cookbooks:b,cookbooksCi:12,
+  cookbooksSdkPin:a,contractBlob:"b".repeat(40),publicOps:56
+ });
+ assert.equal(p.status,"PR_REQUIRED");
+ assert.equal(p.registry.openapi_source_git_blob_sha,"b".repeat(40));
+ assert.equal(p.registry.required_public_operation_count,56);
+ assert.equal(p.registry.package_identity.CLI.ci,"55");
+ assert.equal(p.registry.post_release_observation_20261023.cli_current_main_ci_run,"55");
+ assert.equal(p.controls.post_release_observation_20261023.cli_current_main_ci_run,"55");
+ assert.equal(p.controls.controls[0].dependent_component_ci.CLI,"55");
+ assert.deepEqual(p.registry.post_release_observation_20261023.engine_production,
+  m.post_release_observation_20261023.engine_production);
+ assert.equal(m.openapi_source_git_blob_sha,"a".repeat(40));
+ assert.equal(m.general_availability_approved,false);
 });
