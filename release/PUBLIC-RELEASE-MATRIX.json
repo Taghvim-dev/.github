@@ -45,7 +45,7 @@
   "source_verification": {
     "date": "2026-11-20",
     "phase": "source-integrated-not-deployed",
-    "engine_main_merge_sha": "2cc96b36cdab28c61a6620c8974f0b2d83bdac8c",
+    "engine_main_merge_sha": "8764e738c9404d262a0138bc2c1795a3afa92258",
     "engine_offline_ci_run": "40195989813",
     "engine_live_gate_ci_run": "39439068311",
     "landing_main_merge_sha": "1f2bed752ccd6dcd8f24d59c94a183fbda653e84",
@@ -149,8 +149,8 @@
     },
     "latest_checked": {
       "date": "2026-11-20",
-      "engine_sha": "2cc96b36cdab28c61a6620c8974f0b2d83bdac8c",
-      "engine_ci": "44823831903",
+      "engine_sha": "8764e738c9404d262a0138bc2c1795a3afa92258",
+      "engine_ci": "44831224936",
       "landing_sha": "1f2bed752ccd6dcd8f24d59c94a183fbda653e84",
       "landing_ci": "44823841167",
       "shared_release_actions_sha": "c195c8bfde573b6195bd1b3bd00e3535accc9040",
@@ -212,9 +212,9 @@
       "policy_main_sha": "f3bc8d18c5c31fd1125dd4da4887c86b9e3f8447",
       "policy_pr": "Taghvim-dev/.github PR #47",
       "policy_test_run": "39691890610",
-      "engine_main_sha": "2cc96b36cdab28c61a6620c8974f0b2d83bdac8c",
-      "engine_reviewed_head": "cbc4385be0267ad20f574a4f17c36a416caaf86c",
-      "engine_ci_run": "44823831903",
+      "engine_main_sha": "8764e738c9404d262a0138bc2c1795a3afa92258",
+      "engine_reviewed_head": "ffd6f2bff74a6d53da483c2a61f403a928a31548",
+      "engine_ci_run": "44831224936",
       "landing_main_sha": "1f2bed752ccd6dcd8f24d59c94a183fbda653e84",
       "landing_reviewed_head": "ad3f347f3b3058478940e35415ed1b1530a590b8",
       "landing_ci_run": "44823841167",
@@ -814,10 +814,10 @@
     "source_only": true,
     "remote_runtime_attested": false,
     "engine": {
-      "commit": "2cc96b36cdab28c61a6620c8974f0b2d83bdac8c",
+      "commit": "8764e738c9404d262a0138bc2c1795a3afa92258",
       "package": "2.1.0",
       "lock": "2.1.0",
-      "ci": "44823831903"
+      "ci": "44831224936"
     },
     "landing": {
       "commit": "1f2bed752ccd6dcd8f24d59c94a183fbda653e84",
