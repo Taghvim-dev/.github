@@ -48,12 +48,13 @@ function fullLedger(){
  widget_sdk_api_integration_20261023:{sdk_main_sha:a,sdk_main_ci_run:"11",cookbook_main_sha:b,cookbook_main_ci_run:"12"}};
  m.post_release_observation_20261023={
    sdk_current_source_commit:a,sdk_current_main_ci_run:"11",
+   cli_current_source_commit:c,cli_current_main_ci_run:"14",
    cookbooks_current_source_commit:b,cookbooks_current_main_ci_run:"12",
    engine_production:{source_sha:"immutable_remote_original"}
  };
  const ctrl={contract_version:"2.1.0",general_availability_approved:false,
    current_source:{engine_main_sha:a,landing_main_sha:b},
-   controls:[{id:"T0-PACKAGES-014",dependent_component_ci:{engine:"88",landing:"99",SDK:"11",cookbooks:"12"}}],
+   controls:[{id:"T0-PACKAGES-014",dependent_component_ci:{engine:"88",landing:"99",SDK:"11",CLI:"14",cookbooks:"12"}}],
    post_release_observation_20261023:structuredClone(m.post_release_observation_20261023)
  };
  return {m,ctrl};
@@ -153,7 +154,7 @@ test("central reviewed Cohort replaces an unprovisioned private-source token wit
  const release=read("release/PUBLIC-RELEASE-MATRIX.json");
  const controls=read("release/T0-CONTROL-MATRIX.json");
  const attested=attestPrivateSourceCohort(cohort,release,controls);
- assert.equal(attested.status,"ATTESTED_CANONICAL_COHORT");
+ assert.equal(attested.status,"COHORT_PROJECTION_ONLY_NOT_PRIVATE_HEAD_VERIFIED");
  assert.equal(attested.engine,cohort.engine.sha);
  assert.equal(attested.landing,cohort.landing.sha);
  assert.equal(attested.ga_approved,false);
@@ -179,20 +180,40 @@ test("forged, unreviewed or stale cross-repo private Cohort always fails BEFORE 
  assert.throws(()=>attestPrivateSourceCohort(fraudulentGA,release,controls),/T0_PUBLIC_WIDGET_RECONCILE_BLOCKED/);
 });
 
-test("source transport never needs a second long-lived private token or Cloudflare secret",async()=>{
+test("T0 cannot create a source PR without fresh private HEADs and matching SDK CLI Cookbook indices",async()=>{
  const {readFileSync}=await import("node:fs");
  const script=readFileSync(new URL("../scripts/reconcile-public-widget.mjs",import.meta.url),"utf8");
  const workflow=readFileSync(new URL("../.github/workflows/t0-public-widget-sdk-reconciler.yml",import.meta.url),"utf8");
- assert.match(script,/attestPrivateSourceCohort\(cohort\.data,canonical\.data,control\.data\)/);
- assert.match(script,/content\(ROOT,"release\/CANONICAL-SOURCE-COHORT\.json",root\)/);
- assert.ok(!script.includes("headPrivate("));
- assert.ok(!script.includes("WAIT_FOR_PRIVATE_SOURCE_READ_AUTHORITY"));
- assert.ok(!script.includes("TAGHVIM_PRIVATE_SOURCE_READ_TOKEN"));
- assert.ok(script.includes('const allowed=["Taghvim-dev/.github","Taghvim-dev/SDK","Taghvim-dev/cookbooks"]'));
- assert.ok(!workflow.includes("TAGHVIM_PRIVATE_SOURCE_READ_TOKEN"));
+ assert.match(script,/BLOCKED_PRIVATE_HEAD_READ_AUTHORITY/);
+ assert.match(script,/BLOCKED_PRIVATE_HEAD_DRIFT/);
+ assert.match(script,/BLOCKED_PUBLIC_CONTRACT_DRIFT/);
+ assert.ok(script.indexOf("if(!process.env.TAGHVIM_PRIVATE_SOURCE_READ_TOKEN)")<
+  script.indexOf("const pulls=await gh("),"private HEAD gate must predate any PR or branch write");
+ assert.match(script,/head\("Taghvim-dev\/engine"\),head\("Taghvim-dev\/landing"\)/);
+ assert.match(script,/head\("Taghvim-dev\/SDK"\),head\("Taghvim-dev\/CLI"\)/);
+ assert.match(script,/content\("Taghvim-dev\/CLI","contracts\/operation-index.json",cli\)/);
+ assert.ok(script.includes('const publicRepos=["Taghvim-dev/.github","Taghvim-dev/SDK","Taghvim-dev/CLI","Taghvim-dev/cookbooks"]'));
+ assert.ok(workflow.includes("TAGHVIM_PRIVATE_SOURCE_READ_TOKEN:"));
  assert.ok(!workflow.includes("CLOUDFLARE_API_TOKEN"));
  assert.ok(workflow.includes("  push:"));
- assert.ok(workflow.includes("    branches: [main]"));
- assert.ok(workflow.includes("'release/CANONICAL-SOURCE-COHORT.json'"));
-
+});
+test("CLI and source OpenAPI contract drift reconcile atomically without touching private historical receipts",()=>{
+ const {m,ctrl}=fullLedger();
+ m.openapi_source_git_blob_sha="a".repeat(40);
+ m.required_public_operation_count=47;
+ const p=buildCoupledCandidate(m,ctrl,{
+  sdk:a,sdkCi:11,cli:c,cliCi:55,cookbooks:b,cookbooksCi:12,
+  cookbooksSdkPin:a,contractBlob:"b".repeat(40),publicOps:56
+ });
+ assert.equal(p.status,"PR_REQUIRED");
+ assert.equal(p.registry.openapi_source_git_blob_sha,"b".repeat(40));
+ assert.equal(p.registry.required_public_operation_count,56);
+ assert.equal(p.registry.package_identity.CLI.ci,"55");
+ assert.equal(p.registry.post_release_observation_20261023.cli_current_main_ci_run,"55");
+ assert.equal(p.controls.post_release_observation_20261023.cli_current_main_ci_run,"55");
+ assert.equal(p.controls.controls[0].dependent_component_ci.CLI,"55");
+ assert.deepEqual(p.registry.post_release_observation_20261023.engine_production,
+  m.post_release_observation_20261023.engine_production);
+ assert.equal(m.openapi_source_git_blob_sha,"a".repeat(40));
+ assert.equal(m.general_availability_approved,false);
 });

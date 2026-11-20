@@ -37,6 +37,8 @@ jobs:
       - name: Reconcile exact current public main SHAs only after successful release CI
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # Private Engine/Landing are authenticated via central canonical Cohort.
-          # No cross-repo private token or Cloudflare credential in public CI.
+          # A Cohort proves snapshot consistency only. Fresh private HEAD
+          # checks are required before creating ANY public source PR.
+          # Scoped read-only Engine/Landing GitHub App token; not for deploy.
+          TAGHVIM_PRIVATE_SOURCE_READ_TOKEN: ${{ secrets.TAGHVIM_PRIVATE_SOURCE_READ_TOKEN }}
         run: node scripts/reconcile-public-widget.mjs
