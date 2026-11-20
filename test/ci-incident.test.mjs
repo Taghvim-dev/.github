@@ -182,8 +182,8 @@ test("T0 six-repository polling cutover is SHA-bound, source-complete and nonrec
  assert.equal(reg.event_admission.mode,"schedule_poll_current_main_and_open_pr_heads");
  assert.equal(reg.event_admission.rollout_state,"SCHEDULED_CANONICAL_ALL_SIX");
  assert.deepEqual(reg.event_admission.poll_incident_outcomes,reg.outcomes.incident);
- assert.match(wf,/cron: '13 \\*\\/3 \\* \\* \\*'/);
- assert.doesNotMatch(wf,/workflow_run:|pull_request_target:|actions\\/checkout/);
+ assert.ok(wf.includes("cron: '13 */3 * * *'"));
+ for(const forbidden of ["workflow_run:","pull_request_target:","actions/checkout"])assert.ok(!wf.includes(forbidden));
  assert.match(wf,/workflow_dispatch:/);
  assert.match(wf,/ci-incident@b13c7fcdc14c7747b727c7ee2b66f8ef9dbf0f3b/);
  assert.equal(proof.controller_sha,reg.event_admission.all_repo_adapters_sha);
