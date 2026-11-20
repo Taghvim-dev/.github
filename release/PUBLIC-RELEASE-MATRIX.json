@@ -48,7 +48,7 @@
     "engine_main_merge_sha": "d41a5def84d648c98f7af4fda02bcc26303c8c62",
     "engine_offline_ci_run": "40195989813",
     "engine_live_gate_ci_run": "39439068311",
-    "landing_main_merge_sha": "1f2bed752ccd6dcd8f24d59c94a183fbda653e84",
+    "landing_main_merge_sha": "1b6b08f8460d1327a3b186aa0ce20323d9662b24",
     "landing_integration_merge_sha": "e380b5f3553b98faf35adeccd9f6a25440a778a4",
     "landing_integration_ci_run": "39774645927",
     "landing_rtl_ci_run": "40133550240",
@@ -151,8 +151,8 @@
       "date": "2026-11-20",
       "engine_sha": "d41a5def84d648c98f7af4fda02bcc26303c8c62",
       "engine_ci": "44836113373",
-      "landing_sha": "1f2bed752ccd6dcd8f24d59c94a183fbda653e84",
-      "landing_ci": "44823841167",
+      "landing_sha": "1b6b08f8460d1327a3b186aa0ce20323d9662b24",
+      "landing_ci": "44838633515",
       "shared_release_actions_sha": "c195c8bfde573b6195bd1b3bd00e3535accc9040",
       "vendored_engine_files_matched": 11,
       "sandbox_to_production_status": "NO_GO",
@@ -215,9 +215,9 @@
       "engine_main_sha": "d41a5def84d648c98f7af4fda02bcc26303c8c62",
       "engine_reviewed_head": "574298ca54df4cebfaa7377b7d087811e50877ca",
       "engine_ci_run": "44836113373",
-      "landing_main_sha": "1f2bed752ccd6dcd8f24d59c94a183fbda653e84",
-      "landing_reviewed_head": "ad3f347f3b3058478940e35415ed1b1530a590b8",
-      "landing_ci_run": "44823841167",
+      "landing_main_sha": "1b6b08f8460d1327a3b186aa0ce20323d9662b24",
+      "landing_reviewed_head": "e218ace55e325ebb34e5f285ddad0627f52a43ca",
+      "landing_ci_run": "44838633515",
       "admission_scope": "MUTATION_BLOCKING_SOURCE_ONLY",
       "runtime_cloudflare_gate": "ENGINE_AND_LANDING_PRODUCTION_VERIFIED_EARLY_ACCESS_NO_GA",
       "cross_repo_immutable_ref": true,
@@ -820,10 +820,10 @@
       "ci": "44836113373"
     },
     "landing": {
-      "commit": "1f2bed752ccd6dcd8f24d59c94a183fbda653e84",
+      "commit": "1b6b08f8460d1327a3b186aa0ce20323d9662b24",
       "package": "2.1.0",
       "lock": "2.1.0",
-      "ci": "44823841167"
+      "ci": "44838633515"
     },
     "SDK": {
       "commit": "bbba18ac5b5416b3df8d9ff553483392d684d07e",
