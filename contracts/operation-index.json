@@ -1,10 +1,7 @@
 {
   "schemaVersion": 1,
   "contractVersion": "2.1.0",
-  "openApiGitBlobSHA": "9e918c1f60db6984f2dffd9095aa6f4c361973af",
-  "sourceCommit": "ac03f48edf54bfc09968575621fe093c2187bfc2",
-  "generatedAt": "2026-10-24",
-  "status": "preview",
+  "openApiGitBlobSHA": "2a895c456c633f7a325c49152bd6f251bc8108a1",
   "operations": [
     {
       "method": "GET",
@@ -366,6 +363,72 @@
       "method": "POST",
       "path": "/v1/connectors/payment/manifests/validate",
       "operationId": "validateAdapterManifest",
+      "auth": []
+    },
+    {
+      "method": "GET",
+      "path": "/v1/workspaces/current",
+      "operationId": "getCurrentWorkspace",
+      "auth": [
+        "ApiKey"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/v1/calendars",
+      "operationId": "createCalendar",
+      "auth": [
+        "ApiKey"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/calendars/{calendar_id}",
+      "operationId": "getCalendar",
+      "auth": [
+        "ApiKey"
+      ]
+    },
+    {
+      "method": "PATCH",
+      "path": "/v1/calendars/{calendar_id}",
+      "operationId": "updateCalendar",
+      "auth": [
+        "ApiKey"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/v1/calendars/{calendar_id}/publish",
+      "operationId": "publishCalendar",
+      "auth": [
+        "ApiKey"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/v1/calendars/{calendar_id}/unpublish",
+      "operationId": "unpublishCalendar",
+      "auth": [
+        "ApiKey"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/public/calendars/{calendar_id}",
+      "operationId": "getPublicCalendar",
+      "auth": []
+    },
+    {
+      "method": "GET",
+      "path": "/v1/public/calendars/{calendar_id}/ics",
+      "operationId": "getPublicCalendarIcs",
+      "auth": []
+    },
+    {
+      "method": "GET",
+      "path": "/v1/public/calendar-search",
+      "operationId": "searchPublicCalendarEvents",
       "auth": []
     }
   ]
