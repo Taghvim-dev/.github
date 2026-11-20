@@ -45,7 +45,7 @@
   "source_verification": {
     "date": "2026-11-20",
     "phase": "source-integrated-not-deployed",
-    "engine_main_merge_sha": "821c807548f2e5e5c6ba65ca1f1624da29504afe",
+    "engine_main_merge_sha": "d2eabfeb084148840cbcc77d5f76f5718693e97d",
     "engine_offline_ci_run": "40195989813",
     "engine_live_gate_ci_run": "39439068311",
     "landing_main_merge_sha": "287239ce4b5f02432d3cc1d6d28d046d27e6b083",
@@ -149,8 +149,8 @@
     },
     "latest_checked": {
       "date": "2026-11-20",
-      "engine_sha": "821c807548f2e5e5c6ba65ca1f1624da29504afe",
-      "engine_ci": "44791136017",
+      "engine_sha": "d2eabfeb084148840cbcc77d5f76f5718693e97d",
+      "engine_ci": "44816979908",
       "landing_sha": "287239ce4b5f02432d3cc1d6d28d046d27e6b083",
       "landing_ci": "44629136875",
       "shared_release_actions_sha": "c195c8bfde573b6195bd1b3bd00e3535accc9040",
@@ -212,9 +212,9 @@
       "policy_main_sha": "f3bc8d18c5c31fd1125dd4da4887c86b9e3f8447",
       "policy_pr": "Taghvim-dev/.github PR #47",
       "policy_test_run": "39691890610",
-      "engine_main_sha": "821c807548f2e5e5c6ba65ca1f1624da29504afe",
-      "engine_reviewed_head": "b7248f7ae9b7725ca98a1a947d45e33bbe02820f",
-      "engine_ci_run": "44791136017",
+      "engine_main_sha": "d2eabfeb084148840cbcc77d5f76f5718693e97d",
+      "engine_reviewed_head": "f997b1d54736dd593e53bda792cbb357cfc030f7",
+      "engine_ci_run": "44816979908",
       "landing_main_sha": "287239ce4b5f02432d3cc1d6d28d046d27e6b083",
       "landing_reviewed_head": "287239ce4b5f02432d3cc1d6d28d046d27e6b083",
       "landing_ci_run": "44629136875",
@@ -811,10 +811,10 @@
     "source_only": true,
     "remote_runtime_attested": false,
     "engine": {
-      "commit": "821c807548f2e5e5c6ba65ca1f1624da29504afe",
+      "commit": "d2eabfeb084148840cbcc77d5f76f5718693e97d",
       "package": "2.1.0",
       "lock": "2.1.0",
-      "ci": "44791136017"
+      "ci": "44816979908"
     },
     "landing": {
       "commit": "287239ce4b5f02432d3cc1d6d28d046d27e6b083",
