@@ -41,3 +41,11 @@ test("T0 one-source cohort rejects tampered main, CI, reviewed SHA, or derived p
  wrong.general_availability_approved=true;
  assert.throws(()=>projectSourceCohort(cohort,wrong,controls),/T0_COHORT_BLOCKED/);
 });
+
+test("T0 source cohort workflow discovers every cohort-contract test in both PR and main",()=>{
+ const workflow=readFileSync(new URL("../.github/workflows/coordinated-public-release.yml",import.meta.url),"utf8");
+ const trigger='      - "test/*source-cohort*.test.mjs"';
+ assert.equal(workflow.split(trigger).length-1,2,"Both PR and main trigger must subscribe to all cohort tests");
+ assert.match(workflow,/node --test test\/\*source-cohort\*\.test\.mjs/,"Release gate must execute all cohort tests, never only a historical fixture");
+ assert.ok(!workflow.includes('node --test test/canonical-source-cohort.test.mjs'),"A fixed path can silently skip future T0 tests");
+});
