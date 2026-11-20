@@ -111,8 +111,10 @@ test("one commit contains both release matrices",async()=>{
  const src=readFileSync(new URL("../scripts/reconcile-public-widget.mjs",import.meta.url),"utf8");
  assert.ok(src.includes('base_tree:base.tree.sha'));
  assert.ok(src.includes('parents:[root]'));
- assert.ok(src.includes('plan.registry'));
- assert.ok(src.includes('plan.controls'));
+ assert.ok(src.includes('plan.registry??canonical.data'));
+ assert.ok(src.includes('projectSourceCohort(nextSource'));
+ assert.ok(src.includes('["release/CANONICAL-SOURCE-COHORT.json",nextSource]'));
+ assert.ok(src.includes('plan.controls??control.data'));
  assert.ok(src.includes('["contracts/operation-index.json",indexes[0]]'));
  assert.ok(src.includes('const indexDrift=JSON.stringify(centralIndex.data)!==JSON.stringify(indexes[0])'));
  assert.ok(src.indexOf("if(!process.env.TAGHVIM_PRIVATE_SOURCE_READ_TOKEN)")<
@@ -227,4 +229,14 @@ test("CLI and source OpenAPI contract drift reconcile atomically without touchin
   m.post_release_observation_20261023.engine_production);
  assert.equal(m.openapi_source_git_blob_sha,"a".repeat(40));
  assert.equal(m.general_availability_approved,false);
+});
+
+test("T0 release source reconciler updates cohort + projections + optional OpenAPI in one commit",async()=>{
+ const {readFileSync}=await import("node:fs");
+ const s=readFileSync(new URL("../scripts/reconcile-public-widget.mjs",import.meta.url),"utf8");
+ for(const path of ["release/CANONICAL-SOURCE-COHORT.json","release/PUBLIC-RELEASE-MATRIX.json",
+  "release/T0-CONTROL-MATRIX.json","contracts/operation-index.json"])
+  assert.ok(s.includes(path));
+ assert.ok(s.indexOf("const [engineNow,landingNow")<s.indexOf("const files=["));
+ assert.match(s,/BLOCKED_PRIVATE_HEAD_DRIFT/);
 });
