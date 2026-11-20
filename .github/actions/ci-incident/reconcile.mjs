@@ -288,14 +288,29 @@ export async function reconcileCurrentHeads(){
  if(!/^[a-f0-9]{40}$/.test(mainSha||""))throw Error("CI_INCIDENT_MAIN_HEAD_UNVERIFIED");
  const prs=await api("/repos/"+repo+"/pulls?state=open&per_page=100");
  if(!Array.isArray(prs)||prs.length===100)throw Error("CI_INCIDENT_PR_INVENTORY_TRUNCATED");
+ // GitHub supports an exact head_sha filter on the workflow-runs API. A
+ // repository-wide history scan can saturate a page cap forever, even if
+ // today's source is healthy. Query ONLY currently authoritative SHA heads.
+ const allowedHeads=[mainSha,...new Set(prs.filter(pr=>pr.state==="open"&&
+   pr.head?.repo?.full_name===repo&&/^[a-f0-9]{40}$/.test(pr.head?.sha||""))
+    .map(pr=>pr.head.sha).filter(sha=>sha!==mainSha))];
  const rows=[],pages=CONTROL.event_admission.max_run_pages;
- if(!Number.isInteger(pages)||pages<1||pages>5)throw Error("CI_INCIDENT_SCAN_BUDGET_UNVERIFIED");
- for(let page=1;page<=pages;page++){
-  const x=await api("/repos/"+repo+"/actions/runs?per_page=100&page="+page);
-  if(!Array.isArray(x?.workflow_runs))throw Error("CI_INCIDENT_RUN_INVENTORY_INVALID");
-  rows.push(...x.workflow_runs);
-  if(x.workflow_runs.length<100)break;
-  if(page===pages)throw Error("CI_INCIDENT_RUN_INVENTORY_TRUNCATED");
+ if(!Number.isInteger(pages)||pages<1||pages>10)throw Error("CI_INCIDENT_SCAN_BUDGET_UNVERIFIED");
+ for(const sha of allowedHeads){
+  const segment=[];
+  for(let page=1;page<=pages;page++){
+   const x=await api("/repos/"+repo+"/actions/runs?head_sha="+sha+"&per_page=100&page="+page);
+   if(!Array.isArray(x?.workflow_runs)||!Number.isInteger(x.total_count))
+    throw Error("CI_INCIDENT_RUN_INVENTORY_INVALID");
+   // Fail closed before any mutation if GitHub ignores the filter or if
+   // the currently active SHA truly exceeds the bounded complete scan.
+   if(x.workflow_runs.some(run=>run.head_sha!==sha))
+    throw Error("CI_INCIDENT_SHA_FILTER_UNTRUSTED");
+   segment.push(...x.workflow_runs);
+   if(x.total_count<=segment.length)break;
+   if(page===pages)throw Error("CI_INCIDENT_CURRENT_SHA_RUNS_TRUNCATED");
+  }
+  rows.push(...segment);
  }
  const plan=planCurrentHeadRuns({runs:rows,mainSha,openPulls:prs,repository:repo});
  const decisions=[];

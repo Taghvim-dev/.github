@@ -141,7 +141,9 @@ test("T0 all issue writes follow a bounded complete current-SHA snapshot",async(
  const s=readFileSync(new URL("../.github/actions/ci-incident/reconcile.mjs",import.meta.url),"utf8");
  assert.match(s,/const plan=planCurrentHeadRuns/);
  assert.ok(s.indexOf("const plan=planCurrentHeadRuns")<s.indexOf("for(const run of plan)"));
- assert.match(s,/CI_INCIDENT_RUN_INVENTORY_TRUNCATED/);
+ assert.match(s,/CI_INCIDENT_CURRENT_SHA_RUNS_TRUNCATED/);
+ assert.match(s,/actions\/runs\?head_sha=/);
+ assert.match(s,/CI_INCIDENT_SHA_FILTER_UNTRUSTED/);
  assert.match(s,/CI_INCIDENT_PR_INVENTORY_TRUNCATED/);
  assert.match(s,/T0_CURRENT_HEAD_RECONCILED/);
  assert.doesNotMatch(s,/shouldSweepAfterGreenMainRun/);
@@ -160,15 +162,17 @@ test("T0 durable recovery must independently prove same current SHA, same event/
  for(const bad of [{head_sha:"aa".repeat(20)},{head_branch:"other"},{workflow_id:99},{event:"pull_request"},{run_number:17},{status:"in_progress"},{conclusion:"skipped"}])
    assert.equal(newerCurrentGreenCloses({failed,run:{...green,...bad},currentSha:run.head_sha}),false,JSON.stringify(bad));
 });
-test("T0 observer scans current source on schedule without recursive job fanout",async()=>{
+test("T0 blue-green observer rollout keeps old event observer active until all adapters pin new source",async()=>{
  const {readFileSync}=await import("node:fs");
  const reg=JSON.parse(readFileSync(new URL("../release/CI-CONTROL-REGISTRY.json",import.meta.url),"utf8"));
  const workflow=readFileSync(new URL("../.github/workflows/t0-ci-incident.yml",import.meta.url),"utf8");
  assert.equal(reg.event_admission.mode,"schedule_poll_current_main_and_open_pr_heads");
+ assert.equal(reg.event_admission.rollout_state,"SOURCE_PREPARED_LEGACY_ADAPTER_RUNNING");
  assert.deepEqual(reg.event_admission.poll_incident_outcomes,reg.outcomes.incident);
- assert.ok(workflow.includes("cron: '"+reg.event_admission.sweep_cron+"'"));
- assert.doesNotMatch(workflow,/workflow_run:|pull_request_target:|actions\/checkout/);
- assert.match(workflow,/workflow_dispatch:/);
+ assert.ok(workflow.includes("cron: '13 */6 * * *'"));
+ assert.match(workflow,/workflow_run:/);
+ assert.match(workflow,/ci-incident@a2d99736b6ad37a31e4cf6c3887f3c18c044d8c7/);
+ assert.doesNotMatch(workflow,/pull_request_target:|actions\/checkout/);
 });
 test("T0 complete observer inventory forbids unmonitored product actions and false GA auth success",async()=>{
  const fs=await import("node:fs");
@@ -181,9 +185,10 @@ test("T0 complete observer inventory forbids unmonitored product actions and fal
   .filter(x=>x!=="t0-ci-incident-reconciler");
  assert.deepEqual([...CONTROL.monitored_repositories["Taghvim-dev/.github"]].sort(),localWorkflows.sort());
  const observer=fs.readFileSync(new URL("../.github/workflows/t0-ci-incident.yml",import.meta.url),"utf8");
- assert.doesNotMatch(observer,/workflow_run:/);
+ assert.match(observer,/workflow_run:/);
  assert.match(observer,/schedule:/);
  assert.match(observer,/workflow_dispatch:/);
+ assert.equal(CONTROL.event_admission.rollout_state,"SOURCE_PREPARED_LEGACY_ADAPTER_RUNNING");
  assert.ok(!CONTROL.monitored_repositories["Taghvim-dev/.github"].includes("t0-ci-incident-reconciler"));
  for(const [repo,names] of Object.entries({
   "Taghvim-dev/engine":["public-api-release-observation","t0-private-landing-source-readonly-probe",
