@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "kind": "taghvim.t0.universal_incident_observer.cutover",
+  "authority": "Taghvim-dev/.github",
+  "mode": "canonical_source_head_scan_only",
+  "controller_sha": "b13c7fcdc14c7747b727c7ee2b66f8ef9dbf0f3b",
+  "trigger": "schedule_and_owner_dispatch",
+  "source_guard": "only_current_main_and_open_pr_sha",
+  "reviewed_controller_pr": 217,
+  "adapters": [
+    {
+      "repository": "Taghvim-dev/engine",
+      "head_sha_at_preflight": "2cc96b36cdab28c61a6620c8974f0b2d83bdac8c",
+      "pin": "b13c7fcdc14c7747b727c7ee2b66f8ef9dbf0f3b",
+      "trigger": "schedule_or_owner_dispatch_only"
+    },
+    {
+      "repository": "Taghvim-dev/landing",
+      "head_sha_at_preflight": "1f2bed752ccd6dcd8f24d59c94a183fbda653e84",
+      "pin": "b13c7fcdc14c7747b727c7ee2b66f8ef9dbf0f3b",
+      "trigger": "schedule_or_owner_dispatch_only"
+    },
+    {
+      "repository": "Taghvim-dev/SDK",
+      "head_sha_at_preflight": "bbba18ac5b5416b3df8d9ff553483392d684d07e",
+      "pin": "b13c7fcdc14c7747b727c7ee2b66f8ef9dbf0f3b",
+      "trigger": "schedule_or_owner_dispatch_only"
+    },
+    {
+      "repository": "Taghvim-dev/CLI",
+      "head_sha_at_preflight": "40df61d6c5d5c8a38511372c755f1ad6f9b57e3d",
+      "pin": "b13c7fcdc14c7747b727c7ee2b66f8ef9dbf0f3b",
+      "trigger": "schedule_or_owner_dispatch_only"
+    },
+    {
+      "repository": "Taghvim-dev/cookbooks",
+      "head_sha_at_preflight": "854d63d080fa47c53c70a08705bd32021f8b245d",
+      "pin": "b13c7fcdc14c7747b727c7ee2b66f8ef9dbf0f3b",
+      "trigger": "schedule_or_owner_dispatch_only"
+    },
+    {
+      "repository": "Taghvim-dev/.github",
+      "head_sha_at_preflight": "b13c7fcdc14c7747b727c7ee2b66f8ef9dbf0f3b",
+      "pin": "b13c7fcdc14c7747b727c7ee2b66f8ef9dbf0f3b",
+      "trigger": "schedule_or_owner_dispatch_only"
+    }
+  ],
+  "atomic_cutover_preflight": "6/6_sha_pinned_exact_source_verified_before_pr",
+  "current_source_checks": "read_only_asserted; final_main_CI_and_live_adapter_runs_still_required",
+  "codex_actionbot_scope": "GitHub Actions run and review evidence only; no assumption external Codex execution",
+  "production_mutation_authority": false,
+  "ga_authorized": false,
+  "initial_checkout_bypass": false,
+  "legacy_workflow_run_fanout": "removed_for_all_six_adapters_in_source_candidate",
+  "limitations": [
+    "runtime_onboarding_not_GA",
+    "separately_verify_all_6_scheduled_jobs",
+    "engine_vendor_mirror_is_a_release_artifact_and_requires_reconciliation"
+  ]
+}
