@@ -276,8 +276,30 @@ export function planCurrentHeadRuns({runs=[],mainSha,openPulls=[],repository}={}
      (r.run_number===prev.run_number&&(r.run_attempt||1)>(prev.run_attempt||1)))
    decisions.set(key,r);
  }
- return [...decisions.values()].sort((x,y)=>
-  x.name.localeCompare(y.name)||x.head_branch.localeCompare(y.head_branch)||x.event.localeCompare(y.event));
+ // Different trigger types share the same durable workflow+branch incident
+ // identity. Do NOT publish event-level open/close decisions sequentially:
+ // an older workflow_dispatch success must never close an unresolved schedule
+ // failure on the same source. Aggregate all conclusive event heads FIRST.
+ const groups=new Map();
+ for(const row of decisions.values()){
+  const id=row.workflow_id+"|"+row.head_branch;
+  const group=groups.get(id)||{failures:[],successes:[]};
+  (BAD.has(row.conclusion)?group.failures:group.successes).push(row);
+  groups.set(id,group);
+ }
+ const latest=rows=>rows.reduce((best,row)=>!best||
+   row.run_number>best.run_number||
+   (row.run_number===best.run_number&&(row.run_attempt||1)>(best.run_attempt||1))
+    ?row:best,null);
+ const result=[];
+ for(const group of groups.values()){
+  // A valid newer success already replaced a failure of the SAME event in
+  // decisions. Any remaining failure in another event is still unresolved.
+  const selected=latest(group.failures)||latest(group.successes);
+  if(selected)result.push(selected);
+ }
+ return result.sort((x,y)=>x.name.localeCompare(y.name)||
+   x.head_branch.localeCompare(y.head_branch));
 }
 /** Pre-effect: complete bounded GitHub metadata snapshot before any issue write.
  * Each write remains CAS-protected by the existing canonical incident ledger. */

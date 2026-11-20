@@ -133,6 +133,18 @@ test("T0 current-head planner deduplicates only real latest main and open-PR out
  const other={state:"open",head:{...pr.head,sha:"cc".repeat(20)}};
  assert.throws(()=>planCurrentHeadRuns({mainSha:run.head_sha,runs:[],openPulls:[pr,other],repository:repo}),/AMBIGUOUS_PR_HEAD/);
 });
+test("T0 one issue identity cannot be closed by a different trigger's older success",()=>{
+ const manual={...run,id:210,workflow_id:9,run_number:20,event:"workflow_dispatch",conclusion:"success"};
+ const scheduled={...run,id:211,workflow_id:9,run_number:21,event:"schedule",conclusion:"failure"};
+ const actual=planCurrentHeadRuns({runs:[manual,scheduled],mainSha:run.head_sha,openPulls:[],repository:repo});
+ assert.deepEqual(actual.map(x=>x.id),[211],"the unresolved event failure must dominate unrelated success");
+ const recovered={...scheduled,id:212,run_number:22,conclusion:"success"};
+ const healthy=planCurrentHeadRuns({runs:[manual,scheduled,recovered],mainSha:run.head_sha,openPulls:[],repository:repo});
+ assert.deepEqual(healthy.map(x=>x.id),[212],"same-event newer success resolves that event");
+ const unrelatedNewer={...manual,id:213,run_number:23,conclusion:"success"};
+ const stillBroken=planCurrentHeadRuns({runs:[manual,unrelatedNewer,scheduled],mainSha:run.head_sha,openPulls:[],repository:repo});
+ assert.deepEqual(stillBroken.map(x=>x.id),[211],"newer other-event success cannot suppress a failure");
+});
 test("T0 skipped notification never masks an actual same-SHA failure",()=>{
  assert.equal(classify({...base(),recent:[run,{...run,id:124,run_number:19,conclusion:"skipped"}]}),"open");
 });
