@@ -278,7 +278,7 @@
         "engine": "44816979908",
         "landing": "44629136875",
         "SDK": "44615176228",
-        "CLI": "40138494477",
+        "CLI": "44615189354",
         "cookbooks": "44819876141"
       },
       "source_ci_run": "40002313088",
@@ -564,8 +564,8 @@
     "cookbooks_current_main_ci_run": "44819876141",
     "sdk_publication_status": "source_preview; npm_PyPI_not_published; real_python_sdk_cloudflare_sandbox_retest_required",
     "sdk_current_main_ci_run": "44615176228",
-    "cli_current_source_commit": "db683729a6a80a74018c3faf272f3be4d8e02b1a",
-    "cli_current_main_ci_run": "40138494477",
+    "cli_current_source_commit": "246e8f5eeef6461dd5978883c3c2d8f890084149",
+    "cli_current_main_ci_run": "44615189354",
     "workerd_runtime_and_widget_sandbox_evidence": {
       "scope": "Cloudflare owner-protected synthetic Sandbox Widget SDK/API E2E only",
       "evidence_class": "CLOUDFLARE_SANDBOX_VERIFIED",
