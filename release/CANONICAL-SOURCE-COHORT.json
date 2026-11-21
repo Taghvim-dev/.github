@@ -3,11 +3,11 @@
   "kind": "taghvim.t0.canonical_source_cohort",
   "authority": "Taghvim-dev/.github",
   "engine": {
-    "sha": "9c04f2b1fe327247e6eccfa7674dc0591a1f2517",
-    "ci": "44839512372",
+    "sha": "fec3adaed756a0eaae85751c2b1d73c90475e061",
+    "ci": "44842159751",
     "workflow_id": 372423484,
-    "reviewed_sha": "14fa649746bf8f10dc76ffcd0f717a2c5ba53938",
-    "main_ci": "44839793504"
+    "reviewed_sha": "4816c6e4f79d3fc9f79cd8c6b157ec806bce4ef6",
+    "main_ci": "44842663034"
   },
   "landing": {
     "sha": "1b6b08f8460d1327a3b186aa0ce20323d9662b24",
@@ -21,21 +21,21 @@
   "ga_approved": false,
   "payment_enabled": false,
   "SDK": {
-    "sha": "bbba18ac5b5416b3df8d9ff553483392d684d07e",
-    "ci": "44823926645"
+    "sha": "52b31141ce93ffaa416faf6bcc0b05eeab56700b",
+    "ci": "44843255320"
   },
   "CLI": {
-    "sha": "40df61d6c5d5c8a38511372c755f1ad6f9b57e3d",
-    "ci": "44823936708"
+    "sha": "df09e855a2194df307ab8ebb136da43e2f105571",
+    "ci": "44843207307"
   },
   "cookbooks": {
-    "sha": "a0cd82f949473f50c131fe57ca34db6f851fe95f",
-    "ci": "44824774038",
-    "sdk_source_commit": "bbba18ac5b5416b3df8d9ff553483392d684d07e"
+    "sha": "6e5b165dd9308e4f68575276e6c49ab5e2a5c01e",
+    "ci": "44843437116",
+    "sdk_source_commit": "52b31141ce93ffaa416faf6bcc0b05eeab56700b"
   },
   "public_contract": {
     "contract_version": "2.1.0",
-    "openapi_git_blob_sha": "2a895c456c633f7a325c49152bd6f251bc8108a1",
-    "operation_count": 56
+    "openapi_git_blob_sha": "70461b563b04169bde77f832d9f71d02deb82577",
+    "operation_count": 64
   }
 }
