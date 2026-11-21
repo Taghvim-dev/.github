@@ -10,8 +10,8 @@
   "repositories": [
     {
       "name": "SDK",
-      "commit": "c002ce74cd43e76ce8a017a805b22528fae248ae",
-      "ci_run": "44843730818"
+      "commit": "8bf410ef6810891f7441992739785580444649ed",
+      "ci_run": "44855840713"
     },
     {
       "name": "CLI",
@@ -20,8 +20,8 @@
     },
     {
       "name": "cookbooks",
-      "commit": "4b998b5477985afeab5c46f4222d336876708837",
-      "ci_run": "44843981579"
+      "commit": "8ea3b1e830f89d0b7b1f0f201724653e3e93038d",
+      "ci_run": "44856105303"
     }
   ],
   "deployment_observation": {
