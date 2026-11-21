@@ -1,12 +1,30 @@
 import {test} from "node:test";
 import assert from "node:assert/strict";
-import {buildCandidate,buildCoupledCandidate,sourcesAreConsistent,canResetOrFastForwardBotBranch,attestPrivateSourceCohort} from "../scripts/reconcile-public-widget.mjs";
+import {buildCandidate,buildCoupledCandidate,sourcesAreConsistent,canResetOrFastForwardBotBranch,attestPrivateSourceCohort,deriveCanonicalPublicSource} from "../scripts/reconcile-public-widget.mjs";
 const a="a".repeat(40), b="b".repeat(40),c="c".repeat(40);
 function matrix(){return {
  state:"PREVIEW",general_availability_approved:false,contract_version:"2.1.0",
  repositories:[{name:"SDK",commit:a,ci_run:"11"},{name:"CLI",commit:c,ci_run:"14"},{name:"cookbooks",commit:b,ci_run:"12"}],
  package_identity:{SDK:{commit:a,ci:"11"},CLI:{commit:c,ci:"14"},cookbooks:{commit:b,ci:"12",sdk_source_commit:a}}
 };}
+test("T0 canonical projection binds both underlying OpenAPI hash and actual public index Git blob SHA",async()=>{
+ const {readFileSync}=await import("node:fs");
+ const cohort=JSON.parse(readFileSync(new URL("../release/CANONICAL-SOURCE-COHORT.json",import.meta.url)));
+ const index=JSON.parse(readFileSync(new URL("../contracts/operation-index.json",import.meta.url)));
+ const candidate=deriveCanonicalPublicSource({
+  sha:cohort.public_contract.operation_index_git_blob_sha,data:index
+ });
+ assert.deepEqual(candidate,cohort.public_contract,
+  "Unchanged canonical public artifacts MUST be CURRENT, never source-drift failures");
+ assert.equal(candidate.operation_count,index.operations.length);
+ assert.equal(candidate.openapi_git_blob_sha,index.openApiGitBlobSHA);
+ assert.throws(()=>deriveCanonicalPublicSource({data:index}),/universal public operation authority/);
+ assert.throws(()=>deriveCanonicalPublicSource({sha:"a".repeat(40),data:{...index,operations:[]}}),/universal public operation authority/);
+ assert.throws(()=>deriveCanonicalPublicSource({sha:"a".repeat(40),
+  data:{...index,operations:[...index.operations,index.operations[0]]}}),
+  /universal public operation authority/);
+});
+
 test("no source drift creates no PR or GitHub writes",()=>{
  const r=buildCandidate(matrix(),{sdk:a,sdkCi:11,cookbooks:b,cookbooksCi:12,cookbooksSdkPin:a});
  assert.equal(r.status,"CURRENT");assert.equal(r.candidate,null);
