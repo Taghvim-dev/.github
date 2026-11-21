@@ -43,9 +43,9 @@
   },
   "owner_action": "Promote all NON-PAYMENT GA capabilities only after all immutable live evidence gates pass. Customer checkout and Vandar money movement are separately deferred and denied pre-effect, not GA dependencies.",
   "source_verification": {
-    "date": "2026-11-20",
+    "date": "2026-11-21",
     "phase": "source-integrated-not-deployed",
-    "engine_main_merge_sha": "6f8bbdc15a3e18ec89388c1965174793fcb2b001",
+    "engine_main_merge_sha": "7251e02f8470aeb7296b024d8ab59cbc77e65f34",
     "engine_offline_ci_run": "40195989813",
     "engine_live_gate_ci_run": "39439068311",
     "landing_main_merge_sha": "1b6b08f8460d1327a3b186aa0ce20323d9662b24",
@@ -148,9 +148,9 @@
       "note": "GitHub repository environment settings cannot be read/managed by current connector. Actual deploy job independently verifies via GitHub API; no production action authorized yet."
     },
     "latest_checked": {
-      "date": "2026-11-20",
-      "engine_sha": "6f8bbdc15a3e18ec89388c1965174793fcb2b001",
-      "engine_ci": "44849337971",
+      "date": "2026-11-21",
+      "engine_sha": "7251e02f8470aeb7296b024d8ab59cbc77e65f34",
+      "engine_ci": "44856990521",
       "landing_sha": "1b6b08f8460d1327a3b186aa0ce20323d9662b24",
       "landing_ci": "44838633515",
       "shared_release_actions_sha": "c195c8bfde573b6195bd1b3bd00e3535accc9040",
@@ -212,9 +212,9 @@
       "policy_main_sha": "f3bc8d18c5c31fd1125dd4da4887c86b9e3f8447",
       "policy_pr": "Taghvim-dev/.github PR #47",
       "policy_test_run": "39691890610",
-      "engine_main_sha": "6f8bbdc15a3e18ec89388c1965174793fcb2b001",
-      "engine_reviewed_head": "dcb907ce728ed0ed63ac0c09a8c0b4641a2ee18e",
-      "engine_ci_run": "44849337971",
+      "engine_main_sha": "7251e02f8470aeb7296b024d8ab59cbc77e65f34",
+      "engine_reviewed_head": "21c551a6ceebe8c59417ddf38e35d5b5e66f748e",
+      "engine_ci_run": "44856990521",
       "landing_main_sha": "1b6b08f8460d1327a3b186aa0ce20323d9662b24",
       "landing_reviewed_head": "e218ace55e325ebb34e5f285ddad0627f52a43ca",
       "landing_ci_run": "44838633515",
@@ -814,10 +814,10 @@
     "source_only": true,
     "remote_runtime_attested": false,
     "engine": {
-      "commit": "6f8bbdc15a3e18ec89388c1965174793fcb2b001",
+      "commit": "7251e02f8470aeb7296b024d8ab59cbc77e65f34",
       "package": "2.1.0",
       "lock": "2.1.0",
-      "ci": "44849337971"
+      "ci": "44856990521"
     },
     "landing": {
       "commit": "1b6b08f8460d1327a3b186aa0ce20323d9662b24",

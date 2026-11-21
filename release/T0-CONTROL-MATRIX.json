@@ -4,12 +4,12 @@
   "product": "Taghvim.dev",
   "contract_version": "2.1.0",
   "current_source": {
-    "engine_main_sha": "6f8bbdc15a3e18ec89388c1965174793fcb2b001",
+    "engine_main_sha": "7251e02f8470aeb7296b024d8ab59cbc77e65f34",
     "landing_main_sha": "1b6b08f8460d1327a3b186aa0ce20323d9662b24",
     "shared_policy_sha": "c195c8bfde573b6195bd1b3bd00e3535accc9040",
     "prewrite_source_policy_sha": "f3bc8d18c5c31fd1125dd4da4887c86b9e3f8447",
-    "engine_pr_head_sha": "dcb907ce728ed0ed63ac0c09a8c0b4641a2ee18e",
-    "engine_source_ci_run": "44849337971",
+    "engine_pr_head_sha": "21c551a6ceebe8c59417ddf38e35d5b5e66f748e",
+    "engine_source_ci_run": "44856990521",
     "ga_evidence_transport": "github_actions_same_run_artifact_no_committed_source_receipt"
   },
   "general_availability_approved": false,
