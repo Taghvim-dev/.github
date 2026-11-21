@@ -103,6 +103,12 @@ export function deriveCanonicalPublicSource(indexArtifact){
    operation_index_git_blob_sha:indexArtifact.sha,
    operation_count:d.operations.length};
 }
+export function privateSourceReadAdmission(token) {
+ if(typeof token!=="string"||token.trim()==="")
+  return {status:"BLOCKED_CROSS_REPO_AUTH",writes:0,ga_approved:false,private_head_verified:false};
+ // Token presence is never proof: require real private GitHub HEADs first.
+ return {status:"REQUIRE_INDEPENDENT_PRIVATE_HEAD_READS",writes:0,ga_approved:false,private_head_verified:false};
+}
 export function sourcesAreConsistent(matrix,controls,engine,landing){
  const current=matrix?.source_verification?.latest_checked;
  return [engine,landing].every(x=>SHA.test(x||"")) &&
@@ -138,8 +144,8 @@ async function head(repo){
 /** Canonical Cohort proves internally consistent declared authority, NOT
  * independently fresh private HEADs. Every candidate-changing PR requires
  * both actual private main refs to be read and matched *before* branch writes.
- * With no private read authority, only a read-only public CURRENT result is
- * permitted; a source change is held as BLOCKED, never false-green GA.
+ * Without short-lived, scoped private read authority, even a public-only
+ * NOOP is BLOCKED; neither source CURRENT nor GA may be asserted.
  */
 export function attestPrivateSourceCohort(source,release,controls){
  try{verifySourceCohort(source,release,controls);}
@@ -236,13 +242,10 @@ export async function reconcilePublicWidget(){
  const projected=projectSourceCohort(nextSource,
   plan.registry??canonical.data,plan.controls??control.data);
  const cohortDrift=JSON.stringify(nextSource)!==JSON.stringify(cohort.data);
- if(plan.status==="CURRENT"&&!indexDrift&&!cohortDrift)
-  return {status:"CURRENT_PUBLIC_COMPONENTS_ONLY",writes:0,ga_approved:false,
-    private_head_verified:false};
- // A source candidate is a Git side effect. Without independently fresh
- // private main refs, the pre-effect gate must deny *before* a branch/PR write.
- if(!process.env.TAGHVIM_PRIVATE_SOURCE_READ_TOKEN)
-  return {status:"BLOCKED_PRIVATE_HEAD_READ_AUTHORITY",writes:0,ga_approved:false};
+ // A public projection NEVER attests private HEAD freshness, not even for no-op.
+ // An unconfigured broker stays BLOCKED without a CI failure storm or Git writes.
+ const privateAdmission=privateSourceReadAdmission(process.env.TAGHVIM_PRIVATE_SOURCE_READ_TOKEN);
+ if(privateAdmission.status==="BLOCKED_CROSS_REPO_AUTH")return privateAdmission;
  const [engineNow,landingNow,sdkNow,cliNow,cookbookNow,rootNow]=await Promise.all([
   head("Taghvim-dev/engine"),head("Taghvim-dev/landing"),
   head("Taghvim-dev/SDK"),head("Taghvim-dev/CLI"),
@@ -252,6 +255,9 @@ export async function reconcilePublicWidget(){
   return {status:"BLOCKED_PRIVATE_HEAD_DRIFT",writes:0,ga_approved:false};
  if(sdkNow!==sdk||cliNow!==cli||cookbookNow!==cookbooks||rootNow!==root)
   return {status:"RACED_WITH_NEW_SOURCE",writes:0,ga_approved:false};
+ if(plan.status==="CURRENT"&&!indexDrift&&!cohortDrift)
+  return {status:"CURRENT_ALL_SIX_VERIFIED",writes:0,ga_approved:false,
+    private_head_verified:true};
  const pulls=await gh("/repos/"+ROOT+"/pulls?state=open&head="+encodeURIComponent("Taghvim-dev:"+branch));
  if(!Array.isArray(pulls))fail("PR inventory unavailable");
  if(pulls.length)return {status:"REVIEW_PENDING_EXISTING_PR",pr:pulls[0].number,writes:0};

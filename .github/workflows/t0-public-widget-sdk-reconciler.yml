@@ -34,11 +34,44 @@ jobs:
           node-version: '22'
       - name: Source and CI contract tests (offline)
         run: node --test test/reconcile-public-widget.test.mjs
+      - name: T0 inspect private source read authority without exposing key
+        id: private_source_auth
+        env:
+          APP_ID: ${{ vars.TAGHVIM_PRIVATE_SOURCE_APP_ID }}
+          APP_KEY: ${{ secrets.TAGHVIM_PRIVATE_SOURCE_APP_PRIVATE_KEY }}
+        shell: bash
+        run: |
+          if [ -n "$APP_ID" ] && [ -n "$APP_KEY" ]; then
+            echo 'configured=true' >> "$GITHUB_OUTPUT"
+          else
+            echo 'configured=false' >> "$GITHUB_OUTPUT"
+            echo 'T0_BLOCKED_CROSS_REPO_AUTH: short-lived private repository read broker unconfigured' >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - name: T0 mint short-lived private Engine and Landing read-only GitHub App token
+        id: private_source_token
+        if: steps.private_source_auth.outputs.configured == 'true'
+        uses: actions/create-github-app-token@f418cff399f7aef4c2f0ad47e25ca7a6abbdd6fc
+        with:
+          app-id: ${{ vars.TAGHVIM_PRIVATE_SOURCE_APP_ID }}
+          private-key: ${{ secrets.TAGHVIM_PRIVATE_SOURCE_APP_PRIVATE_KEY }}
+          owner: Taghvim-dev
+          repositories: |
+            engine
+            landing
+          permission-contents: read
+          permission-actions: read
       - name: Reconcile exact current public main SHAs only after successful release CI
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # A Cohort proves snapshot consistency only. Fresh private HEAD
           # checks are required before creating ANY public source PR.
           # Scoped read-only Engine/Landing GitHub App token; not for deploy.
-          TAGHVIM_PRIVATE_SOURCE_READ_TOKEN: ${{ secrets.TAGHVIM_PRIVATE_SOURCE_READ_TOKEN }}
-        run: node scripts/reconcile-public-widget.mjs
+          TAGHVIM_PRIVATE_SOURCE_READ_TOKEN: ${{ steps.private_source_token.outputs.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/reconcile-public-widget.mjs | tee "$RUNNER_TEMP/t0-public-reconciler.jsonl"
+          if grep -q '"status":"BLOCKED_CROSS_REPO_AUTH"' "$RUNNER_TEMP/t0-public-reconciler.jsonl"; then
+            echo 'T0_BLOCKED_CROSS_REPO_AUTH: no cross-repo attestation; see organization issue #150. No writes or GA authority.' >> "$GITHUB_STEP_SUMMARY"
+            echo '::warning title=Cross-repo auth unavailable::T0_BLOCKED_CROSS_REPO_AUTH; source mutations not authorized.'
+          fi
