@@ -4,12 +4,12 @@
   "product": "Taghvim.dev",
   "contract_version": "2.1.0",
   "current_source": {
-    "engine_main_sha": "6f8bbdc15a3e18ec89388c1965174793fcb2b001",
+    "engine_main_sha": "7251e02f8470aeb7296b024d8ab59cbc77e65f34",
     "landing_main_sha": "1b6b08f8460d1327a3b186aa0ce20323d9662b24",
     "shared_policy_sha": "c195c8bfde573b6195bd1b3bd00e3535accc9040",
     "prewrite_source_policy_sha": "f3bc8d18c5c31fd1125dd4da4887c86b9e3f8447",
-    "engine_pr_head_sha": "dcb907ce728ed0ed63ac0c09a8c0b4641a2ee18e",
-    "engine_source_ci_run": "44849337971",
+    "engine_pr_head_sha": "21c551a6ceebe8c59417ddf38e35d5b5e66f748e",
+    "engine_source_ci_run": "44856397596",
     "ga_evidence_transport": "github_actions_same_run_artifact_no_committed_source_receipt"
   },
   "general_availability_approved": false,
@@ -219,7 +219,7 @@
       ],
       "source_ci_run": "39691890610",
       "dependent_component_ci": {
-        "engine": "44849337971",
+        "engine": "44856397596",
         "landing": "44838633515"
       },
       "policy_main_sha": "f3bc8d18c5c31fd1125dd4da4887c86b9e3f8447",
@@ -244,7 +244,7 @@
       "source_ci_run": "39691890610",
       "reviewed_action_main_sha": "f3bc8d18c5c31fd1125dd4da4887c86b9e3f8447",
       "component_source_ci": {
-        "engine": "44849337971",
+        "engine": "44856397596",
         "landing": "44838633515"
       },
       "live_evidence": null,
@@ -275,10 +275,10 @@
       ],
       "package_contract_version": "2.1.0",
       "dependent_component_ci": {
-        "engine": "44849337971",
+        "engine": "44856397596",
         "landing": "44838633515",
         "SDK": "44855840713",
-        "CLI": "44843207307",
+        "CLI": "44857049062",
         "cookbooks": "44856105303"
       },
       "source_ci_run": "40002313088",
@@ -564,8 +564,8 @@
     "cookbooks_current_main_ci_run": "44856105303",
     "sdk_publication_status": "source_preview; npm_PyPI_not_published; real_python_sdk_cloudflare_sandbox_retest_required",
     "sdk_current_main_ci_run": "44855840713",
-    "cli_current_source_commit": "df09e855a2194df307ab8ebb136da43e2f105571",
-    "cli_current_main_ci_run": "44843207307",
+    "cli_current_source_commit": "26d74f5da71a4c4fcfeec2fdeab5263d18a0a171",
+    "cli_current_main_ci_run": "44857049062",
     "workerd_runtime_and_widget_sandbox_evidence": {
       "scope": "Cloudflare owner-protected synthetic Sandbox Widget SDK/API E2E only",
       "evidence_class": "CLOUDFLARE_SANDBOX_VERIFIED",
