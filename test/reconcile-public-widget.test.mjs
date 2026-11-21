@@ -215,10 +215,10 @@ test("T0 cannot create a source PR without fresh private HEADs and matching SDK 
  const {readFileSync}=await import("node:fs");
  const script=readFileSync(new URL("../scripts/reconcile-public-widget.mjs",import.meta.url),"utf8");
  const workflow=readFileSync(new URL("../.github/workflows/t0-public-widget-sdk-reconciler.yml",import.meta.url),"utf8");
- assert.match(script,/BLOCKED_PRIVATE_HEAD_READ_AUTHORITY/);
+ assert.match(script,/BLOCKED_CROSS_REPO_AUTH/);
  assert.match(script,/BLOCKED_PRIVATE_HEAD_DRIFT/);
  assert.match(script,/BLOCKED_PUBLIC_CONTRACT_DRIFT/);
- assert.ok(script.indexOf("if(!process.env.TAGHVIM_PRIVATE_SOURCE_READ_TOKEN)")<
+ assert.ok(script.indexOf('if(privateAdmission.status==="BLOCKED_CROSS_REPO_AUTH")')<
   script.indexOf("const pulls=await gh("),"private HEAD gate must predate any PR or branch write");
  assert.match(script,/head\("Taghvim-dev\/engine"\),head\("Taghvim-dev\/landing"\)/);
  assert.match(script,/head\("Taghvim-dev\/SDK"\),head\("Taghvim-dev\/CLI"\)/);

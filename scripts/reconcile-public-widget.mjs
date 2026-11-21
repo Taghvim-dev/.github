@@ -144,8 +144,8 @@ async function head(repo){
 /** Canonical Cohort proves internally consistent declared authority, NOT
  * independently fresh private HEADs. Every candidate-changing PR requires
  * both actual private main refs to be read and matched *before* branch writes.
- * With no private read authority, only a read-only public CURRENT result is
- * permitted; a source change is held as BLOCKED, never false-green GA.
+ * Without short-lived, scoped private read authority, even a public-only
+ * NOOP is BLOCKED; neither source CURRENT nor GA may be asserted.
  */
 export function attestPrivateSourceCohort(source,release,controls){
  try{verifySourceCohort(source,release,controls);}
