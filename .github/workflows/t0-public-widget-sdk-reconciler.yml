@@ -50,6 +50,7 @@ jobs:
       - name: T0 mint short-lived private Engine and Landing read-only GitHub App token
         id: private_source_token
         if: steps.private_source_auth.outputs.configured == 'true'
+        continue-on-error: true
         uses: actions/create-github-app-token@f418cff399f7aef4c2f0ad47e25ca7a6abbdd6fc
         with:
           app-id: ${{ vars.TAGHVIM_PRIVATE_SOURCE_APP_ID }}
