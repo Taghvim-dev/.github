@@ -4,12 +4,12 @@
   "product": "Taghvim.dev",
   "contract_version": "2.1.0",
   "current_source": {
-    "engine_main_sha": "9c04f2b1fe327247e6eccfa7674dc0591a1f2517",
+    "engine_main_sha": "fec3adaed756a0eaae85751c2b1d73c90475e061",
     "landing_main_sha": "1b6b08f8460d1327a3b186aa0ce20323d9662b24",
     "shared_policy_sha": "c195c8bfde573b6195bd1b3bd00e3535accc9040",
     "prewrite_source_policy_sha": "f3bc8d18c5c31fd1125dd4da4887c86b9e3f8447",
-    "engine_pr_head_sha": "14fa649746bf8f10dc76ffcd0f717a2c5ba53938",
-    "engine_source_ci_run": "44839512372",
+    "engine_pr_head_sha": "4816c6e4f79d3fc9f79cd8c6b157ec806bce4ef6",
+    "engine_source_ci_run": "44842159751",
     "ga_evidence_transport": "github_actions_same_run_artifact_no_committed_source_receipt"
   },
   "general_availability_approved": false,
@@ -219,7 +219,7 @@
       ],
       "source_ci_run": "39691890610",
       "dependent_component_ci": {
-        "engine": "44839512372",
+        "engine": "44842159751",
         "landing": "44838633515"
       },
       "policy_main_sha": "f3bc8d18c5c31fd1125dd4da4887c86b9e3f8447",
@@ -244,7 +244,7 @@
       "source_ci_run": "39691890610",
       "reviewed_action_main_sha": "f3bc8d18c5c31fd1125dd4da4887c86b9e3f8447",
       "component_source_ci": {
-        "engine": "44839512372",
+        "engine": "44842159751",
         "landing": "44838633515"
       },
       "live_evidence": null,
@@ -275,11 +275,11 @@
       ],
       "package_contract_version": "2.1.0",
       "dependent_component_ci": {
-        "engine": "44839512372",
+        "engine": "44842159751",
         "landing": "44838633515",
-        "SDK": "44823926645",
-        "CLI": "44823936708",
-        "cookbooks": "44824774038"
+        "SDK": "44843255320",
+        "CLI": "44843207307",
+        "cookbooks": "44843437116"
       },
       "source_ci_run": "40002313088",
       "live_evidence": null
@@ -559,13 +559,13 @@
     "release_ledger_source_pins_still_require_independent_re_review": true,
     "both_product_components_live": true,
     "current_source_not_yet_deployed_scope": "LATEST_ENGINE_MAIN_CONTROLLER_CHANGE_NOT_YET_CLOUDFLARE_RELEASED; Engine Worker 7a519224 success 40194105707; latest Landing ba9209f5 UTF-8 source not yet promoted. 316530ea source independently deployed run 40195165078.",
-    "sdk_current_source_commit": "bbba18ac5b5416b3df8d9ff553483392d684d07e",
-    "cookbooks_current_source_commit": "a0cd82f949473f50c131fe57ca34db6f851fe95f",
-    "cookbooks_current_main_ci_run": "44824774038",
+    "sdk_current_source_commit": "52b31141ce93ffaa416faf6bcc0b05eeab56700b",
+    "cookbooks_current_source_commit": "6e5b165dd9308e4f68575276e6c49ab5e2a5c01e",
+    "cookbooks_current_main_ci_run": "44843437116",
     "sdk_publication_status": "source_preview; npm_PyPI_not_published; real_python_sdk_cloudflare_sandbox_retest_required",
-    "sdk_current_main_ci_run": "44823926645",
-    "cli_current_source_commit": "40df61d6c5d5c8a38511372c755f1ad6f9b57e3d",
-    "cli_current_main_ci_run": "44823936708",
+    "sdk_current_main_ci_run": "44843255320",
+    "cli_current_source_commit": "df09e855a2194df307ab8ebb136da43e2f105571",
+    "cli_current_main_ci_run": "44843207307",
     "workerd_runtime_and_widget_sandbox_evidence": {
       "scope": "Cloudflare owner-protected synthetic Sandbox Widget SDK/API E2E only",
       "evidence_class": "CLOUDFLARE_SANDBOX_VERIFIED",

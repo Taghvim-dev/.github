@@ -87,9 +87,11 @@ export function projectSourceCohort(source,release,controls){
  widget.cookbook_main_ci_run=source.cookbooks.ci;
  const pub=source.public_contract;
  if(pub?.contract_version!==r.contract_version||!sha.test(pub?.openapi_git_blob_sha||"")||
+    !sha.test(pub?.operation_index_git_blob_sha||"")||
     !Number.isSafeInteger(pub?.operation_count)||pub.operation_count<1)
   block("missing universal public operation authority");
  r.openapi_source_git_blob_sha=pub.openapi_git_blob_sha;
+ r.operation_index_git_blob_sha=pub.operation_index_git_blob_sha;
  r.required_public_operation_count=pub.operation_count;
  if(s.t0_cross_repo_source_admission?.post_facto_ga_authorization!==false||
  s.t0_cross_repo_source_admission?.admission_scope!=="MUTATION_BLOCKING_SOURCE_ONLY")
