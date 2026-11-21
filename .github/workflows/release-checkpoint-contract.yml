@@ -13,6 +13,7 @@ permissions:
   contents: read
 jobs:
   checkpoint-contract:
+    if: ${{ false }} # T0 hard stop: explicit owner approval and reviewed new commit required
     runs-on: ubuntu-26.04
     timeout-minutes: 5
     steps:

@@ -13,7 +13,7 @@ concurrency:
   cancel-in-progress: false
 jobs:
   reconcile:
-    if: github.ref == 'refs/heads/main'
+    if: ${{ false }} # T0 hard stop: explicit owner approval and reviewed new commit required
     runs-on: ubuntu-26.04
     timeout-minutes: 6
     steps:
