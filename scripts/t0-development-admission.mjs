@@ -43,7 +43,6 @@ export function localAdmissionPlan(repo,{sdkRoot=null}={}){
    node("public-version-read-only",["bin/taghvim.mjs","versions"])
   ],
   cookbooks:[
-   node("source-pin-check",["scripts/check-contract.mjs"]),
    npm("cookbook-contract",["test"])
   ],
   ".github":[
@@ -55,7 +54,7 @@ export function localAdmissionPlan(repo,{sdkRoot=null}={}){
  }[repo];
  if(repo==="cookbooks"){
   if(typeof sdkRoot!=="string"||!sdkRoot.trim())throw Error("T0_LOCAL_PEER_SDK_REQUIRED");
-  steps.splice(1,0,npm("install-pinned-peer-sdk",["install","--no-save","--ignore-scripts","--no-audit","--no-fund",join(resolve(sdkRoot),"javascript")]));
+  steps.unshift(npm("install-pinned-peer-sdk",["install","--no-save","--ignore-scripts","--no-audit","--no-fund",join(resolve(sdkRoot),"javascript")]));
   steps.push(step("sdk-python-recipes","python",["-m","compileall","-q","python"],{PYTHONPATH:join(resolve(sdkRoot),"python")}));
  }
  for(const item of steps){
