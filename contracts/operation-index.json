@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "contractVersion": "2.1.0",
-  "openApiGitBlobSHA": "70461b563b04169bde77f832d9f71d02deb82577",
+  "openApiGitBlobSHA": "eb23f6ce223f1605797c35008385dadf3aed583a",
   "operations": [
     {
       "method": "GET",
@@ -492,6 +492,20 @@
       "auth": [
         "ApiKey"
       ]
+    },
+    {
+      "method": "POST",
+      "path": "/v1/handles/requests",
+      "operationId": "applyHandle",
+      "auth": [
+        "ApiKey"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/public/handles",
+      "operationId": "discoverHandles",
+      "auth": []
     }
   ]
 }

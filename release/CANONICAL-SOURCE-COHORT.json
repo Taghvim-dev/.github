@@ -3,40 +3,40 @@
   "kind": "taghvim.t0.canonical_source_cohort",
   "authority": "Taghvim-dev/.github",
   "engine": {
-    "sha": "8219ca6385af711a8cb598a3f30e9fc11b33467a",
-    "ci": "44936372075",
+    "sha": "c5846bc312c793b7201121537424e8036a31c57b",
+    "ci": "44944591712",
     "workflow_id": 372423484,
-    "reviewed_sha": "05c9473685e4fbd57074e7965f16c9383a5bad93",
-    "main_ci": "44936372075"
+    "reviewed_sha": "6775daf62ab5b5d090cadeed6e05da1af6a0d38a",
+    "main_ci": "44944961810"
   },
   "landing": {
-    "sha": "fd56507884731f26d8018ce489a50034454cd2fa",
-    "ci": "44866317370",
+    "sha": "6d94901256d847611cf4592d105b7aaf8833d7d5",
+    "ci": "44945632333",
     "workflow_id": 390048334,
-    "reviewed_sha": "b32cf627588efe546cdb451b5dcd0d96703893eb",
-    "main_ci": "44866465782"
+    "reviewed_sha": "44f259a105be1569a0a8678ed9d710bbc0d4c710",
+    "main_ci": "44945763761"
   },
   "source_only": true,
   "remote_ci_evidence_required": true,
   "ga_approved": false,
   "payment_enabled": false,
   "SDK": {
-    "sha": "40f195c47a2d8c006c31aaf3ee6b39fc2c8b61ef",
-    "ci": "44870378214"
+    "sha": "931391666e31b5d20796917dcbe83b1103dd97b4",
+    "ci": "44944984333"
   },
   "CLI": {
-    "sha": "19e4f1e5c1812e96189e8daf08a7d12c5da67840",
-    "ci": "44866241221"
+    "sha": "feb0f9f5b63cd98862353afdb82364bbbfd8cd9d",
+    "ci": "44945002516"
   },
   "cookbooks": {
-    "sha": "48db442c8f6aa0eb5d0a94198b2f99ddc79bdeae",
-    "ci": "44870614314",
-    "sdk_source_commit": "40f195c47a2d8c006c31aaf3ee6b39fc2c8b61ef"
+    "sha": "9aae33c9cffb5f0c6f19ea8f40231f1272c5fce6",
+    "ci": "44945164325",
+    "sdk_source_commit": "931391666e31b5d20796917dcbe83b1103dd97b4"
   },
   "public_contract": {
     "contract_version": "2.1.0",
-    "openapi_git_blob_sha": "70461b563b04169bde77f832d9f71d02deb82577",
-    "operation_index_git_blob_sha": "9bfe1a51ad87dc1b15fca79b2fa866efc5992a55",
-    "operation_count": 64
+    "openapi_git_blob_sha": "eb23f6ce223f1605797c35008385dadf3aed583a",
+    "operation_index_git_blob_sha": "c8333d6c22618971584367dabdbbb1ee841edadf",
+    "operation_count": 66
   }
 }
