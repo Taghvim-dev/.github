@@ -1,6 +1,6 @@
 import {test} from "node:test";
 import assert from "node:assert/strict";
-import {buildCandidate,buildCoupledCandidate,sourcesAreConsistent,canResetOrFastForwardBotBranch,attestPrivateSourceCohort,deriveCanonicalPublicSource} from "../scripts/reconcile-public-widget.mjs";
+import {buildCandidate,buildCoupledCandidate,sourcesAreConsistent,canResetOrFastForwardBotBranch,attestPrivateSourceCohort,deriveCanonicalPublicSource,privateSourceReadAdmission} from "../scripts/reconcile-public-widget.mjs";
 const a="a".repeat(40), b="b".repeat(40),c="c".repeat(40);
 function matrix(){return {
  state:"PREVIEW",general_availability_approved:false,contract_version:"2.1.0",
@@ -257,4 +257,22 @@ test("T0 release source reconciler updates cohort + projections + optional OpenA
   assert.ok(s.includes(path));
  assert.ok(s.indexOf("const [engineNow,landingNow")<s.indexOf("const files=["));
  assert.match(s,/BLOCKED_PRIVATE_HEAD_DRIFT/);
+});
+
+test("T0 no private read broker never reports complete source reconciliation",()=>{
+ const absent=privateSourceReadAdmission("");
+ assert.deepEqual(absent,{status:"BLOCKED_CROSS_REPO_AUTH",writes:0,
+  ga_approved:false,private_head_verified:false});
+ const candidate=privateSourceReadAdmission("installation-token-present");
+ assert.equal(candidate.status,"REQUIRE_INDEPENDENT_PRIVATE_HEAD_READS");
+ assert.equal(candidate.private_head_verified,false,"token is NOT independent GitHub HEAD evidence");
+});
+test("T0 short-lived GitHub App broker is SHA-pinned and read-only for exactly private repos",async()=>{
+ const {readFileSync}=await import("node:fs");
+ const w=readFileSync(new URL("../.github/workflows/t0-public-widget-sdk-reconciler.yml",import.meta.url),"utf8");
+ assert.match(w,/actions\/create-github-app-token@f418cff399f7aef4c2f0ad47e25ca7a6abbdd6fc/);
+ for(const n of ["engine","landing"])assert.ok(w.includes("            "+n+"\n"));
+ for(const key of ["contents","actions"])assert.ok(w.includes("permission-"+key+": read"));
+ assert.ok(w.includes("TAGHVIM_PRIVATE_SOURCE_READ_TOKEN: "+"$"+"{{ steps.private_source_token.outputs.token }}"));
+ assert.ok(!w.includes("TAGHVIM_PRIVATE_SOURCE_READ_TOKEN: "+"$"+"{{ secrets."));
 });
