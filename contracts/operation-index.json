@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "contractVersion": "2.1.0",
-  "openApiGitBlobSHA": "2a895c456c633f7a325c49152bd6f251bc8108a1",
+  "openApiGitBlobSHA": "70461b563b04169bde77f832d9f71d02deb82577",
   "operations": [
     {
       "method": "GET",
@@ -430,6 +430,68 @@
       "path": "/v1/public/calendar-search",
       "operationId": "searchPublicCalendarEvents",
       "auth": []
+    },
+    {
+      "method": "POST",
+      "path": "/v1/workspaces",
+      "operationId": "createWorkspace",
+      "auth": [
+        "ApiKey"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/workspaces/{workspace_id}",
+      "operationId": "getWorkspace",
+      "auth": [
+        "ApiKey"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/v1/calendars/{calendar_id}/events",
+      "operationId": "createCalendarEvent",
+      "auth": [
+        "ApiKey"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/calendars/{calendar_id}/events",
+      "operationId": "listCalendarEvents",
+      "auth": [
+        "ApiKey"
+      ]
+    },
+    {
+      "method": "PATCH",
+      "path": "/v1/calendars/{calendar_id}/events/{event_id}",
+      "operationId": "updateCalendarEvent",
+      "auth": [
+        "ApiKey"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v1/public/calendars/{calendar_id}/events",
+      "operationId": "listPublicCalendarEvents",
+      "auth": []
+    },
+    {
+      "method": "POST",
+      "path": "/v1/public/calendars/{calendar_id}/subscriptions",
+      "operationId": "subscribeCalendar",
+      "auth": [
+        "ApiKey"
+      ]
+    },
+    {
+      "method": "PATCH",
+      "path": "/v1/calendars/{calendar_id}/notification-preferences",
+      "operationId": "setCalendarNotificationPreferences",
+      "auth": [
+        "ApiKey"
+      ]
     }
   ]
 }

@@ -74,6 +74,7 @@ test("T0 universal Engine/Landing/SDK/CLI/Cookbooks source identity is single au
  const ops=load("contracts/operation-index.json");
  assert.equal(cohort.public_contract.openapi_git_blob_sha,ops.openApiGitBlobSHA);
  assert.equal(cohort.public_contract.operation_count,ops.operations.length);
+ assert.equal(cohort.public_contract.operation_index_git_blob_sha,release.operation_index_git_blob_sha);
 });
 test("T0 universal cohort rejects any individual SDK, CLI, Cookbook or public index split brain",()=>{
  for(const name of ["SDK","CLI","cookbooks"]){
