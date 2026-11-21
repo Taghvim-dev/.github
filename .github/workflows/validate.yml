@@ -30,7 +30,7 @@ jobs:
   validate:
     # PR source is untrusted until complete: only Ready PRs enter CI.
     if: github.event_name != 'pull_request' || github.event.pull_request.draft == false
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v5

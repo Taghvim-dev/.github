@@ -2,8 +2,6 @@
 # One SHA-pinned action, immutable GitHub source evidence and event-driven stale-issue retirement.
 name: t0-ci-incident-reconciler
 on:
-  schedule:
-    - cron: '13 */3 * * *'
   workflow_dispatch:
 permissions:
   contents: read
@@ -16,7 +14,7 @@ concurrency:
 jobs:
   reconcile:
     if: github.ref == 'refs/heads/main'
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     timeout-minutes: 6
     steps:
       - name: Reconcile current-head failures and retire superseded incident issues
