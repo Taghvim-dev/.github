@@ -45,7 +45,7 @@
   "source_verification": {
     "date": "2026-11-21",
     "phase": "source-integrated-not-deployed",
-    "engine_main_merge_sha": "212a0f996fa89687023d8a581fba3c0a8c953cba",
+    "engine_main_merge_sha": "8219ca6385af711a8cb598a3f30e9fc11b33467a",
     "engine_offline_ci_run": "40195989813",
     "engine_live_gate_ci_run": "39439068311",
     "landing_main_merge_sha": "fd56507884731f26d8018ce489a50034454cd2fa",
@@ -149,8 +149,8 @@
     },
     "latest_checked": {
       "date": "2026-11-21",
-      "engine_sha": "212a0f996fa89687023d8a581fba3c0a8c953cba",
-      "engine_ci": "44934402962",
+      "engine_sha": "8219ca6385af711a8cb598a3f30e9fc11b33467a",
+      "engine_ci": "44936372075",
       "landing_sha": "fd56507884731f26d8018ce489a50034454cd2fa",
       "landing_ci": "44866317370",
       "shared_release_actions_sha": "c195c8bfde573b6195bd1b3bd00e3535accc9040",
@@ -212,9 +212,9 @@
       "policy_main_sha": "f3bc8d18c5c31fd1125dd4da4887c86b9e3f8447",
       "policy_pr": "Taghvim-dev/.github PR #47",
       "policy_test_run": "39691890610",
-      "engine_main_sha": "212a0f996fa89687023d8a581fba3c0a8c953cba",
-      "engine_reviewed_head": "0ffd6a5fa76beecc960b1a2487fb542594919965",
-      "engine_ci_run": "44934402962",
+      "engine_main_sha": "8219ca6385af711a8cb598a3f30e9fc11b33467a",
+      "engine_reviewed_head": "05c9473685e4fbd57074e7965f16c9383a5bad93",
+      "engine_ci_run": "44936372075",
       "landing_main_sha": "fd56507884731f26d8018ce489a50034454cd2fa",
       "landing_reviewed_head": "b32cf627588efe546cdb451b5dcd0d96703893eb",
       "landing_ci_run": "44866317370",
@@ -814,10 +814,10 @@
     "source_only": true,
     "remote_runtime_attested": false,
     "engine": {
-      "commit": "212a0f996fa89687023d8a581fba3c0a8c953cba",
+      "commit": "8219ca6385af711a8cb598a3f30e9fc11b33467a",
       "package": "2.1.0",
       "lock": "2.1.0",
-      "ci": "44934402962"
+      "ci": "44936372075"
     },
     "landing": {
       "commit": "fd56507884731f26d8018ce489a50034454cd2fa",
