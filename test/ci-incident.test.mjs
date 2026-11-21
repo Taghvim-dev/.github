@@ -237,3 +237,28 @@ test("T0 canonical three-file release cohort has exactly one PR/push validation 
  assert.match(release,/name: coordinated-public-release/);
  assert.match(release,/T0 canonical source cohort projection gate \(pre-effect\)/);
 });
+
+test("T0 all-six local pre-review admission is a single canonical deny-by-default CLI",async()=>{
+ const {localAdmissionPlan,argumentsFor}=await import("../scripts/t0-development-admission.mjs");
+ const expected=["engine","landing","SDK","CLI","cookbooks",".github"];
+ for(const repo of expected){
+  const opts=repo==="cookbooks"?{sdkRoot:"/controlled/SDK"}:{};
+  const steps=localAdmissionPlan(repo,opts);
+  assert.ok(steps.length>=2,repo);
+  assert.equal(new Set(steps.map(s=>s.name)).size,steps.length,repo);
+  for(const s of steps){
+   assert.ok(["npm","node","python"].includes(s.command),repo+" unexpected executor");
+   const instruction=s.command+" "+s.args.join(" ");
+   assert.doesNotMatch(instruction,/wrangler deploy|wrangler d1 migrations apply|npm run deploy(?: |$)/);
+   assert.ok(!instruction.includes("production-release"),repo);
+  }
+ }
+ assert.ok(localAdmissionPlan("engine").some(s=>s.args.join(" ")==="run deploy:dry"));
+ assert.ok(localAdmissionPlan("landing").some(s=>s.args.join(" ")==="run deploy:dry"));
+ assert.ok(localAdmissionPlan("CLI").some(s=>s.name==="public-health-read-only"));
+ assert.throws(()=>localAdmissionPlan("cookbooks"),/PEER_SDK_REQUIRED/);
+ assert.throws(()=>localAdmissionPlan("outside"),/UNKNOWN_REPOSITORY/);
+ assert.throws(()=>argumentsFor(["--repo","engine"]),/REPO_AND_CWD_REQUIRED/);
+ assert.throws(()=>argumentsFor(["--repo","engine","--repo","landing","--cwd","."]),/DUPLICATE_ARGUMENT/);
+ assert.deepEqual(argumentsFor(["--repo","engine","--cwd","/a"]),{repo:"engine",cwd:"/a",sdkRoot:null});
+});
