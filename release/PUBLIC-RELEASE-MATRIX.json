@@ -10,8 +10,8 @@
   "repositories": [
     {
       "name": "SDK",
-      "commit": "5d0901977b8f35c394632e9a47266417f3f314d6",
-      "ci_run": "44866357871"
+      "commit": "40f195c47a2d8c006c31aaf3ee6b39fc2c8b61ef",
+      "ci_run": "44870378214"
     },
     {
       "name": "CLI",
@@ -20,8 +20,8 @@
     },
     {
       "name": "cookbooks",
-      "commit": "f9a13129d7e5b6b0e82ad3720caf4583553f97ee",
-      "ci_run": "44866561527"
+      "commit": "48db442c8f6aa0eb5d0a94198b2f99ddc79bdeae",
+      "ci_run": "44870614314"
     }
   ],
   "deployment_observation": {
@@ -785,7 +785,7 @@
       "status": "SOURCE_TESTED_NOT_RUNTIME_ATTESTED",
       "engine_main_sha": "4b5ee01feee7c8095a1c69fb4981e08de0daa566",
       "engine_ci": "40102236916",
-      "sdk_main_sha": "5d0901977b8f35c394632e9a47266417f3f314d6",
+      "sdk_main_sha": "40f195c47a2d8c006c31aaf3ee6b39fc2c8b61ef",
       "sdk_ci": "40028869453",
       "cookbooks_main_sha": "803e054e51457049bd26cd7c9003f7ecf8988a2b",
       "cookbooks_ci": "40029335220",
@@ -804,9 +804,9 @@
       "remote_widget_receipt_source_sha": "9bef81578ee0b745f4c88417a709e2c24464e9bc",
       "remote_widget_receipt_run_id": "40022082871",
       "current_engine_main_runtime_certified": false,
-      "sdk_main_ci_run": "44866357871",
-      "cookbook_main_sha": "f9a13129d7e5b6b0e82ad3720caf4583553f97ee",
-      "cookbook_main_ci_run": "44866561527"
+      "sdk_main_ci_run": "44870378214",
+      "cookbook_main_sha": "48db442c8f6aa0eb5d0a94198b2f99ddc79bdeae",
+      "cookbook_main_ci_run": "44870614314"
     }
   },
   "package_identity": {
@@ -826,11 +826,11 @@
       "ci": "44866317370"
     },
     "SDK": {
-      "commit": "5d0901977b8f35c394632e9a47266417f3f314d6",
+      "commit": "40f195c47a2d8c006c31aaf3ee6b39fc2c8b61ef",
       "root": "2.1.0",
       "javascript": "2.1.0",
       "python": "2.1.0",
-      "ci": "44866357871",
+      "ci": "44870378214",
       "registry_published": false
     },
     "CLI": {
@@ -840,10 +840,10 @@
       "registry_published": false
     },
     "cookbooks": {
-      "commit": "f9a13129d7e5b6b0e82ad3720caf4583553f97ee",
+      "commit": "48db442c8f6aa0eb5d0a94198b2f99ddc79bdeae",
       "package": "2.1.0",
-      "sdk_source_commit": "5d0901977b8f35c394632e9a47266417f3f314d6",
-      "ci": "44866561527"
+      "sdk_source_commit": "40f195c47a2d8c006c31aaf3ee6b39fc2c8b61ef",
+      "ci": "44870614314"
     }
   },
   "post_release_observation_20261023": {
@@ -1032,11 +1032,11 @@
     "release_ledger_source_pins_still_require_independent_re_review": true,
     "both_product_components_live": true,
     "current_source_not_yet_deployed_scope": "LATEST_ENGINE_MAIN_CONTROLLER_CHANGE_NOT_YET_CLOUDFLARE_RELEASED; Engine Worker 7a519224 success 40194105707; latest Landing ba9209f5 UTF-8 source not yet promoted. 316530ea source independently deployed run 40195165078.",
-    "sdk_current_source_commit": "5d0901977b8f35c394632e9a47266417f3f314d6",
-    "cookbooks_current_source_commit": "f9a13129d7e5b6b0e82ad3720caf4583553f97ee",
-    "cookbooks_current_main_ci_run": "44866561527",
+    "sdk_current_source_commit": "40f195c47a2d8c006c31aaf3ee6b39fc2c8b61ef",
+    "cookbooks_current_source_commit": "48db442c8f6aa0eb5d0a94198b2f99ddc79bdeae",
+    "cookbooks_current_main_ci_run": "44870614314",
     "sdk_publication_status": "source_preview; npm_PyPI_not_published; real_python_sdk_cloudflare_sandbox_retest_required",
-    "sdk_current_main_ci_run": "44866357871",
+    "sdk_current_main_ci_run": "44870378214",
     "cli_current_source_commit": "19e4f1e5c1812e96189e8daf08a7d12c5da67840",
     "cli_current_main_ci_run": "44866241221",
     "workerd_runtime_and_widget_sandbox_evidence": {
