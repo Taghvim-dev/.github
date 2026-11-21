@@ -135,8 +135,11 @@ test("one commit contains both release matrices",async()=>{
  assert.ok(src.includes('plan.controls??control.data'));
  assert.ok(src.includes('["contracts/operation-index.json",indexes[0]]'));
  assert.ok(src.includes('const indexDrift=JSON.stringify(centralIndex.data)!==JSON.stringify(indexes[0])'));
- assert.ok(src.indexOf("if(!process.env.TAGHVIM_PRIVATE_SOURCE_READ_TOKEN)")<
-  src.indexOf("const files=["),"private head freshness must predate any atomic source tree write");
+ const admission=src.indexOf('if(privateAdmission.status==="BLOCKED_CROSS_REPO_AUTH")');
+ const privateCheck=src.indexOf('if(err?.code==="T0_PRIVATE_HEAD_AUTH_DENIED")');
+ const mutation=src.indexOf("const files=[");
+ assert.ok(admission>=0&&privateCheck>admission&&mutation>privateCheck,
+  "private credential and real private HEAD admission must precede source-tree effects");
 
 });
 
