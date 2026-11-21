@@ -117,6 +117,10 @@ export function sourcesAreConsistent(matrix,controls,engine,landing){
    controls?.current_source?.landing_main_sha===landing;
 }
 
+/** GitHub masks denied private HEAD reads as 404. Do not write on ambiguity. */
+export function privateHeadAuthHttpStatus(status){
+ return status===401||status===403||status===404;
+}
 async function gh(path,method="GET",body){
  // Canonical read scope: all three PUBLIC repositories and the central
  // project. Private HEAD freshness requires a distinct read-only credential,
@@ -133,6 +137,12 @@ async function gh(path,method="GET",body){
   headers:{accept:"application/vnd.github+json",authorization:"Bearer "+token,
    "x-github-api-version":"2022-11-28",...(body===undefined?{}:{"content-type":"application/json"})},
   ...(body===undefined?{}:{body:JSON.stringify(body)}),signal:AbortSignal.timeout(16000)});
+ if(privateRead&&privateHeadAuthHttpStatus(r.status)){
+  const denied=new Error("T0_PRIVATE_HEAD_AUTH_DENIED");
+  denied.code="T0_PRIVATE_HEAD_AUTH_DENIED";
+  denied.http_status=r.status;
+  throw denied;
+ }
  if(!r.ok)fail("GitHub API "+r.status+" at "+path.split("?")[0]);
  return r.status===204?null:r.json();
 }
@@ -246,8 +256,17 @@ export async function reconcilePublicWidget(){
  // An unconfigured broker stays BLOCKED without a CI failure storm or Git writes.
  const privateAdmission=privateSourceReadAdmission(process.env.TAGHVIM_PRIVATE_SOURCE_READ_TOKEN);
  if(privateAdmission.status==="BLOCKED_CROSS_REPO_AUTH")return privateAdmission;
- const [engineNow,landingNow,sdkNow,cliNow,cookbookNow,rootNow]=await Promise.all([
-  head("Taghvim-dev/engine"),head("Taghvim-dev/landing"),
+ let engineNow,landingNow;
+ try{
+  [engineNow,landingNow]=await Promise.all([
+   head("Taghvim-dev/engine"),head("Taghvim-dev/landing")
+  ]);
+ }catch(err){
+  if(err?.code==="T0_PRIVATE_HEAD_AUTH_DENIED")
+   return {...privateSourceReadAdmission(""),reason:"PRIVATE_HEAD_HTTP_"+err.http_status};
+  throw err; // network/429/5xx remain real incident states
+ }
+ const [sdkNow,cliNow,cookbookNow,rootNow]=await Promise.all([
   head("Taghvim-dev/SDK"),head("Taghvim-dev/CLI"),
   head("Taghvim-dev/cookbooks"),head(ROOT)
  ]);

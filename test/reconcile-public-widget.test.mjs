@@ -1,6 +1,6 @@
 import {test} from "node:test";
 import assert from "node:assert/strict";
-import {buildCandidate,buildCoupledCandidate,sourcesAreConsistent,canResetOrFastForwardBotBranch,attestPrivateSourceCohort,deriveCanonicalPublicSource,privateSourceReadAdmission} from "../scripts/reconcile-public-widget.mjs";
+import {buildCandidate,buildCoupledCandidate,sourcesAreConsistent,canResetOrFastForwardBotBranch,attestPrivateSourceCohort,deriveCanonicalPublicSource,privateSourceReadAdmission,privateHeadAuthHttpStatus} from "../scripts/reconcile-public-widget.mjs";
 const a="a".repeat(40), b="b".repeat(40),c="c".repeat(40);
 function matrix(){return {
  state:"PREVIEW",general_availability_approved:false,contract_version:"2.1.0",
@@ -275,4 +275,23 @@ test("T0 short-lived GitHub App broker is SHA-pinned and read-only for exactly p
  for(const key of ["contents","actions"])assert.ok(w.includes("permission-"+key+": read"));
  assert.ok(w.includes("TAGHVIM_PRIVATE_SOURCE_READ_TOKEN: "+"$"+"{{ steps.private_source_token.outputs.token }}"));
  assert.ok(!w.includes("TAGHVIM_PRIVATE_SOURCE_READ_TOKEN: "+"$"+"{{ secrets."));
+});
+
+test("T0 private HEAD 401/403/404 are fail-closed auth blocks; preserve real 429/5xx failures",()=>{
+ for(const status of [401,403,404])assert.equal(privateHeadAuthHttpStatus(status),true);
+ for(const status of [0,200,201,400,409,422,429,500,503])
+  assert.equal(privateHeadAuthHttpStatus(status),false);
+ assert.deepEqual(privateSourceReadAdmission(""),{
+  status:"BLOCKED_CROSS_REPO_AUTH",writes:0,ga_approved:false,private_head_verified:false});
+});
+test("T0 even invalid broker config cannot cause retry mail storms or pre-auth branch writes",async()=>{
+ const {readFileSync}=await import("node:fs");
+ const workflow=readFileSync(new URL("../.github/workflows/t0-public-widget-sdk-reconciler.yml",import.meta.url),"utf8");
+ const source=readFileSync(new URL("../scripts/reconcile-public-widget.mjs",import.meta.url),"utf8");
+ assert.match(workflow,/id: private_source_token\n        if: steps.private_source_auth.outputs.configured == 'true'\n        continue-on-error: true/);
+ assert.ok(source.includes("if(privateRead&&privateHeadAuthHttpStatus(r.status))"));
+ assert.ok(source.includes('if(err?.code==="T0_PRIVATE_HEAD_AUTH_DENIED")'));
+ assert.ok(source.includes('reason:"PRIVATE_HEAD_HTTP_"+err.http_status'));
+ assert.ok(source.indexOf('if(err?.code==="T0_PRIVATE_HEAD_AUTH_DENIED")')<
+  source.indexOf("const pulls=await gh("));
 });
