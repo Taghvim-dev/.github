@@ -21,17 +21,17 @@
   "ga_approved": false,
   "payment_enabled": false,
   "SDK": {
-    "sha": "52b31141ce93ffaa416faf6bcc0b05eeab56700b",
-    "ci": "44843255320"
+    "sha": "c002ce74cd43e76ce8a017a805b22528fae248ae",
+    "ci": "44843730818"
   },
   "CLI": {
     "sha": "df09e855a2194df307ab8ebb136da43e2f105571",
     "ci": "44843207307"
   },
   "cookbooks": {
-    "sha": "6e5b165dd9308e4f68575276e6c49ab5e2a5c01e",
-    "ci": "44843437116",
-    "sdk_source_commit": "52b31141ce93ffaa416faf6bcc0b05eeab56700b"
+    "sha": "4b998b5477985afeab5c46f4222d336876708837",
+    "ci": "44843981579",
+    "sdk_source_commit": "c002ce74cd43e76ce8a017a805b22528fae248ae"
   },
   "public_contract": {
     "contract_version": "2.1.0",
