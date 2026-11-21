@@ -219,3 +219,21 @@ test("T0 complete observer inventory forbids unmonitored product actions and fal
   assert.ok(!CONTROL.monitored_repositories[repo].includes("t0-ci-incident-reconciler"));
  }
 });
+
+test("T0 canonical three-file release cohort has exactly one PR/push validation owner",async()=>{
+ const fs=await import("node:fs");
+ const docs=fs.readFileSync(new URL("../.github/workflows/validate.yml",import.meta.url),"utf8");
+ const release=fs.readFileSync(new URL("../.github/workflows/coordinated-public-release.yml",import.meta.url),"utf8");
+ const files=["PUBLIC-RELEASE-MATRIX.json","CANONICAL-SOURCE-COHORT.json","T0-CONTROL-MATRIX.json"];
+ // Both PR and push trigger blocks must exclude all three coupled source projections
+ // from the duplicate docs workflow, without disabling unrelated documents tests.
+ for(const file of files){
+  const escaped=file.replace(/[.*+?^$\{\}()|[\]\\]/g,"\\$&");
+  const re=new RegExp('^\\s{6}- "release/'+escaped+'"\\s*$','gm');
+  assert.equal([...docs.matchAll(re)].length,2,"duplicate docs CI path for "+file);
+  assert.equal([...release.matchAll(re)].length,2,"canonical release workflow missing "+file);
+ }
+ assert.match(docs,/name: public-docs-verify/);
+ assert.match(release,/name: coordinated-public-release/);
+ assert.match(release,/T0 canonical source cohort projection gate \(pre-effect\)/);
+});

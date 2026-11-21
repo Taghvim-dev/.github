@@ -5,14 +5,18 @@ on:
     types: [opened, synchronize, reopened, ready_for_review]
     # Release-matrix-only changes are verified by coordinated-public-release,
     # which runs these same shared source/runtime regression tests.
-    # Avoid two separate failure notification paths for a single matrix edit.
+    # One validated release cohort (all three SSOT projections) owns exactly one CI path.
+    # Coordinated-public-release independently validates the full SHA/CI contract and source cohort;
+    # do not run public-docs-verify in parallel on registry-only edits.
     paths-ignore:
       - "release/PUBLIC-RELEASE-MATRIX.json"
+      - "release/CANONICAL-SOURCE-COHORT.json"
       - "release/T0-CONTROL-MATRIX.json"
   push:
     branches: [main]
     paths-ignore:
       - "release/PUBLIC-RELEASE-MATRIX.json"
+      - "release/CANONICAL-SOURCE-COHORT.json"
       - "release/T0-CONTROL-MATRIX.json"
 
 permissions:
