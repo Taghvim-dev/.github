@@ -13,7 +13,7 @@ concurrency:
   cancel-in-progress: false
 jobs:
   reconcile:
-    if: github.ref == 'refs/heads/main'
+    if: vars.TAGHVIM_ACTIONS_BUDGET_20261121 == 'OWNER_APPROVED_REOPEN' && (github.ref == 'refs/heads/main')
     runs-on: ubuntu-26.04
     timeout-minutes: 6
     steps:

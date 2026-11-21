@@ -60,7 +60,7 @@ jobs:
   public-contract-parity:
     # Draft = inert candidate; ready_for_review must request a complete, tested SHA.
     # Main pushes and explicit owner-driven verification still execute normally.
-    if: github.event_name != 'pull_request' || github.event.pull_request.draft == false
+    if: vars.TAGHVIM_ACTIONS_BUDGET_20261121 == 'OWNER_APPROVED_REOPEN' && (github.event_name != 'pull_request' || github.event.pull_request.draft == false)
     runs-on: ubuntu-26.04
     timeout-minutes: 12
     steps:
