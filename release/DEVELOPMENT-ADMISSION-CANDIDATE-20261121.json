@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "kind": "taghvim.t0.development_admission_candidate",
+  "cohort_id": "strict-outgoing-sha-20261121",
+  "authority": "Taghvim-dev/.github",
+  "state": "STAGED_AWAITING_FULL_PREFLIGHT",
+  "source_only": true,
+  "main_unchanged": true,
+  "ga_approved": false,
+  "production_effects": 0,
+  "payment_effects": 0,
+  "base_snapshot": {
+    "engine": "11747481a00bbbbbfdb8fcbe2298d7a0b80579a4",
+    "landing": "650a62e0ae00c551e95460ea07c07f0a7d2f7327",
+    "SDK": "0a51f69b55257dbbf4dd00ca4de7ad97441f28de",
+    "CLI": "fb3977c7fa8ce7f1a0bbf1b6cf1c250a90f906e4",
+    "cookbooks": "ea36b783421982c130e4f50334e318fad3e46cdf",
+    ".github": "661b97e31734b0332d6e3bfe614e65ec05dc07fd"
+  },
+  "branch": "t0/strict-outgoing-sha-20261121",
+  "candidate_commit_shas": {
+    "engine": "5deb684998ed30df79c54d797bbe77485e8ae405",
+    "landing": "b32cf627588efe546cdb451b5dcd0d96703893eb",
+    "SDK": "4566f8b52b52ee7766de642a68172365b7a9597e",
+    "CLI": "acd8ef7b95bd45b15ead942e8af3b41a3a552db8",
+    "cookbooks": "3a56fc9463bf4ae4ea8fcc4347c1aaa878cc7f51"
+  },
+  "shared_git_blobs": {
+    "executable_pre_push": "b9066b6677f8bb5a14eef705c6b2f38464f373f2",
+    "node_test": "9c77f940c2e0b999dc75c62a40f2e8497293266a"
+  },
+  "observed_tests": {
+    "isolated_git_hook_behaviour": "9/9_pass",
+    "remote_git_tree_blob_parity": "5/5_verified",
+    "full_repo_npm_preflight": "NOT_RUN",
+    "exact_candidate_remote_ci": "NOT_RUN",
+    "browser_customer_e2e": "NOT_RUN",
+    "protected_GA_receipts": "MISSING"
+  },
+  "root_cause": "Existing five-repo pre-push hook tested checked-out HEAD but ignored actual outgoing git push ref SHA records. API-created commits also bypass local hooks; protected CI/rules remain independent authority.",
+  "next_admission_steps": [
+    "Acquire exclusive cross-repository lease; refresh exact 6-repo mains and all open PRs",
+    "Obtain environment capable of checkout of exact candidate commits and run npm run t0:preflight for each of five repos before ready-review",
+    "Confirm all candidate tests pass and immutable source cohort is reconciled before review and any promotion",
+    "Keep source-only staged until 6-repo exact SHA reviewed CI and GitHub App read broker authority are certified",
+    "Do not declare GA without protected same-run 42 sha-bound receipts from full real nonpayment customer journey and admin"
+  ]
+}
