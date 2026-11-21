@@ -81,6 +81,28 @@ export function buildCoupledCandidate(matrix,controls,args){
    return {status:"CURRENT",registry:null,controls:null};
  return {status:"PR_REQUIRED",registry:result,controls:cc};
 }
+/**
+ * T0 canonical public-contract projection: the same validated git blob owns
+ * both the OpenAPI hash INSIDE its contents and the actual operation-index
+ * git object identity. Never silently drop the latter when CI reconciles.
+ */
+export function deriveCanonicalPublicSource(indexArtifact){
+ const d=indexArtifact?.data;
+ if(!SHA.test(indexArtifact?.sha||"") ||
+    d?.contractVersion!=="2.1.0" ||
+    !SHA.test(d?.openApiGitBlobSHA||"") ||
+    !Array.isArray(d?.operations)||d.operations.length<1 ||
+    d.operations.some(x=>!["GET","POST","PATCH","PUT","DELETE"].includes(x?.method)||
+      typeof x?.path!=="string"||!x.path.startsWith("/")||
+      typeof x?.operationId!=="string"||!Array.isArray(x?.auth)||
+      x.auth.includes("OperatorToken")) ||
+    new Set(d.operations.map(x=>x.method+" "+x.path)).size!==d.operations.length)
+  fail("missing or divergent universal public operation authority");
+ return {contract_version:d.contractVersion,
+   openapi_git_blob_sha:d.openApiGitBlobSHA,
+   operation_index_git_blob_sha:indexArtifact.sha,
+   operation_count:d.operations.length};
+}
 export function sourcesAreConsistent(matrix,controls,engine,landing){
  const current=matrix?.source_verification?.latest_checked;
  return [engine,landing].every(x=>SHA.test(x||"")) &&
@@ -210,11 +232,7 @@ export async function reconcilePublicWidget(){
   nextSource[name].sha=sha;nextSource[name].ci=String(run);
  }
  nextSource.cookbooks.sdk_source_commit=sdk;
- nextSource.public_contract={
-  contract_version:canonical.data.contract_version,
-  openapi_git_blob_sha:indexes[0].openApiGitBlobSHA,
-  operation_count:indexes[0].operations.length
- };
+ nextSource.public_contract=deriveCanonicalPublicSource(sdkIndex);
  const projected=projectSourceCohort(nextSource,
   plan.registry??canonical.data,plan.controls??control.data);
  const cohortDrift=JSON.stringify(nextSource)!==JSON.stringify(cohort.data);
