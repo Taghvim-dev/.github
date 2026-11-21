@@ -3,9 +3,9 @@
   "kind": "taghvim.t0.development_admission_candidate",
   "cohort_id": "strict-outgoing-sha-20261121",
   "authority": "Taghvim-dev/.github",
-  "state": "STAGED_AWAITING_FULL_PREFLIGHT",
+  "state": "SOURCE_MERGED_CI_VERIFIED_AWAITING_PROTECTED_GA",
   "source_only": true,
-  "main_unchanged": true,
+  "main_unchanged": false,
   "ga_approved": false,
   "production_effects": 0,
   "payment_effects": 0,
@@ -32,17 +32,41 @@
   "observed_tests": {
     "isolated_git_hook_behaviour": "9/9_pass",
     "remote_git_tree_blob_parity": "5/5_verified",
-    "full_repo_npm_preflight": "NOT_RUN",
-    "exact_candidate_remote_ci": "NOT_RUN",
-    "browser_customer_e2e": "NOT_RUN",
-    "protected_GA_receipts": "MISSING"
+    "full_repo_npm_preflight": "FIVE_GITHUB_PR_CHECKS_SUCCESS",
+    "exact_candidate_remote_ci": "FIVE_GITHUB_PR_CHECKS_SUCCESS",
+    "browser_customer_e2e": "AUTHENTICATED_FULL_JOURNEY_NOT_VERIFIED",
+    "protected_GA_receipts": "MISSING",
+    "all_five_main_ci": "FIVE_GITHUB_MAIN_CHECKS_SUCCESS",
+    "browser_public_contract": "LIVE_67_67_IDENTICAL_OPENAPI_2_1",
+    "browser_unauthenticated_gate": "4_API_ROUTES_DENY_401"
   },
   "root_cause": "Existing five-repo pre-push hook tested checked-out HEAD but ignored actual outgoing git push ref SHA records. API-created commits also bypass local hooks; protected CI/rules remain independent authority.",
   "next_admission_steps": [
-    "Acquire exclusive cross-repository lease; refresh exact 6-repo mains and all open PRs",
-    "Obtain environment capable of checkout of exact candidate commits and run npm run t0:preflight for each of five repos before ready-review",
-    "Confirm all candidate tests pass and immutable source cohort is reconciled before review and any promotion",
-    "Keep source-only staged until 6-repo exact SHA reviewed CI and GitHub App read broker authority are certified",
-    "Do not declare GA without protected same-run 42 sha-bound receipts from full real nonpayment customer journey and admin"
-  ]
+    "Review and merge atomic three-ledger source projection before any promotion",
+    "Verify exact current six HEADs and central reviewed CI, protected source release admission",
+    "Execute owner-protected actual Sandbox/Production complete customer E2E and same-run immutable evidence only",
+    "GA=false until 42 bound authenticated receipts verified together"
+  ],
+  "actual_merged_main_shas": {
+    "engine": "c92986460b3893ed5b223a23bbe5fa80cac64d89",
+    "landing": "fd56507884731f26d8018ce489a50034454cd2fa",
+    "SDK": "5d0901977b8f35c394632e9a47266417f3f314d6",
+    "CLI": "19e4f1e5c1812e96189e8daf08a7d12c5da67840",
+    "cookbooks": "f9a13129d7e5b6b0e82ad3720caf4583553f97ee"
+  },
+  "actual_main_ci_runs": {
+    "engine": "44865978071",
+    "landing": "44866465782",
+    "SDK": "44866357871",
+    "CLI": "44866241221",
+    "cookbooks": "44866561527"
+  },
+  "reconciled_source_authority": "release/CANONICAL-SOURCE-COHORT.json",
+  "actual_reviewed_pr_heads": {
+    "engine": "5deb684998ed30df79c54d797bbe77485e8ae405",
+    "landing": "b32cf627588efe546cdb451b5dcd0d96703893eb",
+    "SDK": "777daa4c5bf093a4e0a1a1d8349cca10b78db188",
+    "CLI": "acd8ef7b95bd45b15ead942e8af3b41a3a552db8",
+    "cookbooks": "fdd041ebd2f827e038f1d4c49e725fb5ad5e052d"
+  }
 }
