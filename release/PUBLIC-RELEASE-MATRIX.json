@@ -4,24 +4,24 @@
   "state": "PREVIEW",
   "general_availability_approved": false,
   "contract_version": "2.1.0",
-  "openapi_source_git_blob_sha": "46146dbcec18eadad579dcac50afbf86d15d3276",
-  "operation_index_git_blob_sha": "31f5045519809b7da0f77ba09dbfa071078cb929",
-  "required_public_operation_count": 67,
+  "openapi_source_git_blob_sha": "c7d29e88cba281b34c2dbf171c5edda5120fa57b",
+  "operation_index_git_blob_sha": "e67a5ff1f5d72b965ef4067d1301cd1190cac250",
+  "required_public_operation_count": 69,
   "repositories": [
     {
       "name": "SDK",
-      "commit": "792c473b3aaa504236ab3c1041bc5e0e34a92595",
-      "ci_run": "45005332702"
+      "commit": "a99e74d768b2f435961c1f1f40d8ee6069dc5d2d",
+      "ci_run": "45025094200"
     },
     {
       "name": "CLI",
-      "commit": "b8a5f79eb928d93ad7eef99f315ebe1fb176b19f",
-      "ci_run": "45005500227"
+      "commit": "f7d0bfabe9ead4aee1c0d3c29f5f5b109741b4fc",
+      "ci_run": "45025187906"
     },
     {
       "name": "cookbooks",
-      "commit": "80e1be66310e15a82828e841c42e829297657340",
-      "ci_run": "45005644615"
+      "commit": "5cf9a64dfa24a8f97f43883dbc8568fb5a0f96e6",
+      "ci_run": "45025524077"
     }
   ],
   "deployment_observation": {
@@ -45,7 +45,7 @@
   "source_verification": {
     "date": "2026-11-22",
     "phase": "current-main-source-CI-attested-production-release-pending",
-    "engine_main_merge_sha": "ad13b303d6baad7e51d18305934d91a251c431c0",
+    "engine_main_merge_sha": "a24df9499c99ef049aba54aa96b756f3b40d21b3",
     "engine_offline_ci_run": "40195989813",
     "engine_live_gate_ci_run": "39439068311",
     "landing_main_merge_sha": "524c4e6fd9e1269bd50a8f7b34e92183e0db920a",
@@ -149,8 +149,8 @@
     },
     "latest_checked": {
       "date": "2026-11-22",
-      "engine_sha": "ad13b303d6baad7e51d18305934d91a251c431c0",
-      "engine_ci": "45019155749",
+      "engine_sha": "a24df9499c99ef049aba54aa96b756f3b40d21b3",
+      "engine_ci": "45024757294",
       "landing_sha": "524c4e6fd9e1269bd50a8f7b34e92183e0db920a",
       "landing_ci": "45004362835",
       "shared_release_actions_sha": "c195c8bfde573b6195bd1b3bd00e3535accc9040",
@@ -212,9 +212,9 @@
       "policy_main_sha": "f3bc8d18c5c31fd1125dd4da4887c86b9e3f8447",
       "policy_pr": "Taghvim-dev/.github PR #47",
       "policy_test_run": "39691890610",
-      "engine_main_sha": "ad13b303d6baad7e51d18305934d91a251c431c0",
-      "engine_reviewed_head": "a7891163d155cd5ec4a15fd41f422384ebace7ab",
-      "engine_ci_run": "45019155749",
+      "engine_main_sha": "a24df9499c99ef049aba54aa96b756f3b40d21b3",
+      "engine_reviewed_head": "6994a3927a6a5c6c889120c6849d03aafb42bd4a",
+      "engine_ci_run": "45024757294",
       "landing_main_sha": "524c4e6fd9e1269bd50a8f7b34e92183e0db920a",
       "landing_reviewed_head": "52b8cb6b17fb9c54b6173bb1628d187ef4e02afb",
       "landing_ci_run": "45004362835",
@@ -814,10 +814,10 @@
     "source_only": true,
     "remote_runtime_attested": false,
     "engine": {
-      "commit": "ad13b303d6baad7e51d18305934d91a251c431c0",
+      "commit": "a24df9499c99ef049aba54aa96b756f3b40d21b3",
       "package": "2.1.0",
       "lock": "2.1.0",
-      "ci": "45019155749"
+      "ci": "45024757294"
     },
     "landing": {
       "commit": "524c4e6fd9e1269bd50a8f7b34e92183e0db920a",
@@ -826,24 +826,24 @@
       "ci": "45004362835"
     },
     "SDK": {
-      "commit": "792c473b3aaa504236ab3c1041bc5e0e34a92595",
+      "commit": "a99e74d768b2f435961c1f1f40d8ee6069dc5d2d",
       "root": "2.1.0",
       "javascript": "2.1.0",
       "python": "2.1.0",
-      "ci": "45005332702",
+      "ci": "45025094200",
       "registry_published": false
     },
     "CLI": {
-      "commit": "b8a5f79eb928d93ad7eef99f315ebe1fb176b19f",
+      "commit": "f7d0bfabe9ead4aee1c0d3c29f5f5b109741b4fc",
       "package": "2.1.0",
-      "ci": "45005500227",
+      "ci": "45025187906",
       "registry_published": false
     },
     "cookbooks": {
-      "commit": "80e1be66310e15a82828e841c42e829297657340",
+      "commit": "5cf9a64dfa24a8f97f43883dbc8568fb5a0f96e6",
       "package": "2.1.0",
-      "sdk_source_commit": "792c473b3aaa504236ab3c1041bc5e0e34a92595",
-      "ci": "45005644615"
+      "sdk_source_commit": "a99e74d768b2f435961c1f1f40d8ee6069dc5d2d",
+      "ci": "45025524077"
     }
   },
   "post_release_observation_20261023": {

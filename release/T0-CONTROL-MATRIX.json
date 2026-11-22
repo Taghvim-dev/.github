@@ -4,20 +4,20 @@
   "product": "Taghvim.dev",
   "contract_version": "2.1.0",
   "current_source": {
-    "engine_main_sha": "ad13b303d6baad7e51d18305934d91a251c431c0",
+    "engine_main_sha": "a24df9499c99ef049aba54aa96b756f3b40d21b3",
     "landing_main_sha": "524c4e6fd9e1269bd50a8f7b34e92183e0db920a",
     "shared_policy_sha": "c195c8bfde573b6195bd1b3bd00e3535accc9040",
     "prewrite_source_policy_sha": "f3bc8d18c5c31fd1125dd4da4887c86b9e3f8447",
-    "engine_pr_head_sha": "a7891163d155cd5ec4a15fd41f422384ebace7ab",
-    "engine_source_ci_run": "45019155749",
+    "engine_pr_head_sha": "6994a3927a6a5c6c889120c6849d03aafb42bd4a",
+    "engine_source_ci_run": "45024757294",
     "ga_evidence_transport": "github_actions_same_run_artifact_no_committed_source_receipt",
     "source_cohort_20261122": {
       "engine": {
-        "main": "ad13b303d6baad7e51d18305934d91a251c431c0",
-        "reviewed_head": "a7891163d155cd5ec4a15fd41f422384ebace7ab",
-        "reviewed_pr": 280,
-        "ci_run": "45019155749",
-        "verified_equal_git_tree": "4c63a7781c7f51cc7a244f58d4b7dec7ec831733"
+        "main": "a24df9499c99ef049aba54aa96b756f3b40d21b3",
+        "reviewed_head": "6994a3927a6a5c6c889120c6849d03aafb42bd4a",
+        "reviewed_pr": 283,
+        "ci_run": "45024757294",
+        "verified_equal_git_tree": "5b774659aa0e70dae52626e39e14b74f80aa1651"
       },
       "landing": {
         "main": "524c4e6fd9e1269bd50a8f7b34e92183e0db920a",
@@ -32,20 +32,20 @@
     },
     "public_cohort_20261122": {
       "sdk": {
-        "sha": "792c473b3aaa504236ab3c1041bc5e0e34a92595",
-        "ci": "45005332702"
+        "sha": "a99e74d768b2f435961c1f1f40d8ee6069dc5d2d",
+        "ci": "45025094200"
       },
       "cli": {
-        "sha": "b8a5f79eb928d93ad7eef99f315ebe1fb176b19f",
-        "ci": "45005500227"
+        "sha": "f7d0bfabe9ead4aee1c0d3c29f5f5b109741b4fc",
+        "ci": "45025187906"
       },
       "cookbooks": {
-        "sha": "80e1be66310e15a82828e841c42e829297657340",
-        "ci": "45005644615"
+        "sha": "5cf9a64dfa24a8f97f43883dbc8568fb5a0f96e6",
+        "ci": "45025524077"
       },
-      "operation_index_git_blob_sha": "31f5045519809b7da0f77ba09dbfa071078cb929",
-      "openapi_git_blob_sha": "46146dbcec18eadad579dcac50afbf86d15d3276",
-      "operation_count": 67,
+      "operation_index_git_blob_sha": "e67a5ff1f5d72b965ef4067d1301cd1190cac250",
+      "openapi_git_blob_sha": "c7d29e88cba281b34c2dbf171c5edda5120fa57b",
+      "operation_count": 69,
       "scope": "PRERELEASE_SOURCE_CI_ONLY",
       "ga": false
     }
