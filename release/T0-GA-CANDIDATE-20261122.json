@@ -1,0 +1,97 @@
+{
+  "schema_version": 1,
+  "kind": "TAGHVIM_T0_COHESIVE_NONPAYMENT_GA_CANDIDATE",
+  "observed_utc_date": "2026-11-22",
+  "decision": "GA_BLOCKED",
+  "requires": "T0 policy-gated reviewed release with exact Cloudflare Worker source SHA; no post-facto receipts",
+  "customer_checkout": "DEFERRED_ONLY",
+  "source": {
+    "engine_main": "a9fa967b8c9d46d804a716fb3f9c2d7a017a3b45",
+    "sdk_main": "6e2a8fd68ff57b33156e1336328ac7b36df8b1ab",
+    "cli_main": "c6429deacb6e9b3fecd2bca4feca63c736a41f30",
+    "landing_main": "45037bc9c1bc6cd6a64d489c23240c98a95d2e07",
+    "cookbooks_main": "23b30e82694d3fa7c2128f96365e78741d2b09e9",
+    "engine_openapi_git_blob": "46146dbcec18eadad579dcac50afbf86d15d3276",
+    "sdk_openapi_git_blob": "46146dbcec18eadad579dcac50afbf86d15d3276",
+    "cli_openapi_git_blob": "46146dbcec18eadad579dcac50afbf86d15d3276",
+    "engine_total_operations": 70,
+    "live_total_operations": 69,
+    "source_public_sdk_operations": 67,
+    "landing_pinned_public_sdk_operations": 66,
+    "missing_live_operation": "listCalendarPortfolio"
+  },
+  "proven": {
+    "engine_pr_276_merged": true,
+    "engine_workflows_hard_stopped": true,
+    "sdk_workflows_hard_stopped": true,
+    "cli_workflows_hard_stopped": true,
+    "live_api_health_200": true,
+    "live_api_readiness_200": true,
+    "production_d1_0023_applied": true,
+    "production_d1_portfolio_sql_schema_accepted": true,
+    "landing_public_web_200": true,
+    "admin_cloudflare_access_enforced": true,
+    "source_sdk_browser_execution": {
+      "real_js_source_blob": "c6f7d32556b3a79a367018c2488cba0fc166c3bf",
+      "kind": "in_browser_real_module_with_blob_dependency_rewrite_and_synthetic_transport",
+      "result": "PASS",
+      "calls": 1,
+      "method": "GET",
+      "bearer": true,
+      "workspace": "wsp_hospital_001",
+      "invalid_workspace_denied_before_network": true
+    },
+    "source_cli_browser_execution": {
+      "real_cli_source_blob": "f25178fff585ad7231d31fdf15f5f1f0b6fd7b8e",
+      "kind": "in_browser_source_with_readonly_injected_operation_index_and_node_buffer_polyfill_using_synthetic_transport",
+      "result": "PASS",
+      "exit_codes": [
+        0,
+        0,
+        2
+      ],
+      "calls": 2,
+      "authenticated": true,
+      "invalid_scope_denied": true
+    }
+  },
+  "cloudflare_runtime": {
+    "engine_production": {
+      "script": "taghvim-api",
+      "version_id": "2398e28c-1974-4dd9-9c94-f788d76757ad",
+      "source_sha": "c5846bc312c793b7201121537424e8036a31c57b"
+    },
+    "landing_production": {
+      "script": "taghvim-web",
+      "version_id": "10e9cacb-14a8-4c5f-b173-328f1bb3b2b7",
+      "upload_utc": "2026-11-21T04:54:15.61808Z"
+    },
+    "configured_worker_build_triggers": {
+      "taghvim_api": 0,
+      "taghvim_web": 0,
+      "taghvim_api_sandbox": 0
+    }
+  },
+  "blockers": [
+    "GITHUB_ACTIONS_90_PERCENT_OWNER_BUDGET_STOP_NO_EXPLICIT_REOPEN",
+    "UNTESTED_NEW_ENGINE_SOURCE_IN_REAL_SANDBOX_AND_PRODUCTION",
+    "LIVE_OPENAPI_69_VS_ENGINE_SOURCE_70",
+    "LANDING_SOURCE_AND_LIVE_WORKER_DEPLOYMENT_DRIFT",
+    "LANDING_ENGINE_VENDOR_SNAPSHOT_STILL_PINNED_TO_OLD_LIVE_API",
+    "FULL_AUTHENTICATED_CUSTOMER_SIGNUP_EMAIL_KEY_SDK_CLI_WIDGET_E2E_RELEASE_COHORT_NOT_ATTESTED"
+  ],
+  "not_claimed": [
+    "real_live_portfolio_200",
+    "real_customer_portfolio_data",
+    "public_GA",
+    "billing",
+    "real_mailbox_to_admission_proof"
+  ],
+  "safety": {
+    "secrets_read": false,
+    "customer_traffic_mutated": false,
+    "d1_writes": false,
+    "github_actions_expensive_runners_dispatched": false,
+    "cloudflare_deployments_issued": false
+  }
+}
