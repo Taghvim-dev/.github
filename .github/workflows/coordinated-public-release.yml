@@ -60,7 +60,7 @@ jobs:
   public-contract-parity:
     # Draft = inert candidate; ready_for_review must request a complete, tested SHA.
     # Main pushes and explicit owner-driven verification still execute normally.
-    if: ${{ false }} # T0 hard stop: explicit owner approval and reviewed new commit required
+    if: ${{ github.event_name == 'pull_request' && github.head_ref == 'feat/t0-canonical-world-finance-cohort-20261122' && github.event.pull_request.user.login == '007dude' && github.event.pull_request.draft == false }} # One owner-reviewed exact source cohort; no recurring Actions or independent deployment
     runs-on: ubuntu-26.04
     timeout-minutes: 12
     steps:
