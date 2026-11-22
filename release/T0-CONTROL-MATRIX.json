@@ -4,20 +4,20 @@
   "product": "Taghvim.dev",
   "contract_version": "2.1.0",
   "current_source": {
-    "engine_main_sha": "8e5b5afa8ef96ab36d189c7a904434fa664cebb8",
+    "engine_main_sha": "e5078446599d6ee294f1e24eb2cb3ea33b094fef",
     "landing_main_sha": "524c4e6fd9e1269bd50a8f7b34e92183e0db920a",
     "shared_policy_sha": "c195c8bfde573b6195bd1b3bd00e3535accc9040",
     "prewrite_source_policy_sha": "f3bc8d18c5c31fd1125dd4da4887c86b9e3f8447",
-    "engine_pr_head_sha": "9f026f30fa47ed5cee9317df35ec379ced2b599c",
-    "engine_source_ci_run": "45083043005",
+    "engine_pr_head_sha": "e4dbd87130c2a276b067d7750d80218c3176c11b",
+    "engine_source_ci_run": "45084546369",
     "ga_evidence_transport": "github_actions_same_run_artifact_no_committed_source_receipt",
     "source_cohort_20261122": {
       "engine": {
-        "main": "8e5b5afa8ef96ab36d189c7a904434fa664cebb8",
-        "reviewed_head": "9f026f30fa47ed5cee9317df35ec379ced2b599c",
-        "reviewed_pr": 284,
-        "ci_run": "45083043005",
-        "verified_equal_git_tree": "477f9a0049943c7355e94c9351c828ffb09235e0"
+        "main": "e5078446599d6ee294f1e24eb2cb3ea33b094fef",
+        "reviewed_head": "e4dbd87130c2a276b067d7750d80218c3176c11b",
+        "reviewed_pr": 285,
+        "ci_run": "45084546369",
+        "verified_equal_git_tree": "d6ada61dd106414f4e04312437d6bb720e8aecae"
       },
       "landing": {
         "main": "524c4e6fd9e1269bd50a8f7b34e92183e0db920a",
@@ -257,7 +257,7 @@
       ],
       "source_ci_run": "39691890610",
       "dependent_component_ci": {
-        "engine": "45083043005",
+        "engine": "45084546369",
         "landing": "45004362835"
       },
       "policy_main_sha": "f3bc8d18c5c31fd1125dd4da4887c86b9e3f8447",
@@ -282,7 +282,7 @@
       "source_ci_run": "39691890610",
       "reviewed_action_main_sha": "f3bc8d18c5c31fd1125dd4da4887c86b9e3f8447",
       "component_source_ci": {
-        "engine": "45083043005",
+        "engine": "45084546369",
         "landing": "45004362835"
       },
       "live_evidence": null,
@@ -313,7 +313,7 @@
       ],
       "package_contract_version": "2.1.0",
       "dependent_component_ci": {
-        "engine": "45083043005",
+        "engine": "45084546369",
         "landing": "45004362835",
         "SDK": "45083737962",
         "CLI": "45083703172",

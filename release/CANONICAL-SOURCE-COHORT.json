@@ -3,11 +3,13 @@
   "kind": "taghvim.t0.canonical_source_cohort",
   "authority": "Taghvim-dev/.github",
   "engine": {
-    "sha": "8e5b5afa8ef96ab36d189c7a904434fa664cebb8",
-    "ci": "45083043005",
+    "sha": "e5078446599d6ee294f1e24eb2cb3ea33b094fef",
+    "ci": "45084546369",
     "workflow_id": 372423484,
-    "reviewed_sha": "9f026f30fa47ed5cee9317df35ec379ced2b599c",
-    "main_ci": "44944961810"
+    "reviewed_sha": "e4dbd87130c2a276b067d7750d80218c3176c11b",
+    "main_ci": "44944961810",
+    "reviewed_pr": 285,
+    "reviewed_tree": "d6ada61dd106414f4e04312437d6bb720e8aecae"
   },
   "landing": {
     "sha": "524c4e6fd9e1269bd50a8f7b34e92183e0db920a",
@@ -41,8 +43,8 @@
   },
   "source_ci_attestation_20261122": {
     "engine": {
-      "reviewed_head": "9f026f30fa47ed5cee9317df35ec379ced2b599c",
-      "successful_ci_run": "45083043005",
+      "reviewed_head": "e4dbd87130c2a276b067d7750d80218c3176c11b",
+      "successful_ci_run": "45084546369",
       "main_tree_equals_reviewed_tree": true
     },
     "landing": {

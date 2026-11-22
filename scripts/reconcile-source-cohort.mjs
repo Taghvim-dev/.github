@@ -53,6 +53,39 @@ export function projectSourceCohort(source,release,controls){
    if(x.component_source_ci?.[n])x.component_source_ci[n]=item.ci;
   }
  }
+ // T0: every active cohort mirror is projected from one canonical source.
+ const active=t.current_source?.source_cohort_20261122;
+ if(!active?.engine||!active?.landing||!Number.isInteger(source.engine.reviewed_pr)||
+    source.engine.reviewed_pr<1||!sha.test(source.engine.reviewed_tree||""))
+  block("missing canonical reviewed PR / immutable Git tree");
+ Object.assign(active.engine,{main:source.engine.sha,reviewed_head:source.engine.reviewed_sha,
+  reviewed_pr:source.engine.reviewed_pr,ci_run:source.engine.ci,
+  verified_equal_git_tree:source.engine.reviewed_tree});
+ if(active.landing.main!==source.landing.sha||active.landing.reviewed_head!==source.landing.reviewed_sha||
+    String(active.landing.ci_run)!==String(source.landing.ci))
+  block("landing source evidence drift");
+ const ciProof=source.source_ci_attestation_20261122;
+ if(ciProof?.engine?.reviewed_head!==source.engine.reviewed_sha||
+    String(ciProof?.engine?.successful_ci_run)!==String(source.engine.ci)||
+    ciProof.engine.main_tree_equals_reviewed_tree!==true||
+    ciProof?.landing?.reviewed_head!==source.landing.reviewed_sha||
+    String(ciProof?.landing?.successful_ci_run)!==String(source.landing.ci))
+  block("reviewed CI attestation split brain");
+ const publicProof=source.public_ci_attestation_20261122;
+ const publicActive=t.current_source?.public_cohort_20261122;
+ if(!publicActive)block("public cohort projection target absent");
+ for(const [name,key] of [["SDK","sdk"],["CLI","cli"],["cookbooks","cookbooks"]]){
+  if(publicProof?.[name]?.sha!==source[name]?.sha||
+    String(publicProof?.[name]?.ci)!==String(source[name]?.ci)||!publicActive[key])
+   block("public exact SHA/CI split brain "+name);
+  publicActive[key].sha=source[name].sha;
+  publicActive[key].ci=source[name].ci;
+ }
+ if(publicProof?.public_operations!==source.public_contract.operation_count)
+  block("public operation count proof diverges");
+ publicActive.openapi_git_blob_sha=source.public_contract.openapi_git_blob_sha;
+ publicActive.operation_index_git_blob_sha=source.public_contract.operation_index_git_blob_sha;
+ publicActive.operation_count=source.public_contract.operation_count;
  // One universal source authority for every product surface. SDK, CLI and
  // Cookbooks are no longer permitted to write their own independent current
  // source register while the Engine/Landing cohort remains stale.
