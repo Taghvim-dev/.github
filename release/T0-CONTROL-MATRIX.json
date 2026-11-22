@@ -4,20 +4,20 @@
   "product": "Taghvim.dev",
   "contract_version": "2.1.0",
   "current_source": {
-    "engine_main_sha": "d51d3ecaef731822cffd51d13c12443814338c26",
+    "engine_main_sha": "e46420d23151e74966348a461e2369746a34299e",
     "landing_main_sha": "524c4e6fd9e1269bd50a8f7b34e92183e0db920a",
     "shared_policy_sha": "c195c8bfde573b6195bd1b3bd00e3535accc9040",
     "prewrite_source_policy_sha": "f3bc8d18c5c31fd1125dd4da4887c86b9e3f8447",
-    "engine_pr_head_sha": "18c651308fab63dbed5c50cdb1a0ada4758fe273",
-    "engine_source_ci_run": "45004430439",
+    "engine_pr_head_sha": "f877138fd964506b6f4185c9bf6cdb90b36faa68",
+    "engine_source_ci_run": "45007299204",
     "ga_evidence_transport": "github_actions_same_run_artifact_no_committed_source_receipt",
     "source_cohort_20261122": {
       "engine": {
-        "main": "d51d3ecaef731822cffd51d13c12443814338c26",
-        "reviewed_head": "18c651308fab63dbed5c50cdb1a0ada4758fe273",
+        "main": "e46420d23151e74966348a461e2369746a34299e",
+        "reviewed_head": "f877138fd964506b6f4185c9bf6cdb90b36faa68",
         "reviewed_pr": 277,
-        "ci_run": "45004430439",
-        "verified_equal_git_tree": "2b975db4f3ec6600f3b05310f52db19a19aba045"
+        "ci_run": "45007299204",
+        "verified_equal_git_tree": "c3b815756988bed82b5d21f38e4a8bac9c93d38d"
       },
       "landing": {
         "main": "524c4e6fd9e1269bd50a8f7b34e92183e0db920a",
