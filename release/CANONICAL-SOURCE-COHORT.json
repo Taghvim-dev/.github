@@ -21,23 +21,23 @@
   "ga_approved": false,
   "payment_enabled": false,
   "SDK": {
-    "sha": "931391666e31b5d20796917dcbe83b1103dd97b4",
-    "ci": "44944984333"
+    "sha": "792c473b3aaa504236ab3c1041bc5e0e34a92595",
+    "ci": "45005332702"
   },
   "CLI": {
-    "sha": "feb0f9f5b63cd98862353afdb82364bbbfd8cd9d",
-    "ci": "44945002516"
+    "sha": "b8a5f79eb928d93ad7eef99f315ebe1fb176b19f",
+    "ci": "45005500227"
   },
   "cookbooks": {
-    "sha": "9aae33c9cffb5f0c6f19ea8f40231f1272c5fce6",
-    "ci": "44945164325",
-    "sdk_source_commit": "931391666e31b5d20796917dcbe83b1103dd97b4"
+    "sha": "80e1be66310e15a82828e841c42e829297657340",
+    "ci": "45005644615",
+    "sdk_source_commit": "792c473b3aaa504236ab3c1041bc5e0e34a92595"
   },
   "public_contract": {
     "contract_version": "2.1.0",
-    "openapi_git_blob_sha": "eb23f6ce223f1605797c35008385dadf3aed583a",
-    "operation_index_git_blob_sha": "c8333d6c22618971584367dabdbbb1ee841edadf",
-    "operation_count": 66
+    "openapi_git_blob_sha": "46146dbcec18eadad579dcac50afbf86d15d3276",
+    "operation_index_git_blob_sha": "31f5045519809b7da0f77ba09dbfa071078cb929",
+    "operation_count": 67
   },
   "source_ci_attestation_20261122": {
     "engine": {
@@ -54,5 +54,21 @@
     "source_only": true,
     "production_released": false,
     "ga_attested": false
+  },
+  "public_ci_attestation_20261122": {
+    "SDK": {
+      "sha": "792c473b3aaa504236ab3c1041bc5e0e34a92595",
+      "ci": "45005332702"
+    },
+    "CLI": {
+      "sha": "b8a5f79eb928d93ad7eef99f315ebe1fb176b19f",
+      "ci": "45005500227"
+    },
+    "cookbooks": {
+      "sha": "80e1be66310e15a82828e841c42e829297657340",
+      "ci": "45005644615"
+    },
+    "source_only": true,
+    "public_operations": 67
   }
 }

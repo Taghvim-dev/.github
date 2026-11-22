@@ -29,6 +29,25 @@
       "status": "SOURCE_CI_VERIFIED_NO_LIVE_GA",
       "github_actions_budget": "scoped owner release only",
       "d1_migration_0023": "already applied prod and sandbox; do not replay"
+    },
+    "public_cohort_20261122": {
+      "sdk": {
+        "sha": "792c473b3aaa504236ab3c1041bc5e0e34a92595",
+        "ci": "45005332702"
+      },
+      "cli": {
+        "sha": "b8a5f79eb928d93ad7eef99f315ebe1fb176b19f",
+        "ci": "45005500227"
+      },
+      "cookbooks": {
+        "sha": "80e1be66310e15a82828e841c42e829297657340",
+        "ci": "45005644615"
+      },
+      "operation_index_git_blob_sha": "31f5045519809b7da0f77ba09dbfa071078cb929",
+      "openapi_git_blob_sha": "46146dbcec18eadad579dcac50afbf86d15d3276",
+      "operation_count": 67,
+      "scope": "PRERELEASE_SOURCE_CI_ONLY",
+      "ga": false
     }
   },
   "general_availability_approved": false,
