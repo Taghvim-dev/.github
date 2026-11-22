@@ -179,14 +179,28 @@ test("T0 six-repository polling cutover is SHA-bound, source-complete and nonrec
  const reg=JSON.parse(readFileSync(new URL("../release/CI-CONTROL-REGISTRY.json",import.meta.url),"utf8"));
  const wf=readFileSync(new URL("../.github/workflows/t0-ci-incident.yml",import.meta.url),"utf8");
  const proof=JSON.parse(readFileSync(new URL("../release/CI-OBSERVER-CUTOVER.json",import.meta.url),"utf8"));
- assert.equal(reg.event_admission.mode,"schedule_poll_current_main_and_open_pr_heads");
- assert.equal(reg.event_admission.rollout_state,"SCHEDULED_CANONICAL_ALL_SIX");
+ assert.equal(reg.event_admission.mode,"owner_dispatch_current_main_and_open_pr_heads");
+ assert.equal(reg.event_admission.sweep_cron,null);
+ assert.equal(reg.event_admission.current_event_authority,"release/CI-OBSERVER-CURRENT.json");
+ assert.equal(reg.event_admission.rollout_state,"OWNER_DISPATCH_ONLY_NO_CRON");
  assert.deepEqual(reg.event_admission.poll_incident_outcomes,reg.outcomes.incident);
- assert.ok(wf.includes("cron: '13 */3 * * *'"));
+ assert.doesNotMatch(wf,/^\s+schedule:/m);
+ assert.match(wf,/github.actor == '007dude'/);
+ assert.match(wf,/github.ref == 'refs\/heads\/main'/);
  for(const forbidden of ["workflow_run:","pull_request_target:","actions/checkout"])assert.ok(!wf.includes(forbidden));
  assert.match(wf,/workflow_dispatch:/);
  assert.match(wf,/ci-incident@b13c7fcdc14c7747b727c7ee2b66f8ef9dbf0f3b/);
  assert.equal(proof.controller_sha,reg.event_admission.all_repo_adapters_sha);
+ // Historical cutover is immutable; source-only current admission is a different registry.
+ const actual=JSON.parse(readFileSync(new URL("../release/CI-OBSERVER-CURRENT.json",import.meta.url),"utf8"));
+ assert.equal(actual.scope,"source_only_pre_effect_not_a_runtime_receipt");
+ assert.equal(actual.controller_sha,proof.controller_sha);
+ assert.equal(actual.mode,"owner_dispatch_only");
+ assert.equal(actual.trigger,"workflow_dispatch");
+ assert.equal(actual.schedule_enabled,false);
+ assert.equal(actual.workflow_run_fanout,false);
+ assert.equal(actual.ga_authorized,false);
+ assert.deepEqual(actual.monitored_repositories,Object.keys(reg.monitored_repositories).sort());
  assert.equal(proof.adapters.length,6);
  assert.deepEqual(proof.adapters.map(x=>x.repository).sort(),Object.keys(reg.monitored_repositories).sort());
  assert.ok(proof.adapters.every(x=>x.trigger==="schedule_or_owner_dispatch_only"&&x.pin===proof.controller_sha));
@@ -205,9 +219,10 @@ test("T0 complete observer inventory forbids unmonitored product actions and fal
  assert.deepEqual([...CONTROL.monitored_repositories["Taghvim-dev/.github"]].sort(),localWorkflows.sort());
  const observer=fs.readFileSync(new URL("../.github/workflows/t0-ci-incident.yml",import.meta.url),"utf8");
  assert.doesNotMatch(observer,/workflow_run:/);
- assert.match(observer,/schedule:/);
+ assert.doesNotMatch(observer,/^\s+schedule:/m);
+ assert.match(observer,/github.actor == '007dude'/);
  assert.match(observer,/workflow_dispatch:/);
- assert.equal(CONTROL.event_admission.rollout_state,"SCHEDULED_CANONICAL_ALL_SIX");
+ assert.equal(CONTROL.event_admission.rollout_state,"OWNER_DISPATCH_ONLY_NO_CRON");
  assert.ok(!CONTROL.monitored_repositories["Taghvim-dev/.github"].includes("t0-ci-incident-reconciler"));
  for(const [repo,names] of Object.entries({
   "Taghvim-dev/engine":["public-api-release-observation","t0-private-landing-source-readonly-probe",
@@ -236,6 +251,15 @@ test("T0 canonical three-file release cohort has exactly one PR/push validation 
  assert.match(docs,/name: public-docs-verify/);
  assert.match(release,/name: coordinated-public-release/);
  assert.match(release,/T0 canonical source cohort projection gate \(pre-effect\)/);
+ const owned=[...release.matchAll(/^      - "([^"]+)"\s*$/gm)].map(x=>x[1]);
+ const names=[...new Set(owned)];
+ assert.ok(names.length>=18,"Canonical release ownership scope missing");
+ for(const path of names){
+  assert.equal(owned.filter(x=>x===path).length,2,"PR/push source ownership split brain: "+path);
+  assert.equal(docs.split('      - "'+path+'"').length-1,2,
+    "Duplicate docs CI admission or missing source ownership: "+path);
+ }
+
 });
 
 test("T0 all-six local pre-review admission is a single canonical deny-by-default CLI",async()=>{

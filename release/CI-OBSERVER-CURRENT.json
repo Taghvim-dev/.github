@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "kind": "taghvim.t0.ci_observer_current_source_authority",
+  "authority": "Taghvim-dev/.github",
+  "scope": "source_only_pre_effect_not_a_runtime_receipt",
+  "controller_sha": "b13c7fcdc14c7747b727c7ee2b66f8ef9dbf0f3b",
+  "mode": "owner_dispatch_only",
+  "trigger": "workflow_dispatch",
+  "owner": "007dude",
+  "branch": "main",
+  "schedule_enabled": false,
+  "workflow_run_fanout": false,
+  "no_untrusted_checkout": true,
+  "no_auto_retries": true,
+  "production_mutation_authority": false,
+  "ga_authorized": false,
+  "legacy_cutover_proof": "release/CI-OBSERVER-CUTOVER.json",
+  "monitored_repositories": [
+    "Taghvim-dev/.github",
+    "Taghvim-dev/CLI",
+    "Taghvim-dev/SDK",
+    "Taghvim-dev/cookbooks",
+    "Taghvim-dev/engine",
+    "Taghvim-dev/landing"
+  ]
+}

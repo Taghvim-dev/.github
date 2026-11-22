@@ -44,6 +44,8 @@ on:
       - "test/source-runtime-separation-20261023.test.mjs"
       - "scripts/release-pins.mjs"
       - "test/release-pins.test.mjs"
+      - "scripts/reconcile-public-widget.mjs"
+      - "test/reconcile-public-widget.test.mjs"
       - ".github/workflows/coordinated-public-release.yml"
   workflow_dispatch:
     inputs:

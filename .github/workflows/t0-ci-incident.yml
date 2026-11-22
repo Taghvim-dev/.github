@@ -13,7 +13,7 @@ concurrency:
   cancel-in-progress: false
 jobs:
   reconcile:
-    if: ${{ false }} # T0 hard stop: explicit owner approval and reviewed new commit required
+    if: ${{ github.event_name == 'workflow_dispatch' && github.actor == '007dude' && github.ref == 'refs/heads/main' }} # owner-only manual admission, no cron or workflow_run
     runs-on: ubuntu-26.04
     timeout-minutes: 6
     steps:
