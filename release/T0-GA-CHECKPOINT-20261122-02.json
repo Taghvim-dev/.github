@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "kind": "TAGHVIM_T0_GA_COHEISVE_CHECKPOINT",
+  "checkpoint_stage": "CROSS_REPO_SOURCE_PARITY_ATTESTED_RELEASE_BLOCKED",
+  "observed_date_utc": "2026-11-22",
+  "previous_evidence": {
+    "repo": "Taghvim-dev/.github",
+    "commit": "4d20df99d461546aa9669e311daf1aa2ebe7fda0",
+    "path": "release/T0-GA-CANDIDATE-20261122.json",
+    "git_blob_sha": "9c8b1979083cb373a8db07e0824274d44c299dad"
+  },
+  "git_main": {
+    "engine": "a9fa967b8c9d46d804a716fb3f9c2d7a017a3b45",
+    "sdk": "6e2a8fd68ff57b33156e1336328ac7b36df8b1ab",
+    "cli": "c6429deacb6e9b3fecd2bca4feca63c736a41f30",
+    "cookbooks": "5814d8bd670c492ac7f6e8c34ef8a600230ec14d",
+    "landing": "e56add1e06600acf7106be020c343983710f6c61"
+  },
+  "canonical_contract": {
+    "engine_openapi_git_blob": "46146dbcec18eadad579dcac50afbf86d15d3276",
+    "engine_total_ops": 70,
+    "source_public_operations": 67,
+    "index_sha_engine_sdk_cli_cookbooks": "31f5045519809b7da0f77ba09dbfa071078cb929",
+    "landing_index_git_blob": "4dc967e95d9dfea01ff01019510b344a8feda651",
+    "five_repository_operations_deep_equal": true,
+    "landing_vendored_openapi_exact_blob_equal": true,
+    "landing_predeploy_source_identity_check": "PASS",
+    "actual_landing_backend_release_check": "BLOCKED_LIVE_API_OLD"
+  },
+  "sdk_cli_tests": {
+    "sdk_real_js_browser_transport_execution": "PASS_SYNTHETIC_RESPONSE",
+    "sdk_requests": 1,
+    "invalid_workspace_pre_network_denied": true,
+    "cli_actual_js_browser_execution": "PASS_SYNTHETIC_RESPONSE_WITH_MODULE_DEPENDENCY_SHIM",
+    "cli_exit_codes": [
+      0,
+      0,
+      2
+    ],
+    "cli_requests": 2,
+    "node_python_full_ci": "NOT_RUN_BUDGET_HARD_STOP"
+  },
+  "migration": {
+    "production_applied_0023": true,
+    "sandbox_applied_0023": true,
+    "exact_0023_migration_git_blob_same_old_and_new": true,
+    "source_commit_provenance": "a9fa967b8c9d46d804a716fb3f9c2d7a017a3b45",
+    "exact_sql_applied_byte_parity": "UNVERIFIED"
+  },
+  "deployment": {
+    "api_old_source_sha": "c5846bc312c793b7201121537424e8036a31c57b",
+    "api_live_operations": 69,
+    "api_live_missing": "listCalendarPortfolio",
+    "landing_live_version": "10e9cacb-14a8-4c5f-b173-328f1bb3b2b7",
+    "cloudflare_build_triggers_configured": false,
+    "ga_deployment_performed": false
+  },
+  "admission": {
+    "ga": false,
+    "github_actions_hard_stop": true,
+    "approval_to_spend_github_actions_minutes": false,
+    "full_customer_e2e": false,
+    "authoritative_evidence_gaps": [
+      "PROTECTED_CI_SANDBOX_REAL_E2E",
+      "ENGINE_API_SANDBOX_AND_PRODUCTION_RELEASE_SHA",
+      "LANDING_DEPLOY_SOURCE_SHA",
+      "LIVE_PORTFOLIO_HTTP_200_WITH_EXPLICIT_TENANT_GRANTS",
+      "DEVELOPER_SIGNUP_TO_EMAIL_TO_KEY_SDK_CLI_AND_WIDGET_BOUND_TO_SAME_COHORT"
+    ],
+    "next_phase": "After explicit owner authorization to reopen bounded CI budget, use canonical reviewed T0 release and immutable SHA gates; do not bypass with ad-hoc Cloudflare uploads."
+  }
+}
