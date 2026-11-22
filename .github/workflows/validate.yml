@@ -29,7 +29,7 @@ concurrency:
 jobs:
   validate:
     # PR source is untrusted until complete: only Ready PRs enter CI.
-    if: ${{ (github.event_name != 'pull_request' && github.ref == 'refs/heads/main' && github.actor == '007dude' && !startsWith(github.event.head_commit.message, 'T0_CERTIFY_SOURCE_COHORT_20261122')) || (github.event_name == 'pull_request' && github.event.pull_request.draft == false && github.event.pull_request.user.login == '007dude' && github.event.pull_request.title != 'T0_CERTIFY_SOURCE_COHORT_20261122') }} # no billing for release-only dual CI, ready and owner only
+    if: ${{ (github.event_name != 'pull_request' && github.ref == 'refs/heads/main' && github.actor == '007dude' && !startsWith(github.event.head_commit.message, 'T0_CERTIFY_SOURCE_COHORT_')) || (github.event_name == 'pull_request' && github.event.pull_request.draft == false && github.event.pull_request.user.login == '007dude' && !startsWith(github.event.pull_request.title, 'T0_CERTIFY_SOURCE_COHORT_')) }} # no billing for release-only dual CI, ready and owner only
     runs-on: ubuntu-26.04
     timeout-minutes: 10
     steps:
