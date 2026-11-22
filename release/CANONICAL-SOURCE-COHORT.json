@@ -3,17 +3,17 @@
   "kind": "taghvim.t0.canonical_source_cohort",
   "authority": "Taghvim-dev/.github",
   "engine": {
-    "sha": "c5846bc312c793b7201121537424e8036a31c57b",
-    "ci": "44944591712",
+    "sha": "d51d3ecaef731822cffd51d13c12443814338c26",
+    "ci": "45004430439",
     "workflow_id": 372423484,
-    "reviewed_sha": "6775daf62ab5b5d090cadeed6e05da1af6a0d38a",
+    "reviewed_sha": "18c651308fab63dbed5c50cdb1a0ada4758fe273",
     "main_ci": "44944961810"
   },
   "landing": {
-    "sha": "6d94901256d847611cf4592d105b7aaf8833d7d5",
-    "ci": "44945632333",
+    "sha": "524c4e6fd9e1269bd50a8f7b34e92183e0db920a",
+    "ci": "45004362835",
     "workflow_id": 390048334,
-    "reviewed_sha": "44f259a105be1569a0a8678ed9d710bbc0d4c710",
+    "reviewed_sha": "52b8cb6b17fb9c54b6173bb1628d187ef4e02afb",
     "main_ci": "44945763761"
   },
   "source_only": true,
@@ -38,5 +38,21 @@
     "openapi_git_blob_sha": "eb23f6ce223f1605797c35008385dadf3aed583a",
     "operation_index_git_blob_sha": "c8333d6c22618971584367dabdbbb1ee841edadf",
     "operation_count": 66
+  },
+  "source_ci_attestation_20261122": {
+    "engine": {
+      "reviewed_head": "18c651308fab63dbed5c50cdb1a0ada4758fe273",
+      "successful_ci_run": "45004430439",
+      "main_tree_equals_reviewed_tree": true
+    },
+    "landing": {
+      "reviewed_head": "52b8cb6b17fb9c54b6173bb1628d187ef4e02afb",
+      "successful_ci_run": "45004362835",
+      "main_tree_equals_reviewed_tree": true
+    },
+    "main_push_ci_skipped_under_budget_policy": true,
+    "source_only": true,
+    "production_released": false,
+    "ga_attested": false
   }
 }
