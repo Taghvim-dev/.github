@@ -45,7 +45,7 @@
   "source_verification": {
     "date": "2026-11-22",
     "phase": "current-main-source-CI-attested-production-release-pending",
-    "engine_main_merge_sha": "d51d3ecaef731822cffd51d13c12443814338c26",
+    "engine_main_merge_sha": "e46420d23151e74966348a461e2369746a34299e",
     "engine_offline_ci_run": "40195989813",
     "engine_live_gate_ci_run": "39439068311",
     "landing_main_merge_sha": "524c4e6fd9e1269bd50a8f7b34e92183e0db920a",
@@ -149,8 +149,8 @@
     },
     "latest_checked": {
       "date": "2026-11-22",
-      "engine_sha": "d51d3ecaef731822cffd51d13c12443814338c26",
-      "engine_ci": "45004430439",
+      "engine_sha": "e46420d23151e74966348a461e2369746a34299e",
+      "engine_ci": "45007299204",
       "landing_sha": "524c4e6fd9e1269bd50a8f7b34e92183e0db920a",
       "landing_ci": "45004362835",
       "shared_release_actions_sha": "c195c8bfde573b6195bd1b3bd00e3535accc9040",
@@ -212,9 +212,9 @@
       "policy_main_sha": "f3bc8d18c5c31fd1125dd4da4887c86b9e3f8447",
       "policy_pr": "Taghvim-dev/.github PR #47",
       "policy_test_run": "39691890610",
-      "engine_main_sha": "d51d3ecaef731822cffd51d13c12443814338c26",
-      "engine_reviewed_head": "18c651308fab63dbed5c50cdb1a0ada4758fe273",
-      "engine_ci_run": "45004430439",
+      "engine_main_sha": "e46420d23151e74966348a461e2369746a34299e",
+      "engine_reviewed_head": "f877138fd964506b6f4185c9bf6cdb90b36faa68",
+      "engine_ci_run": "45007299204",
       "landing_main_sha": "524c4e6fd9e1269bd50a8f7b34e92183e0db920a",
       "landing_reviewed_head": "52b8cb6b17fb9c54b6173bb1628d187ef4e02afb",
       "landing_ci_run": "45004362835",
@@ -814,10 +814,10 @@
     "source_only": true,
     "remote_runtime_attested": false,
     "engine": {
-      "commit": "d51d3ecaef731822cffd51d13c12443814338c26",
+      "commit": "e46420d23151e74966348a461e2369746a34299e",
       "package": "2.1.0",
       "lock": "2.1.0",
-      "ci": "45004430439"
+      "ci": "45007299204"
     },
     "landing": {
       "commit": "524c4e6fd9e1269bd50a8f7b34e92183e0db920a",
