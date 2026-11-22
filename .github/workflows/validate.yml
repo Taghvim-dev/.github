@@ -29,7 +29,7 @@ concurrency:
 jobs:
   validate:
     # PR source is untrusted until complete: only Ready PRs enter CI.
-    if: vars.TAGHVIM_ACTIONS_BUDGET_20261121 == 'OWNER_APPROVED_REOPEN' && (github.event_name != 'pull_request' || github.event.pull_request.draft == false)
+    if: ${{ false }} # T0 hard stop: explicit owner approval and reviewed new commit required
     runs-on: ubuntu-26.04
     timeout-minutes: 10
     steps:

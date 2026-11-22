@@ -10,6 +10,8 @@ on:
       - 'scripts/reconcile-public-widget.mjs'
       - 'scripts/reconcile-source-cohort.mjs'
       - '.github/workflows/t0-public-widget-sdk-reconciler.yml'
+  schedule:
+    - cron: '23 */6 * * *'
   workflow_dispatch:
 permissions:
   contents: write
@@ -20,7 +22,7 @@ concurrency:
   cancel-in-progress: false
 jobs:
   reconcile:
-    if: vars.TAGHVIM_ACTIONS_BUDGET_20261121 == 'OWNER_APPROVED_REOPEN' && (github.ref == 'refs/heads/main')
+    if: ${{ false }} # T0 hard stop: explicit owner approval and reviewed new commit required
     runs-on: ubuntu-26.04
     timeout-minutes: 5
     steps:

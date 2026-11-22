@@ -20,7 +20,7 @@ concurrency:
   cancel-in-progress: true
 jobs:
   proof:
-    if: vars.TAGHVIM_ACTIONS_BUDGET_20261121 == 'OWNER_APPROVED_REOPEN'
+    if: ${{ false }} # T0 hard stop: explicit owner approval and reviewed new commit required
     runs-on: ubuntu-26.04
     timeout-minutes: 5
     steps:
