@@ -3,7 +3,7 @@
   "authority": "Taghvim-dev/.github",
   "constitution": "T0 canonical, pre-effect, authenticated-current-source-only, fail-closed",
   "product": "Taghvim.dev",
-  "notification_policy": "One canonical SHA-pinned current-source scan across six repositories; schedule and owner dispatch only, zero workflow_run fanout, bounded exact-SHA plan, pre-effect incident CAS, no GA or deployment privileges.",
+  "notification_policy": "Canonical six-repository incident inventory with T0 hard stop. The GitHub Actions observer has no schedule and cannot spend minutes without reviewed owner admission. Historical cutover receipt is not a claim of current scheduled execution. No workflow_run fanout, production mutations, billing or GA authority.",
   "monitored_repositories": {
     "Taghvim-dev/engine": [
       "controlled-engine-release",
@@ -79,14 +79,14 @@
   "production_mutation_authority": false,
   "event_admission": {
     "version": 2,
-    "mode": "schedule_poll_current_main_and_open_pr_heads",
+    "mode": "owner_dispatch_only_current_source",
     "poll_incident_outcomes": [
       "failure",
       "timed_out",
       "startup_failure",
       "action_required"
     ],
-    "sweep_cron": "13 */3 * * *",
+    "sweep_cron": null,
     "max_run_pages": 10,
     "no_fork_dispatch": true,
     "no_untrusted_checkout": true,
@@ -101,10 +101,10 @@
     "zero_step_boundary": "PRE_RUNNER_PLATFORM_OR_QUOTA",
     "green_recovery_requires": "same_current_SHA_workflow_event_branch_newer_success",
     "capabilities": "T0 CI incident tracking only; no deployment, billing, GA or permission escalation",
-    "rollout_state": "SCHEDULED_CANONICAL_ALL_SIX",
+    "rollout_state": "T0_HARD_STOP_PENDING_OWNER_REENABLE",
     "all_repo_adapters_sha": "b13c7fcdc14c7747b727c7ee2b66f8ef9dbf0f3b",
     "cutover_evidence_registry": "release/CI-OBSERVER-CUTOVER.json"
   },
-  "coverage_rule": "Each monitored repository currently retains SHA-pinned per-completion observer until a reviewed polling action ships on .github/main. Then all six thin adapters switch to SHA-pinned scheduled current-head scanning, no untrusted checkout and no deployment privilege. Cutover is fail-closed and receipt-bound.",
+  "coverage_rule": "Source-owned incident registry enumerates six GitHub repositories. Current observer workflow is disabled with a manual-only trigger; re-enable only through reviewed owner-authorized budget-admitted CI. No competing incident watchers and no false scheduled monitor claim.",
   "blocked_reconciliation_policy": "WAIT_FOR_PRIVATE_SOURCE_READ_AUTHORITY is BLOCKED_CROSS_REPO_AUTH, never GA or a successful cross-repo source reconciliation."
 }

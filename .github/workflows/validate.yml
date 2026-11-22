@@ -12,12 +12,16 @@ on:
       - "release/PUBLIC-RELEASE-MATRIX.json"
       - "release/CANONICAL-SOURCE-COHORT.json"
       - "release/T0-CONTROL-MATRIX.json"
+      - "scripts/reconcile-source-cohort.mjs"
+      - "test/*source-cohort*.test.mjs"
   push:
     branches: [main]
     paths-ignore:
       - "release/PUBLIC-RELEASE-MATRIX.json"
       - "release/CANONICAL-SOURCE-COHORT.json"
       - "release/T0-CONTROL-MATRIX.json"
+      - "scripts/reconcile-source-cohort.mjs"
+      - "test/*source-cohort*.test.mjs"
 
 permissions:
   contents: read

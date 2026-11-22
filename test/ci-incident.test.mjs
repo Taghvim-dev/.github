@@ -174,15 +174,15 @@ test("T0 durable recovery must independently prove same current SHA, same event/
  for(const bad of [{head_sha:"aa".repeat(20)},{head_branch:"other"},{workflow_id:99},{event:"pull_request"},{run_number:17},{status:"in_progress"},{conclusion:"skipped"}])
    assert.equal(newerCurrentGreenCloses({failed,run:{...green,...bad},currentSha:run.head_sha}),false,JSON.stringify(bad));
 });
-test("T0 six-repository polling cutover is SHA-bound, source-complete and nonrecursive",async()=>{
+test("T0 six-repo incident observer is disabled and cutover proof is historical",async()=>{
  const {readFileSync}=await import("node:fs");
  const reg=JSON.parse(readFileSync(new URL("../release/CI-CONTROL-REGISTRY.json",import.meta.url),"utf8"));
  const wf=readFileSync(new URL("../.github/workflows/t0-ci-incident.yml",import.meta.url),"utf8");
  const proof=JSON.parse(readFileSync(new URL("../release/CI-OBSERVER-CUTOVER.json",import.meta.url),"utf8"));
- assert.equal(reg.event_admission.mode,"schedule_poll_current_main_and_open_pr_heads");
- assert.equal(reg.event_admission.rollout_state,"SCHEDULED_CANONICAL_ALL_SIX");
+ assert.equal(reg.event_admission.mode,"owner_dispatch_only_current_source");
+ assert.equal(reg.event_admission.rollout_state,"T0_HARD_STOP_PENDING_OWNER_REENABLE");
  assert.deepEqual(reg.event_admission.poll_incident_outcomes,reg.outcomes.incident);
- assert.ok(wf.includes("cron: '13 */3 * * *'"));
+ assert.doesNotMatch(wf,/^\s*schedule:/m); assert.match(wf,/if: \$\{\{ false \}\}/);
  for(const forbidden of ["workflow_run:","pull_request_target:","actions/checkout"])assert.ok(!wf.includes(forbidden));
  assert.match(wf,/workflow_dispatch:/);
  assert.match(wf,/ci-incident@b13c7fcdc14c7747b727c7ee2b66f8ef9dbf0f3b/);
@@ -205,9 +205,9 @@ test("T0 complete observer inventory forbids unmonitored product actions and fal
  assert.deepEqual([...CONTROL.monitored_repositories["Taghvim-dev/.github"]].sort(),localWorkflows.sort());
  const observer=fs.readFileSync(new URL("../.github/workflows/t0-ci-incident.yml",import.meta.url),"utf8");
  assert.doesNotMatch(observer,/workflow_run:/);
- assert.match(observer,/schedule:/);
+ assert.doesNotMatch(observer,/^\s*schedule:/m); assert.match(observer,/if: \$\{\{ false \}\}/);
  assert.match(observer,/workflow_dispatch:/);
- assert.equal(CONTROL.event_admission.rollout_state,"SCHEDULED_CANONICAL_ALL_SIX");
+ assert.equal(CONTROL.event_admission.rollout_state,"T0_HARD_STOP_PENDING_OWNER_REENABLE");
  assert.ok(!CONTROL.monitored_repositories["Taghvim-dev/.github"].includes("t0-ci-incident-reconciler"));
  for(const [repo,names] of Object.entries({
   "Taghvim-dev/engine":["public-api-release-observation","t0-private-landing-source-readonly-probe",
