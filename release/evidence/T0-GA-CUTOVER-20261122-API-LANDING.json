@@ -1,0 +1,91 @@
+{
+  "schema_version": 1,
+  "kind": "taghvim.t0.ga.cutover.checkpoint",
+  "observed_date_utc": "2026-11-22",
+  "product": "Taghvim.dev",
+  "ga_attested": false,
+  "engine": {
+    "source_sha": "d51d3ecaef731822cffd51d13c12443814338c26",
+    "source_ci_run": 45004430439,
+    "release_workflow_run": 45005766952,
+    "release_jobs": {
+      "admit": "success",
+      "sandbox": "success",
+      "deploy": "success",
+      "persist_evidence": "success"
+    },
+    "cloudflare_worker": "taghvim-api",
+    "cloudflare_deployment_id": "56a0cc8e-c4b9-4110-a724-1b55e43a9dcf",
+    "version_id": "d8c812ea-79d9-4749-bdff-fd99849815e7",
+    "traffic_percentage": 100,
+    "cloudflare_annotated_source_sha": "d51d3ecaef731822cffd51d13c12443814338c26",
+    "production_admin_worker": "taghvim-platform-admin",
+    "admin_version_id": "4c655351-1bae-4da8-9d63-bc41ae77a653",
+    "admin_deployment_id": "3c26e32e-7f7b-4929-b362-3d5315114a30",
+    "release_evidence_artifact_id": 14747228368,
+    "production_smoke": {
+      "health": true,
+      "readiness": true,
+      "exact_contract": true,
+      "live_route_count": 70,
+      "public_operations": 67,
+      "nonpayment_count": 66,
+      "payment_denied": 4,
+      "protected_denied": 54,
+      "live_positive_customer_e2e": false,
+      "real_email_delivery_verified": false,
+      "authenticated_api_key_customer_verified": false,
+      "scope": "real Cloudflare read-only route coverage, not positive customer GA"
+    }
+  },
+  "landing": {
+    "source_main_sha": "524c4e6fd9e1269bd50a8f7b34e92183e0db920a",
+    "source_ci_run": 45004362835,
+    "current_cloudflare_worker": "taghvim-web",
+    "deployed_worker_version": "10e9cacb-14a8-4c5f-b173-328f1bb3b2b7",
+    "production_source_stale": true,
+    "github_owner_dispatch_runs": [
+      45006426362,
+      45006427555
+    ],
+    "preflight_result": "BLOCKED_BEFORE_DEPLOY",
+    "blocker_codes": [
+      "LANDING_REPOSITORY_CLOUDFLARE_TOKEN_MISSING",
+      "LANDING_REPOSITORY_ENGINE_READ_TOKEN_MISSING"
+    ],
+    "direct_cloudflare_bypass_permitted": false,
+    "needed_github_repository_secret_names": [
+      "CLOUDFLARE_API_TOKEN",
+      "TAGHVIM_ENGINE_READ_TOKEN"
+    ],
+    "secret_values_in_evidence": false
+  },
+  "d1": {
+    "engine_production_migrations": 23,
+    "engine_sandbox_migrations": 23,
+    "landing_production_migrations": 5,
+    "landing_sandbox_migrations": 5,
+    "integrity": "PRAGMA quick_check ok; FK check empty",
+    "replay_required": false
+  },
+  "canonical": {
+    "source_registry_sha": "d24a51e5764a6da73ac22a1ad7043ea35b915d7c",
+    "public_operations": 67,
+    "source_cohort": "CLI SDK cookbooks current successful CI",
+    "one_release_lifecycle": true,
+    "policy_before_effect": true,
+    "fail_closed": true
+  },
+  "recovery": {
+    "resume_from": "GitHub Landing #13: resolve missing repository-scoped CI credentials WITHOUT copying secret values into evidence; then exact reviewed SHA-bound Sandbox→Production release",
+    "ga_exit_gates": [
+      "Landing deployment exact main SHA",
+      "Authenticated Production customer signup/email/API-key SDK CLI Widget journey",
+      "Positive Portfolio tenant grant and negative cross-tenant proof",
+      "Platform Admin protected operator tests",
+      "Webhook and metering E2E",
+      "Release artifacts and durable checkpoints sealed"
+    ],
+    "no_auto_retry_until_dependency_resolved": true
+  }
+}
