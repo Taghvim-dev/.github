@@ -55,15 +55,19 @@ export function projectSourceCohort(source,release,controls){
  }
  // T0: every active cohort mirror is projected from one canonical source.
  const active=t.current_source?.source_cohort_20261122;
- if(!active?.engine||!active?.landing||!Number.isInteger(source.engine.reviewed_pr)||
-    source.engine.reviewed_pr<1||!sha.test(source.engine.reviewed_tree||""))
-  block("missing canonical reviewed PR / immutable Git tree");
- Object.assign(active.engine,{main:source.engine.sha,reviewed_head:source.engine.reviewed_sha,
-  reviewed_pr:source.engine.reviewed_pr,ci_run:source.engine.ci,
-  verified_equal_git_tree:source.engine.reviewed_tree});
- if(active.landing.main!==source.landing.sha||active.landing.reviewed_head!==source.landing.reviewed_sha||
-    String(active.landing.ci_run)!==String(source.landing.ci))
-  block("landing source evidence drift");
+ if(!active?.engine||!active?.landing)
+  block("missing canonical mirrored Engine/Landing source cohort");
+ // Symmetric immutable source authority: never hand-edit Landing SHA/tree/PR
+ // mirrors. Both components must project from the same signed-off cohort.
+ for(const n of ["engine","landing"]){
+  const item=source[n];
+  if(!Number.isInteger(item?.reviewed_pr)||item.reviewed_pr<1||
+     !sha.test(item?.reviewed_tree||""))
+   block("missing canonical "+n+" reviewed PR / immutable Git tree");
+  Object.assign(active[n],{main:item.sha,reviewed_head:item.reviewed_sha,
+   reviewed_pr:item.reviewed_pr,ci_run:item.ci,
+   verified_equal_git_tree:item.reviewed_tree});
+ }
  const ciProof=source.source_ci_attestation_20261122;
  if(ciProof?.engine?.reviewed_head!==source.engine.reviewed_sha||
     String(ciProof?.engine?.successful_ci_run)!==String(source.engine.ci)||

@@ -15,6 +15,12 @@ test("T0 one six-repository source and exact CI generates every nested source pr
  assert.equal(engine.reviewed_head,source.engine.reviewed_sha);
  assert.equal(engine.verified_equal_git_tree,source.engine.reviewed_tree);
  assert.equal(engine.reviewed_pr,source.engine.reviewed_pr);
+ const landing=controls.current_source.source_cohort_20261122.landing;
+ assert.equal(landing.main,source.landing.sha);
+ assert.equal(landing.reviewed_head,source.landing.reviewed_sha);
+ assert.equal(landing.reviewed_pr,source.landing.reviewed_pr);
+ assert.equal(landing.verified_equal_git_tree,source.landing.reviewed_tree);
+ assert.equal(String(landing.ci_run),String(source.landing.ci));
  assert.ok(Number.isSafeInteger(source.engine.reviewed_pr)&&source.engine.reviewed_pr>0,
   "Canonical reviewed PR identity must be a current positive GitHub PR number");
  const moved=JSON.parse(JSON.stringify(source));
@@ -38,6 +44,8 @@ test("T0 projection repairs source drift, rejects forged CI, GA and payment clai
  for(const change of [
   c=>{c.current_source.source_cohort_20261122.engine.main="0".repeat(40)},
   c=>{c.current_source.source_cohort_20261122.engine.reviewed_pr=1},
+  c=>{c.current_source.source_cohort_20261122.landing.reviewed_pr=1},
+  c=>{c.current_source.source_cohort_20261122.landing.verified_equal_git_tree="f".repeat(40)},
   c=>{c.current_source.source_cohort_20261122.engine.verified_equal_git_tree="f".repeat(40)},
   c=>{c.current_source.public_cohort_20261122.sdk.sha="a".repeat(40)},
   c=>{c.current_source.public_cohort_20261122.operation_count=69}
