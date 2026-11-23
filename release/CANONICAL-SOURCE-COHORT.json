@@ -3,13 +3,13 @@
   "kind": "taghvim.t0.canonical_source_cohort",
   "authority": "Taghvim-dev/.github",
   "engine": {
-    "sha": "e5078446599d6ee294f1e24eb2cb3ea33b094fef",
-    "ci": "45084546369",
+    "sha": "614d8c5f07d0542f56cb90a3db07277de9a8229b",
+    "ci": "45086605662",
     "workflow_id": 372423484,
-    "reviewed_sha": "e4dbd87130c2a276b067d7750d80218c3176c11b",
+    "reviewed_sha": "4c55575b20fb71169639438dec2a0c3520bcc358",
     "main_ci": "44944961810",
-    "reviewed_pr": 285,
-    "reviewed_tree": "d6ada61dd106414f4e04312437d6bb720e8aecae"
+    "reviewed_pr": 288,
+    "reviewed_tree": "c517ffaf9bbdbe591ff9ba77f444fc5cd447e598"
   },
   "landing": {
     "sha": "524c4e6fd9e1269bd50a8f7b34e92183e0db920a",
@@ -43,8 +43,8 @@
   },
   "source_ci_attestation_20261122": {
     "engine": {
-      "reviewed_head": "e4dbd87130c2a276b067d7750d80218c3176c11b",
-      "successful_ci_run": "45084546369",
+      "reviewed_head": "4c55575b20fb71169639438dec2a0c3520bcc358",
+      "successful_ci_run": "45086605662",
       "main_tree_equals_reviewed_tree": true
     },
     "landing": {
