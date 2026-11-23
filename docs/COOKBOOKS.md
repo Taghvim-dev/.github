@@ -1,43 +1,43 @@
-# Taghvim.dev cookbooks | مثال‌های کاربردی
+# Taghvim.dev Cookbook — draft examples
 
-The samples show the **planned public API contract**; they do not assert that self-service test access is available today. Never embed keys in shipped frontend code.
+These examples illustrate API usage against the versioned contract. Production availability is not asserted; confirm the deployed contract before integrating.
 
-## 1. Convert dates
+## 1. Convert an Iranian business date
 
-```bash
-curl -X POST https://api.taghvim.dev/v1/dates/convert \
-  -H "Authorization: Bearer $TAGHVIM_TEST_API_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{"date":"1405-07-15"}'
+```http
+POST /v1/dates/convert
+Authorization: Bearer <test-key>
+Content-Type: application/json
+
+{"date":"1405-07-15"}
 ```
 
-## 2. Compute business days
+## 2. Add 30 working days, not 30 calendar days
 
-```bash
-curl -X POST https://api.taghvim.dev/v1/business-days/add \
-  -H "Authorization: Bearer $TAGHVIM_TEST_API_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{"date":"1405-07-15","days":3}'
+```http
+POST /v1/business-days/add
+Authorization: Bearer <test-key>
+Content-Type: application/json
+
+{"date":"1405-07-15","days":30}
 ```
 
-## 3. Plan a recurring schedule
+Use the business-calendar rules and data-version included in your approved profile; do not silently assume that a holiday is a working day.
 
-```bash
-curl -X POST https://api.taghvim.dev/v1/schedules/preview \
-  -H "Authorization: Bearer $TAGHVIM_TEST_API_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{"rule":"last-business","from":"1405-07-01","count":6}'
-```
+## 3. Audit an API request
 
-## 4. Handle quota errors safely
+Persist the operation identifier, request ID, tenant, contract version, calendar-data version and outcome. Never record full API keys. Retry mutating actions only with documented idempotency behaviour.
 
-- Read HTTP status and `RateLimit` / `Retry-After` response headers.
-- Use the `Taghvim-Request-Id` when reporting a problem.
-- Avoid blind automatic retry for operations that cause effects.
-- Separate each customer's request scope and billing owner.
+## 4. Manage appointments across multiple businesses
 
-## 5. Multi-party adoption
+Each organization must have an independent identity, policy, consent boundary and ledger. An intermediary's credential is not transferable to a downstream partner or consumer.
 
-A software provider can embed calendar features for business customers and their end users, but access grants and metering must remain separated per delegated customer. The current public documentation does **not** claim automated multi-layer billing or subtenant provisioning is deployed.
+## 5. A deadline that falls on an uncertain lunar holiday
 
-[Developer quickstart](DEVELOPER-START.md) · [API lifecycle](API-LIFECYCLE.md)
+Record the data source, publication date, as-of version and whether the date is *official* or *predicted*. Re-evaluate pending workflows after official publication; preserve prior calculation evidence rather than rewriting history silently.
+
+## 6. Future cookbook packs (roadmap)
+
+Scheduling, webhook replay, signing verification, cancellation and refund reconciliation, timezone boundaries, enterprise policy rules, SDK error handling and secure widget embedding. These are not automatically claims of released functionality.
+
+[Getting started](DEVELOPER-QUICKSTART.md)

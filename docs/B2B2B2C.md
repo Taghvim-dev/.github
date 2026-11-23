@@ -1,15 +1,28 @@
-# Multi-party distribution — B2B2B2C design target
+# Taghvim.dev as B2B2B2C infrastructure
 
-Taghvim.dev is designed to support **direct developers**, **technology resellers and partner platforms**, **downstream businesses**, and their **end users**. This is a target architecture, not proof that multi-level delegation and billing are fully deployed.
+**Product architecture direction:** multilevel distribution where the direct Taghvim account is a business; a distributor, tenant organization, downstream business and consumer can each represent an independent boundary.
 
 ```mermaid
-flowchart TB
- T["Taghvim.dev governed API"] --> A["Software provider / integrator"]
- A --> B["Partner platform / distributor"]
- B --> C["Business customer"]
- C --> D["End user / device / agent"]
+flowchart LR
+ T["Taghvim.dev service"] --> P["Platform / distributor B1"]
+ P --> M["Partner / integrator B2"]
+ M --> B["Merchant / service business B3"]
+ B --> C["Consumer / end-user C"]
 ```
 
-**Non-negotiables before general availability:** isolated tenant/subtenant identifiers; explicitly scoped delegated permissions; upstream and downstream meter attribution; no implicit inheritance of identity, data or keys; revoke at each boundary; signed traceable usage evidence; separate sandbox/live policies; clear service ownership.
+## Required governance, not automatic inheritance
 
-Do not represent the consumer as the payer by default: a partner or business may pay on behalf of end-user traffic. Distributors can remain interoperable without a compulsory network or common customer database.
+- Every actor uses explicit identity, consent and scoped permissions. Partner credentials do not convey unrestricted downstream authority.
+- Business-level metering distinguishes `provider_tenant`, `distributor`, `partner`, `merchant`, `end_customer`, `environment`, `plan_version` and `bill_to` in the *governed internal data contract*. Do not expose customer identity to unrelated partners.
+- Invoices and commercial balances must reconcile to durable immutable usage events, documented rate versions and accepted delegation.
+- Revocation, dispute, reversals, refund events and usage corrections require independent audit records.
+- No party's access to the end customer's personal data may be inferred from commercial placement.
+- Multi-level billing, delegated keys, federation and partner-level settlement are **roadmap gates**. Existing tenant-scoped API keys alone do not prove this implementation.
+
+## Suggested rollout
+
+1. Direct B2B developer sandbox, test keys, consent and quota with real operational evidence.
+2. B2B2C embedded widgets and delegated scopes for a single partner and consumer-facing flow.
+3. B2B2B2C nested scopes, delegated invitations, sub-ledgers, settlements and revenue distribution, validated with negative isolation tests.
+
+[SDK quickstart](DEVELOPER-QUICKSTART.md)
