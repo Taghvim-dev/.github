@@ -62,7 +62,7 @@ jobs:
   public-contract-parity:
     # Draft = inert candidate; ready_for_review must request a complete, tested SHA.
     # Main pushes and explicit owner-driven verification still execute normally.
-    if: ${{ (github.event_name == 'pull_request' && github.head_ref == 'feat/t0-universal-source-cohort-20261122' && github.event.pull_request.draft == false && github.event.pull_request.user.login == '007dude' && github.event.pull_request.title == 'T0_CERTIFY_UNIVERSAL_SOURCE_COHORT_20261122') || (github.event_name != 'pull_request' && github.ref == 'refs/heads/main' && github.actor == '007dude' && startsWith(github.event.head_commit.message, 'T0_CERTIFY_SOURCE_COHORT_20261122')) }} # one source cohort, owner verified, no generic CI spend
+    if: ${{ (github.event_name == 'pull_request' && github.head_ref == 'feat/t0-universal-source-cohort-20261122' && github.event.pull_request.draft == false && github.event.pull_request.user.login == '007dude' && github.event.pull_request.title == 'T0_CERTIFY_UNIVERSAL_SOURCE_COHORT_20261122') || (github.event_name == 'pull_request' && github.head_ref == 'release/t0-bundler-root-source-cohort-20261123' && github.event.pull_request.draft == false && github.event.pull_request.user.login == '007dude' && github.event.pull_request.title == 'T0_CERTIFY_SOURCE_COHORT_20261122') || (github.event_name != 'pull_request' && github.ref == 'refs/heads/main' && github.actor == '007dude' && startsWith(github.event.head_commit.message, 'T0_CERTIFY_SOURCE_COHORT_20261122')) }} # one source cohort, owner verified, no generic CI spend
     runs-on: ubuntu-26.04
     timeout-minutes: 12
     steps:

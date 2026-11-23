@@ -15,7 +15,13 @@ test("T0 one six-repository source and exact CI generates every nested source pr
  assert.equal(engine.reviewed_head,source.engine.reviewed_sha);
  assert.equal(engine.verified_equal_git_tree,source.engine.reviewed_tree);
  assert.equal(engine.reviewed_pr,source.engine.reviewed_pr);
- assert.equal(source.engine.reviewed_pr,285);
+ assert.ok(Number.isSafeInteger(source.engine.reviewed_pr)&&source.engine.reviewed_pr>0,
+  "Canonical reviewed PR identity must be a current positive GitHub PR number");
+ const moved=JSON.parse(JSON.stringify(source));
+ moved.engine.reviewed_pr=source.engine.reviewed_pr+1;
+ const simulated=projectSourceCohort(moved,release,controls);
+ assert.equal(simulated.controls.current_source.source_cohort_20261122.engine.reviewed_pr,moved.engine.reviewed_pr,
+  "T0 projection must follow the canonical reviewed PR, not hardcode a historic PR number");
  const current=controls.current_source.public_cohort_20261122;
  for(const [name,key] of [["SDK","sdk"],["CLI","cli"],["cookbooks","cookbooks"]]){
   assert.equal(current[key].sha,source[name].sha);
